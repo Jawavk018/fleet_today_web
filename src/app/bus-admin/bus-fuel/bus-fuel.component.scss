@@ -1,0 +1,266 @@
+// .btn-sm1 {
+//     height: 32px;
+//     text-align: center;
+//     background-color: #3f51b5;
+//     color: white;
+//     margin: auto;
+//     width: 90px;
+// }
+.border {
+    border: 1px solid lavender;
+}
+// .btnDiv {
+//     margin: auto;
+//     text-align: center;
+//     width: 100%;
+// }
+.tWidth {
+    width: 23vh;
+    font-weight: 600;
+}
+
+.main {
+    padding: 2vh;
+}
+.number {
+    padding-left: 2vh;
+    font-size: 2vh;
+    margin-bottom: 2px !important;
+}
+.subDiv {
+    margin: 6px;
+}
+.start:hover {
+    color: #3f51b5;
+    font-weight: 900;
+}
+.start {
+    color: #3f51b5;
+    font-weight: 900;
+}
+.end {
+    font-weight: 900;
+}
+.end:hover {
+    color: #3f51b5;
+    font-weight: 900;
+}
+.accept {
+    border-radius: 2px;
+    float: right;
+    margin: 1vh;
+    color: white;
+    background: #3f51b5;
+    font-weight: 500;
+    border: 1px solid #3f51b5;
+    padding: 3px;
+    font-family: sans-serif;
+}
+.topDiv {
+    margin-bottom: -10px;
+}
+.driver {
+    padding-left: 2vh;
+    font-weight: bold;
+
+    margin: 0px !important;
+}
+
+.tLabel {
+    margin: 0;
+    color: rgb(148, 147, 147);
+}
+
+.icons {
+    color: violet;
+}
+.tDtl {
+    padding-left: 3vh;
+}
+.iconCenter {
+    // margin-bottom: 20%;
+    color: rgba(161, 51, 161, 0.935);
+}
+
+.custom-btn {
+    float: right;
+    width: 130px;
+    height: 40px;
+    color: #fff;
+    border-radius: 5px;
+    padding: 10px 25px;
+    font-family: "Lato", sans-serif;
+    font-weight: 500;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: inline-block;
+    box-shadow: inset 2px 2px 2px 0px rgba(255, 255, 255, 0.5), 7px 7px 20px 0px rgba(0, 0, 0, 0.1),
+        4px 4px 5px 0px rgba(0, 0, 0, 0.1);
+    outline: none;
+}
+.btn-5 {
+    width: 130px;
+    height: 40px;
+    line-height: 42px;
+    padding: 0;
+    border: none;
+    background: #3f51b5;
+    background: linear-gradient(0deg, #3f51b5 0%, #3f51b5 100%);
+}
+.btn-5:hover {
+    color: #3f51b5;
+    background: transparent;
+    box-shadow: none;
+}
+.btn-5:before,
+.btn-5:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 2px;
+    width: 0;
+    background: #3f51b5;
+    box-shadow: -1px -1px 5px 0px #fff, 7px 7px 20px 0px #0003, 4px 4px 5px 0px #0002;
+    transition: 400ms ease all;
+}
+.btn-5:after {
+    right: inherit;
+    top: inherit;
+    left: 0;
+    bottom: 0;
+}
+.btn-5:hover:before,
+.btn-5:hover:after {
+    width: 100%;
+    transition: 800ms ease all;
+}
+.tInput {
+    border: none;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+    width: 80%;
+}
+.user-progress {
+    float: right;
+    width: 45% !important;
+}
+
+.attendance-card {
+    box-shadow: 0 0 10px rgb(159, 189, 203);
+    border-radius: 10px;
+}
+.spinner-border {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: -0.125em;
+    border: 0.25em solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: 0.75s linear infinite spinner-border;
+}
+
+// .imgView:hover {
+//     width: 30%;
+//     position: fixed;
+//     left: 10vw;
+//     margin-left: 35px;
+//     top: 50vh;
+//     margin-top: -210px;
+//     z-index: 1;
+//     border: 1px solid transparent;
+//     background-color: white;
+//     padding: 2vh;
+//     border-radius: 1pc;}
+.imgView {
+    width: 50%;
+}
+// ::ng-deep {
+//     .mat-form-field-appearance-outline .mat-form-field-flex {
+//         padding: 0 0.75em 0 0.75em;
+//         margin-top: -0.65em;
+//         position: relative;
+//     }
+// }
+// ::ng-deep {
+//     .mat-form-field-flex {
+//         display: inline-flex;
+//         align-items: center;
+//         box-sizing: border-box;
+//         width: 38vh !important;
+//         background: white !important;
+//         height: 37px !important;
+//     }
+// }
+// ::ng-deep {
+//     .mat-form-field-prefix,
+//     .mat-form-field-suffix {
+//         white-space: nowrap;
+//         flex: none;
+//         position: none !important;
+//     }
+// }
+
+// ::ng-deep {
+//     .mat-form-field-appearance-outline .mat-form-field-prefix,
+//     .mat-form-field-appearance-outline .mat-form-field-suffix {
+//         margin: auto;
+//     }
+// }
+// ::ng-deep{
+//     input.mat-input-element {
+//         margin-top: -0.0625em;
+//         width: 14vh;
+//         height: 2vh;
+//         margin-top:-15px;
+//         display: block;
+//     }
+// }
+// ::ng-deep{
+//     .mat-form-field-appearance-outline .mat-form-field-outline {
+//         display: flex;
+//         position: absolute;
+//         top: 0em !important;
+//         left: 0;
+//         right: 0;
+//         bottom: 0;
+//         pointer-events: none;
+//     }
+// }
+
+select.minimal {
+    background-image:
+      linear-gradient(45deg, transparent 50%, rgb(18, 7, 7) 50%),
+      linear-gradient(135deg, rgb(12, 3, 3) 50%, transparent 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position:
+      calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px),
+      calc(100% - 2.5em) 0.5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1px 1.5em;
+    background-repeat: no-repeat;
+  }
+
+  .dropdown-container select {
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+  }
+
+  .dropdown-container select::-ms-expand {
+    display: none !important;
+  }
+
+
+  @media(max-width:768px){
+    .btn-search{
+        margin: auto !important;
+        text-align: center;
+    }
+  }

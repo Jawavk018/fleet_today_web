@@ -1,0 +1,304 @@
+<div class="row mt-4 ">
+  <div class="col-4">
+    <!-- <h3 class="font-weight-bold">Operator Details</h3> -->
+  </div>
+  <div class="col-8 text-right" *ngIf="operatorList.length==0">
+    <div class="btn-group mb-4 border" role="group" aria-label="Basic example">
+      <button type="button" class="btn btn-primary" (click)="goToAddNewProject()"><i class="fa fa-plus mr-2"></i>Add
+        Operator</button>
+    </div>
+  </div>
+</div>
+<div *ngIf="operatorList.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+
+<section class="" *ngIf="operatorList.length>0" style="background-color: #f4f5f7;">
+  <div class="  h-100">
+    <div class="row d-flex justify-content-center align-items-center  h-100">
+      <div class="col col-lg-8  mb-lg-5">
+        <div class="card mb-3" *ngFor="let operator of operatorList ;let i =index;" style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div class="col-md-3 gradient-custom text-center text-white"
+              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <img src="assets/img/users/profile.png" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+              <h2>{{operator.ownerDetails.ownerName}}</h2>
+              <p>{{operator.orgName}}</p>
+              <p>{{operator.ownerDetails.vehicleNumber}}</p>
+              <div *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                <button type="button" (click)="gotoEditOperator(i)" class="btn"><i class="far fa-edit" style="color: white;"></i></button> </div>
+              <div *ngIf="operator.social[i].urlLink != '' " class="d-flex mt-4 justify-content-center" style="padding-top: 75px;">
+                <a [href]="operator.social[0].urlLink ? operator.social[0].urlLink : 'https://www.facebook.com/'" target="_blank"><i class="fab fa-facebook-f fa-lg me-3" style="color: white;"></i></a>
+                <a [href]="operator.social[1].urlLink ? operator.social[1].urlLink : 'https://twitter.com/i/flow/login'" target="_blank"><i class="fab fa-twitter fa-lg me-3" style="color: white;"></i></a>
+                <a [href]="operator.social[2].urlLink ? operator.social[2].urlLink : 'https://mail.google.com/mail/'" target="_blank"><i class="fab fa-google fa-lg" style="color: white;"></i></a>
+              </div>
+              <div class="d-flex justify-content-between" *ngIf="user.roleCd == 1">
+                <button  *ngIf="operator.orgStatusCd !=19" title="Approve"
+                data-target="#approve-modal" data-toggle="modal"  style="border: solid 2px lavender;" type="button" (click)="selectedIndex(i)"  class="btn btn-sm text-success shadow"><span class="fa fa-check"></span> Approve</button>
+                <button title="Reject" class="btn btn-sm text-danger shadow" style="border: solid 2px lavender;"  *ngIf="operator.orgStatusCd !=19" (click)="selectedIndex(i)" 
+                data-target="#reject-modal" data-toggle="modal"><span
+                  class="fa fa-ban"></span> Reject</button> 
+              </div>
+              <div>
+            </div>
+            </div>
+            <div class="col-md-8">
+              <div class="card-body p-4">
+                <div class="row pt-1" style="margin: auto;" *ngIf="operator?.orgStatusCd == 58">
+                  <h4 >Reaject Reason : </h4>
+                  <p class="text-danger" style="margin-left: 2%;">{{operator.rejectReason}}</p>
+                </div>
+                <h4 class="fw-bold">Contact</h4>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1" *ngFor="let operator of operator.contactList; let i = index;">
+                  <div class="col-6 mb-3" *ngIf="operator.contactRoleCd == 2">
+                    <p class="text-primary">Name</p>
+                    <p class="fw-bold">{{operator.name}}</p>
+                  </div>
+                  <div class="col-6 mb-3" *ngIf="operator.contactRoleCd == 2">
+                    <p class="text-primary">Role</p>
+                    <p class="fw-bold">{{operator.contactRoleCdValue}}</p>
+                  </div>
+                  <div class="col-6 mb-3" *ngIf="operator.contactRoleCd == 2">
+                    <p class="text-primary">Email</p>
+                    <p class="fw-bold" *ngIf="operator.email != null">{{operator.email}}</p>
+                    <p class="fw-bold" *ngIf="operator.email == null"> - - - </p>
+                  </div>
+                  <div class="col-6 mb-3" *ngIf="operator.contactRoleCd == 2">
+                    <p class="text-primary">Phone</p>
+                    <p class="fw-bold">{{operator.mobileNumber}}</p>
+                  </div>
+                </div>
+                
+                <h4 class="fw-bold">Address</h4>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-6 mb-3">
+                    <p class="text-primary">Address</p>
+                    <p class="fw-bold">{{operator.address.addressLine1}},{{operator.address.addressLine2}},
+                      {{operator.address.city}},{{operator.address.district}}</p>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <p class="text-primary">State</p>
+                    <p class="fw-bold">{{operator.address.state}}</p>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <p class="text-primary">District</p>
+                    <p class="fw-bold">{{operator.address.district}}</p>
+                  </div>
+                  <div class="col-6 mb-3">
+                    <p class="text-primary">Pincode</p>
+                    <p class="fw-bold">{{operator.address.pincode}}</p>
+                  </div>
+                </div>
+           
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<div class="modal fade" id="approve-modal" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+  aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header state modal-success">
+        <h4 class="modal-title" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Operator KYC</h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        Are you sure to approve this operator Kyc?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal"
+          (click)="changeStatus('Approve')">Yes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="reject-modal" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+  aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header state modal-danger">
+        <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Operator KYC</h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" style="height: 100px;  width:330px" id="pxp-candidate-about"
+          placeholder="Type reason here..." [(ngModel)]="reason"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" [disabled]="!reason" data-dismiss="modal"
+          (click)="changeStatus('Reject')">Yes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="input-group mb-2" *ngIf="projects.length>0">
+    <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+    <input class="form-control" [(ngModel)]="searchText" type="text" placeholder="Search Project Name..." />
+  </div>
+  
+  <div class="table-responsive" *ngIf="projects.length>0">
+    <app-confirm-dialog></app-confirm-dialog>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Project Name</th>
+          <th>Account</th>
+          <th>Description</th>
+          <th>Project Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of projects | ProjectSearchPipe : searchText;let i =index;">
+          <td>{{i+1}}</td>
+          <td>{{row.projectName}}</td>
+          <td>{{row.companyName}}</td>
+          <td>{{row.description}}</td>
+          <td>{{row?.settings?.projectStatusName}}</td>
+  
+          <td class="align-middle">
+  
+            <div class="btn-group" role="group">
+              <button data-toggle="tooltip" data-placement="top" title="##VIEW_BUTTON_TOOL_TIP##"
+                class="btn btn-secondary btn-sm" (click)="openModal(i,modalContent,'v')"><i
+                  class="fa fa-search"></i></button>
+              <button data-toggle="tooltip" data-placement="top" title="##UPDATE_BUTTON_TOOL_TIP##"
+                class="btn btn-secondary btn-sm" (click)="goToEditProject(i,'add')"><i class="fa fa-pencil"></i></button>
+              <button data-toggle="tooltip" data-placement="top" title="##DELETE_BUTTON_TOOL_TIP##"
+                class="btn btn-secondary btn-sm" (click)="deleteProject(i,record)"><i class="fa fa-trash"></i></button>
+              <button data-toggle="tooltip" data-placement="top" title="##COPY_BUTTON_TOOL_TIP##"
+                class="btn btn-secondary btn-sm" (click)="goToEditProject(i,'copy')"><i
+                  class="fa fa-copy"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
+  <ng-template #modalContent >
+    <div class="modal-body bg-gray">
+      <h6 class="bg-gray text-center" style="padding-bottom: 3px; color:white;    font-size: 14px;
+        font-weight: bold;">{{action}}</h6>
+      <div class="row">
+        <div class="col-12 vertical-tabs">
+         
+          <div class="col-12 vertical-tabs bg-white">
+            <table class="table table-hover" *ngFor="let proRec of projectLists;let i=index">
+             <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Project Name</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.projectName}}</label>
+                </td>
+              </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Account</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.companyName}}</label>
+                </td>
+              </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Client Name</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.clientName}}</label>
+                </td>
+              </tr>
+  
+               <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Project Description</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.description}}</label>
+                </td>
+              </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Cost Budget</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.budget?.costBudget}}</label>
+                </td>
+              </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Revenue Budget</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.budget?.revenueBudget}}</label>
+                </td>
+              </tr>
+  
+                <tr>
+                  <td width="50%" class="text-right">
+                    <label class="text-secondary">Assigned Users</label>
+                  </td>
+                  <td width="50%" class="text-left color-blue" >
+                    <ul>
+                    <li *ngFor="let project of proRec?.userList;let i=index"> 
+                      <div>{{project?.name}}</div>
+                      <div class="text-secondary">{{project?.email}}</div>
+                    </li>
+                  </ul>
+                  </td>
+                </tr>
+  
+                <tr>
+                  <td width="50%" class="text-right">
+                    <label class="text-secondary">Tasks</label>
+                  </td>
+                  <td width="50%" class="text-left color-blue" >
+                    <ul>
+                    <li *ngFor="let projects of proRec?.taskList;let i=index"> 
+                      <div>{{projects?.taskName}}</div>
+                      <div class="text-secondary">{{projects?.description}}</div>
+                    </li>
+                  </ul>
+                  </td>
+                </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Registration Date</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.settings?.registrationDate}}</label></td>
+              </tr>
+  
+              <tr>
+                <td width="50%" class="text-right">
+                  <label class="text-secondary">Active Flag</label>
+                </td>
+                <td width="50%" class="text-left color-blue"><label> {{proRec?.settings?.projectStatusName}}</label></td>
+              </tr> 
+  
+            </table>
+            <div class="col-12 bg-white text-center py-1">
+              <button type="button" class="btn btn-danger" (click)="closeModal()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </ng-template> -->

@@ -1,0 +1,352 @@
+<div class="row mt-4 ">
+  <div class="container-fluid">
+    <div class="row justify-content-md-end">
+      <div class="col-auto my-2">
+        <div class="input-group mb-2 ">
+          <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+          <!-- <input class="form-control" type="text" placeholder="Type to filter the name column..."
+            (keyup)="updateFilter($event)" /> -->
+          <input (input)="searchVehicle.next($event);" [(ngModel)]="searchKey" type="text" style="height:42px"
+            class="w-25" placeholder="Search Vehicle Name..." class="form-control border-1 ">
+        </div>
+      </div>
+      <div class="col-auto">
+        <mat-form-field appearance="outline" class="ml-2">
+          <mat-label>Filter By District</mat-label>
+          <mat-select [formControl]="operatorDistrictCtrl" (ngModelChange)="getOrganization()" placeholder="Project"
+            [multiple]="true">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="operatorDistrictFilterCtrl" placeholderLabel="Find district..."
+                noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                [toggleAllCheckboxIndeterminate]="isIndeterminate" [toggleAllCheckboxChecked]="isChecked"
+                (toggleAll)="toggleDistrictSelectAll($event)">
+                <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option class="text-capitalize" *ngFor="let district of filteredDistrict | async "
+              style="border-bottom:1px solid #ced4da !important;" [value]="district">
+              {{ district }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-auto">
+        <mat-form-field appearance="outline" class="ml-2">
+          <mat-label>Filter By City</mat-label>
+          <mat-select [formControl]="operatorCityCtrl" (ngModelChange)="getOrganization()"  placeholder="Project" [multiple]="true">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="operatorCityFilterCtrl" placeholderLabel="Find city..."
+                noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                [toggleAllCheckboxIndeterminate]="isIndeterminate" [toggleAllCheckboxChecked]="isChecked"
+                (toggleAll)="toggleCitySelectAll($event)">
+                <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let city of filteredCity | async " class="text-capitalize"
+              style="border-bottom:1px solid #ced4da !important;" [value]="city">
+              {{ city }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="col-auto my-2" aria-label="Basic example">
+        <button type="button" class="btn btn-primary" (click)="goToAddNewOperator()"><i class="fa fa-plus mr-2"></i>Add
+          Operator</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<span>
+
+  <div *ngIf="isNoOperators" class="text-center">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+  </div>
+
+  <span *ngIf="!isNoOperators">
+
+
+    <div class="row">
+      <div class="col-12">
+        <div class="table table-hover table-responsive  table-striped">
+          <table class="table table-hover">
+            <thead class="bg-primary border-0 text-light">
+              <tr>
+                <th>#</th>
+                <th>Organization Name</th>
+                <th>Operator Name</th>
+                <th>District </th>
+                <th>City</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let operator of operatorList;let i = index;"
+                [ngClass]="operator.orgStatusCd != 20 && operator.orgStatusCd != 58 ?'text-dark':'text-danger'">
+                <td class="align-middle text-truncate">{{(pageIndex*limit)+i+1}}</td>
+                <td class="align-middle text-truncate">{{operator.orgName}} </td>
+                <td class="align-middle text-truncate">{{operator.ownerDetails.ownerName}}</td>
+                <td class="align-middle text-truncate">{{operator.address.district}}</td>
+                <td class="align-middle text-truncate">{{operator.address.city}}</td>
+                <!-- <td class="align-middle text-truncate">
+                  <span *ngIf="operator.orgStatusCd ==20" class="badge rounded-pill bg-secondary text-light">Not Verified</span>
+                  <span *ngIf="operator.orgStatusCd ==19" class="badge rounded-pill bg-success text-light">Verified</span>
+                  <span *ngIf="operator.orgStatusCd ==58" class="badge rounded-pill bg-danger text-light">Rejected</span>
+
+
+                </td> -->
+                <td class="align-middle text-truncate">
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-primary" *ngIf="operator.orgStatusCd !=19" title="Approve"
+                      data-target="#approve-modal" data-toggle="modal" (click)="openModal(i)"><span
+                        class="fa fa-check"></span></button>
+                    <!-- <button title="View Operator" class="btn btn-primary" data-target="#viewModel" data-toggle="modal"
+                      (click)="openModal(i)"><span class="fa fa-eye"></span></button> -->
+                    <button title="View Operator" class="btn btn-primary" (click)="viewOperatorPage(i)"><span
+                        class="fa fa-eye"></span></button>
+                    <button title="Reject" class="btn btn-primary" *ngIf="operator.orgStatusCd !=19"
+                      data-target="#reject-modal" data-toggle="modal" (click)="openModal(i)"><span
+                        class="fa fa-ban"></span></button>
+                    <button title="Edit" class="btn btn-primary" (click)="goToEdit(i)"><span
+                        class="fa fa-pencil"></span></button>
+                    <button title="Add" class="btn btn-primary" (click)="goToAddVehicle(i)"><span
+                        class="fa fa-bus"></span></button>
+
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="count">
+            <mat-paginator [length]="count" [pageSize]="pageSize"
+                [pageSizeOptions]="itemPerPage" (page)="getMoreOrg($event)"
+                aria-label="Select page" [pageIndex]="pageIndex">
+            </mat-paginator>
+        </div>
+        </div>
+      </div>
+    </div>
+  </span>
+</span>
+
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold" id="myModalLabel">Share Vault</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" (click)="dimiss()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group mb-2">
+          <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+          <input class="form-control" type="text" placeholder="Type to filter the name column..."
+            (keyup)="updateFilter($event)" />
+        </div>
+
+        <div class="container mt-3">
+          <div class="row mb-4 font-weight-bold">
+            <div class="col-1 text-end">
+              <input class="form-check-input" [(ngModel)]="isSelectAll" type="checkbox" (click)="selectAll()">
+            </div>
+            <div class="col-5">
+              Name
+            </div>
+            <div class="col-6">
+              Email
+            </div>
+          </div>
+          <div class="row mb-4" *ngFor="let user of userList;let i = index;">
+            <div class="col-1 text-end">
+              <input class="form-check-input" [(ngModel)]="user.isSelect" type="checkbox" [id]="user.appUserSno">
+            </div>
+            <div class="col-5">
+              {{user.name}}
+            </div>
+            <div class="col-6">
+              {{user.email}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" (click)="dimiss()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="shareVault()">Share</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="nofooter-modal" tabindex="-1" role="dialog" aria-labelledby="modal-nofooter-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold" id="modal-nofooter-label">Shared Vault Users</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="d-flex justify-content-between align-items-center"
+          *ngFor="let user of sharedVaultUsers;let i =index;">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="mr-2">
+              <img class="rounded-circle" width="60"
+                [src]="user?.genderName == 'Male' ? 'assets/img/profile/bruno.jpg' : 'assets/img/profile/julia.jpg'"
+                alt="">
+            </div>
+            <div class="ml-2">
+              <div class="h5 m-0">{{user.name}}</div>
+            </div>
+          </div>
+          <div>
+            <button class="btn text-danger" type="button" (click)="selectedSharedVaultIndex = i;" data-toggle="modal"
+              data-target="#error-modal">
+              <i class="fa fa-close mr-2"></i> Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="error-modal" role="dialog" aria-labelledby="modal-error-label">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header state modal-danger">
+        <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Delete Vault Shared User</h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        Are you sure to delete vault shared this user?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" (click)="deleteSharedUser()">Yes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="reject-modal" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+  aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header state modal-danger">
+        <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Operator KYC</h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" style="height: 100px;  width:330px" id="pxp-candidate-about"
+          placeholder="Type reason here..." [(ngModel)]="reason"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" [disabled]="!reason" data-dismiss="modal"
+          (click)="changeStatus('Reject')">Yes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="approve-modal" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+  aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header state modal-success">
+        <h4 class="modal-title" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Operator KYC</h4>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">×</span></button>
+      </div>
+      <div class="modal-body">
+        Are you sure to approve this operator Kyc?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal"
+          (click)="changeStatus('Approve')">Yes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="viewModel" tabindex="-1" role="dialog" aria-labelledby="viewModelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content col-12 col-md-12 col-sm-12">
+      <div class="modal-header">
+        <h4 class="modal-title font-weight-bold mb-2" id="viewModelLabel">Operator Detail</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="row mb-1 m-0">
+          <div class="col d-flex">
+            <div class="pxp-jobs-tab-pane-category-icon"><span class="fa fa-bus"></span></div>&nbsp;&nbsp;
+            <div class="color"><span class="font-weight-bold">{{selectedOperators?.orgName}}</span></div>
+          </div>
+        </div>
+
+        <div class="container mt-3">
+          <div class="row mb-4">
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="font-weight-bold mb-2">Operator Name</div>
+              <p class="text-capitalize">{{selectedOperators?.ownerDetails?.ownerName}}</p>
+            </div>
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="font-weight-bold mb-2">Vehicle Number</div>
+              <p>{{selectedOperators?.ownerDetails?.vehicleNumber}}</p>
+            </div>
+            <!-- <div class="col-12 col-md-12 col-sm-12">
+                <div class="font-weight-bold mb-2">Website</div>
+                <div>
+                  <span
+                    *ngIf="selectedOperators?.ownerDetails?.website">{{selectedOperators?.ownerDetails?.website}}</span>
+                  <span *ngIf="!selectedOperators?.ownerDetails?.website">-</span>
+                </div>
+              </div> -->
+            <!-- </div> -->
+            <!-- <div class="row mb-4"> -->
+            <div class="col-12 col-md-12 col-sm-12 text-capitalize">
+              <div class="mb-2 font-weight-bold">
+                <span class="fa fa-address-card-o" aria-hidden="true"></span> Address
+              </div>
+              <div class="mb-2">
+                {{selectedOperators?.address?.addressLine1}},{{selectedOperators?.address?.addressLine2}},{{selectedOperators?.address?.city}},
+                {{selectedOperators?.address?.district}},{{selectedOperators?.address?.state}},{{selectedOperators?.address?.pincode}}
+              </div>
+            </div>
+            <div class="col-12 col-md-12 col-sm-12">
+              <div class="mb-2 font-weight-bold">
+                <span class="fa fa-phone" aria-hidden="true"></span> Contact
+              </div>
+              <div class="mb-2" *ngFor="let contact of selectedOperators?.contactList">
+                <div>Email:&nbsp;<span>{{contact.email}}</span>
+                </div>
+                <div>Mobile:&nbsp;<span>{{contact.mobileNumber}}</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <div class="col-12 col-md-12 col-sm-12" *ngIf="selectedOperators?.orgStatusCd == 58">
+            <div class="font-weight-bold mb-2">Reject Reason</div>
+            <p class="text-capitalize" class="text-danger">{{selectedOperators?.rejectReason}}</p>
+          </div>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

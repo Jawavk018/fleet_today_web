@@ -1,0 +1,1397 @@
+<div class="row mt-4 ">
+    <div class="col-md-4 col-sm-12">
+        <h3>Add Vehicle Details</h3>
+    </div>
+</div>
+
+<form [formGroup]="form">
+    <div class="row">
+
+        <div class="col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <div class="form-group">
+                    <label class="text-gray">Vehicle Registration Number <span class="text-danger">*</span></label>
+                    <input class="form-control text-lights" type="text" formControlName="vehicleRegNumber"
+                        maxlength="10" [disabled]="isPermit"
+                        pattern="^[A-Za-z]{2}[0-9]{1,2}(?:[A-Za-z])?(?:[A-Za-z]*)?[0-9]{4}$" type="text"
+                        oninput="this.value = this.value.toUpperCase()" placeholder="TN09AB1234">
+                    <small class="text-danger"
+                        *ngIf="form.controls.vehicleRegNumber.touched && form.controls.vehicleRegNumber.errors?.required">Registration
+                        Number
+                        is required</small>
+                    <small class="text-danger"
+                        *ngIf="form.controls.vehicleRegNumber.touched && form.controls.vehicleRegNumber.errors?.maxlength">vehicle
+                        number is invalid</small>
+                    <small class="text-danger"
+                        *ngIf="form.controls.vehicleRegNumber.touched && form.controls.vehicleRegNumber.errors?.pattern">vehicle
+                        number is invalid</small>
+                </div>
+            </fieldset>
+        </div>
+
+        <div class="col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <div class="form-group">
+                    <label class="text-gray">Vehicle Name <span class="text-danger">*</span></label>
+                    <input class="form-control" type="text" formControlName="vehicleName">
+                    <small class="text-danger"
+                        *ngIf="form.controls.vehicleName.touched && form.controls.vehicleName.errors?.required"> Vehicle
+                        Name
+                        is required</small>
+                    <small class="text-danger"
+                        *ngIf="form.controls.vehicleName.touched && form.controls.vehicleName.errors?.minlength">vehicle
+                        Name
+                        isn't long enough, minimum of 3 characters</small>
+                    <small class="text-danger" *ngIf="form.controls.vehicleName?.errors?.pattern">InValid
+                        Vehicle Name
+                    </small>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label class="text-gray">Vehicle Type <span class="text-danger">*</span></label>
+                <select (change)="onChange()" class="form-control fa-select" formControlName="vehicleTypeCd">
+                    <option [value]="vehicleType.codesDtlSno" *ngFor="let vehicleType of vehicleTypeList">
+                        {{vehicleType.cdValue}}</option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="form.controls.vehicleTypeCd.touched && form.controls.vehicleTypeCd.errors?.required">
+                    Vehicle type is required
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <!-- <div class="form-group">
+                    <label class="text-gray">Tyre Type <span class="text-danger">*</span></label>
+                    <select (change)="onChange()" class="form-control fa-select minimal" formControlName="tyreTypeCd">
+                        <option [value]="type.codesDtlSno" *ngFor="let type of tyreType">
+                            {{type.cdValue}}</option>
+                    </select>
+                    <small class="text-danger"
+                        *ngIf="form.controls.tyreTypeCd.touched && form.controls.tyreTypeCd.errors?.required">
+                        Tyre type is required
+                    </small>
+                </div> -->
+                <!-- <div class="form-group">
+                    <label class="text-gray">Tyre Type <span class="text-danger">*</span></label>
+                    <select class="form-control" formControlName="tyreTypeCd" (change)='onOptionsSelected($event)'>
+                        <option [value]="type.tyreTypeSno" *ngFor="let type of tyreTypeList;">
+                            {{type.tyreType}}</option>
+                    </select>
+                    <small class="text-danger"
+                        *ngIf="form?.get('tyreTypeCd')?.touched && form?.get('tyreTypeCd').errors?.required">
+                        Tyre Type is required</small>
+                </div> -->
+                <div class="form-group">
+                    <label class="text-gray">Tyre Type <span class="text-danger">*</span></label>
+                    <!-- <select class="form-control fa-select minimal" formControlName="videoType">
+                    <option [value]="vid.codesDtlSno" *ngFor="let vid of videoTypes">{{vid.cdValue}}</option>
+                </select> -->
+                    <mat-select formControlName="tyreTypeCd" class="form-control fa-select minimal"
+                        (selectionChange)="onSelectChange($event)"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                        <mat-option *ngFor="let type of tyreTypeList;" [value]="type.tyreTypeSno">
+                            {{type.tyreType}}
+                        </mat-option>
+                    </mat-select>
+                    <small class="text-danger"
+                        *ngIf="form?.get('tyreTypeCd')?.touched && form?.get('tyreTypeCd').errors?.required">
+                        Tyre Type is required</small>
+                </div>
+            </fieldset>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <div class="form-group">
+                    <label class="text-gray">Tyre Size <span class="text-danger">*</span></label>
+                    <mat-select class="form-control fa-select minimal" (selectionChange)="onSizeChange($event)"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+                        formControlName="tyreSizeCd" multiple>
+                        <mat-optgroup *ngFor="let group of tyreSizeList" [label]="group.name">
+                            <mat-option *ngFor="let pokemon of group.tyreSizeList" [value]="pokemon.tyreSizeSno">
+                                {{pokemon.tyreSize}}
+                            </mat-option>
+                        </mat-optgroup>
+                    </mat-select>
+                    <small class="text-danger"
+                        *ngIf="form?.get('tyreSizeCd').touched && form?.get('tyreSizeCd').errors?.required">
+                        Tyre Size is required</small>
+                </div>
+            </fieldset>
+        </div>
+
+
+
+        <div class="form-group col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <label class="text-gray">Vehicle Banner Name <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" formControlName="vehicleBanner">
+                <small class="text-danger"
+                    *ngIf="form.controls.vehicleBanner?.touched && form.controls.vehicleBanner?.errors?.required">
+                    Vehicle banner name is required
+                </small>
+                <small class="text-danger" *ngIf="form.controls.vehicleBanner?.errors?.pattern">InValid
+                    Banner Name
+                </small>
+            </fieldset>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <label class="text-gray">Chasis Number <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()"
+                    formControlName="chaseNumber">
+                <small class="text-danger" *ngIf="form.controls.chaseNumber?.touched && 
+    form.controls.chaseNumber?.errors?.required">
+                    Chasis number is required
+                </small>
+                <small class="text-danger" *ngIf="form.controls.chaseNumber?.errors?.pattern">
+                    InValid
+                    Chasis Number
+                </small>
+            </fieldset>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-12">
+            <fieldset [disabled]="isPermit">
+                <label class="text-gray">Engine Number <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" oninput="this.value = this.value.toUpperCase()"
+                    formControlName="engineNumber">
+                <small class="text-danger"
+                    *ngIf="form.controls.engineNumber?.touched && form.controls.engineNumber?.errors?.required">
+                    Engine number is required
+                </small>
+                <small class="text-danger" *ngIf="form.controls.engineNumber?.errors?.pattern">InValid
+                    Engine number
+                </small>
+            </fieldset>
+        </div>
+
+        <div class="form-group col-md-4 col-sm-12">
+            <label class="text-gray">No Of Tyres <span class="text-danger">*</span></label>
+            <select class="form-control fa-select minimal" formControlName="tyreCountCd">
+                <option [value]="tyreCount.codesDtlSno" *ngFor="let tyreCount of tyreCountList;">
+                    {{tyreCount.cdValue}}</option>
+            </select>
+            <small class="text-danger"
+                *ngIf="form.controls.tyreCountCd?.touched && form.controls.tyreCountCd?.errors?.required">
+                Tyre Count type is required
+            </small>
+        </div>
+
+    </div>
+    <fieldset [disabled]="isPermit">
+        <div class="row" formGroupName="vehicleDetails">
+
+            <div class="form-group col-md-4 col-sm-12">
+                <label class="text-gray">Odo Meter Value <span class="text-danger">*</span></label>
+                <input class="form-control" type="number" formControlName="odoMeterValue">
+                <small class="text-danger" *ngIf="form.get('vehicleDetails')?.controls.odoMeterValue?.touched && 
+            form.get('vehicleDetails')?.controls.odoMeterValue?.errors?.required">
+                    Odo Meter is required
+                </small>
+            </div>
+
+            <div class="form-group col-md-4 col-sm-12">
+                <label class="text-gray">Fuel Capacity (in liters) <span class="text-danger">*</span></label>
+                <input class="form-control" type="number" formControlName="fuelCapacity">
+                <small class="text-danger" *ngIf="form.get('vehicleDetails')?.controls.fuelCapacity?.touched && 
+            form.get('vehicleDetails')?.controls.fuelCapacity?.errors?.required">
+                    Fuel Capacity is required
+                </small>
+            </div>
+
+            <div class="form-group col-md-4 col-sm-12">
+                <label class="text-gray">Vehicle Class Type <span class="text-danger">*</span></label>
+                <select class="form-control fa-select minimal" formControlName="drivingType">
+                    <option [value]="cls.codesDtlSno" *ngFor="let cls of drivingType;">
+                        {{cls.cdValue}}</option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="form.get('vehicleDetails')?.controls.drivingType.touched && form.get('vehicleDetails')?.controls.drivingType.errors?.required">
+                    Vehicle Class type is required
+                </small>
+            </div>
+
+        </div>
+    </fieldset>
+
+
+
+    <fieldset [disabled]="isPermit">
+        <div class="row mt-4">
+            <div class="col-md-4 col-sm-12">
+                <h3>Owner Details</h3>
+            </div>
+        </div>
+        <div formArrayName="ownerList">
+            <span *ngFor="let owner of ownerList?.controls; let i=index">
+                <div class="row" [formGroup]="owner">
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="text-gray">Name <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <input class="form-control" type="text" formControlName="ownerName">
+                            </div>
+
+                            <small class="text-danger"
+                                *ngIf="owner.get('ownerName')?.touched && owner.get('ownerName')?.errors?.required">
+                                Name is required
+                            </small>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label class="text-gray">Mobile Number <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                                </div>
+                                <input class="form-control" maxlength="10" pattern="^((\\+91-?)|0)?[0-9]{10}$"
+                                    type="number" formControlName="ownerNumber"
+                                    oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                            </div>
+                            <small class="text-danger"
+                                *ngIf="owner.get('ownerNumber')?.touched && owner.get('ownerNumber')?.errors?.required">
+                                Mobile number is required
+                            </small>
+                            <small class="text-danger" *ngIf="owner.get('ownerNumber').errors?.pattern">
+                                Please check your mobile number!</small>
+                        </div>
+                    </div>
+
+                    <!-- <div class="col-2">
+                    <div class="text-left">
+                        <label class="text-gray">Current Owner</label>
+                        <div>
+                            <input mdbCheckbox class="checkBox" type="checkbox" formControlName="currentOwner" value=""
+                                id="flexCheckDefault" />
+                        </div>
+                    </div>
+                </div> -->
+                    <div class="col-2" *ngIf="ownerList?.length>1">
+                        <button class="btn text-danger" type="button" style="margin-top: 10%;" (click)="removeOwner(i)">
+                            <i class="fa fa-close mr-2"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </span>
+        </div>
+
+        <div class="row">
+            <div class="col-6">
+                <button type="button" class="btn btn-outline-success mb-1 mr-3 border-0" (click)="createOwnerList()"><i
+                        class="fa fa-plus mr-2"></i>
+                    Add Owner</button>
+            </div>
+        </div>
+
+        <div class="row mt-4" formGroupName="contractCarriage"
+            *ngIf="form.value.vehicleTypeCd==22 || form.value.vehicleTypeCd==93">
+            <!-- <h3>Contract Carriage</h3> -->
+            <div class="col-md-4 col-sm-12">
+                <h3>Contract Carriage</h3>
+            </div>
+            <div class="row pl-3 pr-3">
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Seat Type <span class="text-danger">*</span></label>
+                    <select class="form-control fa-select minimal" formControlName="seatType">
+                        <option [value]="seat.codesDtlSno" *ngFor="let seat of seatTypes">{{seat.cdValue}}</option>
+                    </select>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.seatType?.touched && 
+            form.get('contractCarriage')?.controls.seatType?.errors?.required">
+                        Seat type is required
+                    </small>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Price per day (400 km) <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="pricePerday">
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.pricePerday?.touched && 
+            form.get('contractCarriage')?.controls.pricePerday?.errors?.required">
+                        Price is required
+                    </small>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Video Type <span class="text-danger">*</span></label>
+                    <!-- <select class="form-control fa-select minimal" formControlName="videoType">
+                    <option [value]="vid.codesDtlSno" *ngFor="let vid of videoTypes">{{vid.cdValue}}</option>
+                </select> -->
+                    <mat-select formControlName="videoType" class="form-control fa-select minimal"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                        <mat-option *ngFor="let vid of videoTypes; let i=index;" [value]="vid.codesDtlSno">
+                            {{vid.cdValue}}
+                        </mat-option>
+                    </mat-select>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.videoType?.touched && 
+            form.get('contractCarriage')?.controls.videoType?.errors?.required">
+                        Video type is required
+                    </small>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Audio Type <span class="text-danger">*</span></label>
+                    <mat-select formControlName="audioType" class="form-control fa-select minimal"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                        <mat-option *ngFor="let audio of audioTypes; let i=index;" [value]="audio.codesDtlSno">
+                            {{audio.cdValue}}
+                        </mat-option>
+                    </mat-select>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.audioType?.touched && 
+                form.get('contractCarriage')?.controls.audioType?.errors?.required">
+                        Audio type is required
+                    </small>
+                </div>
+
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Public Addressing System Type <span class="text-danger">*</span></label>
+                    <select class="form-control fa-select minimal"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+                        formControlName="publicAddressingSystem">
+                        <option [value]="paSystem.codesDtlSno"
+                            *ngFor="let paSystem of publicAddressingSystemTypes; let i=index;">
+                            {{paSystem.cdValue}}</option>
+                        <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.publicAddressingSystem?.touched && 
+                        form.get('contractCarriage')?.controls.publicAddressingSystem?.errors?.required">
+                            Public Addressing System Type is required
+                        </small>
+                    </select>
+
+                </div>
+
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Lighting System Type <span class="text-danger">*</span></label>
+                    <mat-select formControlName="lightingSystem" class="form-control fa-select minimal"
+                        style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                        <mat-option *ngFor="let lightSystem of lightingSystemTypes; let i=index;"
+                            [value]="lightSystem.codesDtlSno">
+                            {{lightSystem.cdValue}}
+                        </mat-option>
+                    </mat-select>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.lightingSystem?.touched && 
+                form.get('contractCarriage')?.controls.lightingSystem?.errors?.required">
+                        Lighting System Type is required
+                    </small>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Number Of Luckage carrier <span class="text-danger">*</span></label>
+                    <input class="form-control" type="number" formControlName="luckageCount">
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.luckageCount?.touched && 
+                form.get('contractCarriage')?.controls.luckageCount?.errors?.required">
+                        Number Of Luckage carrier is required
+                    </small>
+                </div>
+
+
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="text-left">
+                        <label class="text-gray">Top Luckage Carrier </label>
+                        <div>
+                            <input mdbCheckbox class="checkBox" type="checkbox" formControlName="topCarrier" value=""
+                                id="flexCheckDefault" />
+                        </div>
+                    </div>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.topCarrier?.touched && 
+                form.get('contractCarriage')?.controls.topCarrier?.errors?.required">
+                        Top luckage carrier is required
+                    </small>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray mr-2">Class <span class="text-danger">*</span></label>
+                    <br>
+                    <span *ngFor="let cool of coolTypes; let i = index;">
+                        <input type="radio" [id]="cool.codesDtlSno" formControlName="coolType"
+                            [value]="cool.codesDtlSno">&nbsp;
+                        <label [for]="cool.codesDtlSno">{{cool.cdValue}}</label>&nbsp;
+                    </span>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.coolType?.touched && 
+                form.get('contractCarriage')?.controls.coolType?.errors?.required">
+                        Ac/Non Ac is required
+                    </small>
+                </div>
+
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray mr-2">Suspension Type <span class="text-danger">*</span></label>
+                    <br>
+                    <span *ngFor="let sus of busSusType; let i = index;">
+                        <input type="radio" [id]="sus.codesDtlSno" formControlName="suspensionType"
+                            [value]="sus.codesDtlSno">&nbsp;
+                        <label [for]="sus.codesDtlSno">{{sus.cdValue}}</label>&nbsp;
+                    </span>
+                    <small class="text-danger" *ngIf="form.get('contractCarriage')?.controls.suspensionType?.touched && 
+                form.get('contractCarriage')?.controls.suspensionType?.errors?.required">
+                        Suspension type is required
+                    </small>
+                </div>
+
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Others</label>
+                    <input class="form-control" type="text" (change)="createOthersList($event.target.value)">
+                </div>
+                <div class="otherDiv mt">
+                    <mat-chip-list>
+                        <mat-chip *ngFor="let other of OthersList;let i=index">{{other}} <mat-icon (click)="remove(i)">
+                                cancel
+                            </mat-icon>
+                        </mat-chip>
+                    </mat-chip-list>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div *ngIf="form.value.vehicleTypeCd==22 || form.value.vehicleTypeCd==93">
+            <div class="row mt-4">
+                <div class="col-md-6 col-sm-12">
+                    <h3>Media Details</h3>
+                    <h4>You Can't select more than 6 Media(Etc. Image and Videos)<span class="text-danger">*</span></h4>
+                </div>
+            </div>
+            <div class="row  mt-3">
+                <div class="col-md-2 p-0 m-0 bg-secondary " *ngFor="let mediaObj of media;let l = index">
+                    <div class="card">
+                        <div class="delete text-white" (click)="remove(l)">
+                            <i class="bi bi-x "></i>
+                        </div>
+                        <img [src]="mediaObj.mediaUrl" *ngIf="mediaObj.mediaType == 'Image'" height="140px" />
+                        <video autoplay muted loop *ngIf="mediaObj.mediaType == 'Video'" controls height="140px">
+                            <source [src]="mediaObj?.mediaUrl" type="video/mp4">
+
+                        </video>
+
+                    </div>
+                </div>
+                <div class="col-md-2 px-2 m-0" *ngIf="media?.length <= 5 || !media?.length">
+                    <img class="w-100" src="assets/img/gallery.png" height="140px" alt="" (click)="images.click()">
+                </div>
+            </div>
+            <!-- <div class="container py-3">
+                <div class="d-flex justify-content-between">
+                    <div class="col-md-6 p-1">
+                        <div class="bg-primary text-light py-3 text-center font-weight-bold">
+                            Image
+                        </div>
+                        <div *ngIf="!media.length" class="p-2 mt-2" (click)="media?.length ? null : images.click()">
+                            <img class="img-fluid p-3" src="assets/img/norecord.png" alt="">
+                        </div>
+
+                        <div>
+                            <div class="card mt-1" *ngIf="media.length > 0">
+                                <div class="container">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <div id="carouselExampleControls" class="carousel slide"
+                                                data-ride="carousel">
+                                                <div class="carousel-inner">
+                                                    <div class="carousel-item" id="carousel_index_{{l}}"
+                                                        *ngFor="let mediaObj of media;let l = index"
+                                                        [class]="l == 0 ? 'active' : ''">
+                                                        <div class="card" style="width: 534px; height: 300px;">
+                                                            <img class="d-block " style="width: 100% !important;"
+                                                                (click)="images.click()" [src]="mediaObj.mediaUrl"
+                                                                alt="First slide">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div *ngIf="media?.length == 0">
+                                                    <img class="d-block w-100" height="300px" src="assets/img/g2.png"
+                                                        alt="Second slide">
+                                                </div>
+                                                <a class="carousel-control-prev" href="#carouselExampleControls"
+                                                    role="button" data-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Previous</span>
+                                                </a>
+                                                <a class="carousel-control-next" href="#carouselExampleControls"
+                                                    role="button" data-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="sr-only">Next</span>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 p-1">
+                        <div class="bg-primary text-light py-3 text-center font-weight-bold">
+                            Video
+                        </div>
+
+                        <div *ngIf="!video?.length" class="p-2 mt-2" (click)="video?.length ? null : videos.click()">
+                            <img class="img-fluid p-3" src="assets/img/norecord.png" alt="">
+                        </div>
+
+                        <div>
+                            <div class="card mt-1" *ngIf="video?.length > 0">
+                                <div class="container">
+                                    <div class="d-flex justify-content-between">
+                                        <video class="d-block w-100" height="300px"
+                                            (click)="video?.length ? null : videos.click()" autoplay muted playsinline
+                                            loop *ngIf="video&&video[0]?.mediaType == 'Video'" controls>
+                                            <source [src]="video[0]?.mediaUrl" type="video/mp4">
+                                        </video>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+
+
+
+        <div class="mt-4" *ngIf="form.value?.vehicleTypeCd == 21 || form.value?.vehicleTypeCd == 92">
+            <div class="row mt-2">
+                <div class="col-lg-4 col-sm-12">
+                    <h3>Permit Details</h3>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <fieldset [disabled]="(user?.roleCd == 1 && form.value?.vehicleSno != null)" class="w-100 pl-3">
+                    <div formArrayName="routeList">
+                        <span *ngFor="let route of routeList?.controls; let i=index">
+                            <div class="tab-pane active" id="vaultcategory" [formGroup]="route">
+
+                                <div class="form-group row">
+
+                                    <div class="col-md-3">
+                                        <label class="text-gray">Source <span class="text-danger">*</span></label>
+
+                                        <select class="form-control fa-select" formControlName="sourceCitySno"
+                                            (change)="getDestCity();" #sname required>
+                                            <option [value]="scity.citySno" *ngFor="let scity of sourceCities">
+                                                {{scity.cityName}}</option>
+                                        </select>
+                                        <small class="text-danger"
+                                            *ngIf="route.get('sourceCitySno')?.touched && route.get('sourceCitySno')?.errors?.required">
+                                            Source is required
+                                        </small>
+
+
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label class="text-gray">Destination <span
+                                                class="text-danger">*</span></label>&nbsp;&nbsp;&nbsp;
+                                        <select class="form-control fa-select" formControlName="destinationCitySno"
+                                            #dname required>
+                                            <option [value]="dcity.citySno" *ngFor="let dcity of sourceCities">
+                                                {{dcity.cityName}}</option>
+                                        </select>
+                                        <small class="text-danger"
+                                            *ngIf="route.get('destinationCitySno')?.touched && route.get('destinationCitySno')?.errors?.required">
+                                            Destination is required
+                                        </small>
+                                    </div>
+
+
+                                    <div class="col-md-3">
+                                        <label class="text-gray">Set Via Route</label>&nbsp;&nbsp;&nbsp;
+                                        <select class="form-control" (change)="createViaList($event.target.value,i)"
+                                            #dname required>
+                                            <option [ngValue]="null" [disabled]="true">-- Select Via --</option>
+                                            <option [value]=Source.citySno *ngFor="let Source of sourceCities">
+                                                {{Source.cityName}}</option>
+                                        </select>
+                                    </div>
+
+
+                                    <div class="col-1">
+                                        <div class="text-left">
+                                            <label class="text-gray">Active</label>
+                                            <div>
+                                                <input mdbCheckbox class="checkBox" type="checkbox"
+                                                    formControlName="activeFlag" value="" id="flexCheckDefault" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2" *ngIf="routeList?.length>1">
+                                        <button class="btn text-danger" style="margin-top: 10%;" type="button"
+                                            (click)="removeRoute(i)">
+                                            <i class="fa fa-close mr-2"></i> Remove
+                                        </button>
+                                    </div>
+
+
+                                </div>
+                                <div>
+                                    <mat-chip-list *ngIf="route?.value?.viaList">
+                                        <mat-chip
+                                            *ngFor="let via of ((i+1) % 2 != 0)?route.value.viaList:(route.value.viaList).slice().reverse();let j=index">
+                                            {{via.cityName}}
+                                            <mat-icon (click)="removes(i,j)">cancel</mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+
+                            </div>
+                        </span>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="col-lg-6 col-sm-12 pl-0">
+                        <button type="button" class="btn btn-outline-success mb-1 mr-3 border-0"
+                            (click)="createRouteList()"><i class="fa fa-plus mr-2"></i>
+                            Add Permit</button>
+                    </div>
+                </div>
+                <div class="col-6"></div>
+            </div>
+
+        </div>
+
+        <div class="row mt-4 ">
+            <div class="col-md-4 col-sm-12">
+                <h3>Add Vehicle Additional Details</h3>
+            </div>
+            <fieldset class="pl-3 pr-3" [disabled]="isPermit">
+                <div class="row mt-4" formGroupName="vehicleDetails">
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Fuel Type</label>
+                        <select class="form-control fa-select minimal"
+                            style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+                            formControlName="fuelTypeCd">
+                            <option [value]="fuel.codesDtlSno" *ngFor="let fuel of fuelTypeList;">
+                                {{fuel.cdValue}}</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">States</label>
+                        <select class="form-control fa-select minimal" formControlName="stateSno" (change)="index()">
+                            <option [value]="state.stateSno" *ngFor="let state of States;let i=index">
+                                {{state.stateName}}</option>
+                        </select>
+
+                    </div>
+                    <div class=" form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Vehicle Primary Permit District</label>
+                        <select class="form-control fa-select minimal" formControlName="districtsSno">
+                            <option [value]="dis.districtSno" *ngFor="let dis of Districts;">
+                                {{dis.districtName}}</option>
+                        </select>
+
+                    </div>
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Wheelbase Type</label>
+                        <select class="form-control fa-select minimal" formControlName="wheelType">
+                            <option [value]="wheel.codesDtlSno" *ngFor="let wheel of wheelType;">
+                                {{wheel.cdValue}}</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Vehicle Model</label>
+                        <input class="form-control" type="text" formControlName="vehicleModelCd">
+                    </div>
+                    <!-- <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">No Of Wheels Excluding Stepny</label>
+                    <input class="form-control" type="number" formControlName="wheelsCd">
+                </div> -->
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">No Of Stepny</label>
+                        <input class="form-control" type="number" formControlName="stepnyCd">
+                        <small class="text-danger" *ngIf="getvehicleDetails()?.get('stepnyCd')?.errors?.max">
+                            Maximum 2 Stepny only allowed
+                        </small>
+                    </div>
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Seat capacity</label>
+                        <input class="form-control" type="number" formControlName="seatCapacity">
+                    </div>
+
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Vehicle Make</label>
+                        <select class="form-control fa-select minimal" formControlName="vehicleMakeCd">
+                            <option [value]="make.codesDtlSno" *ngFor="let make of vehicleMakeList;">
+                                {{make.cdValue}}</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Fuel Norms</label>
+                        <select class="form-control fa-select minimal" formControlName="fuelNormsCd">
+                            <option [value]="fuel.codesDtlSno" *ngFor="let fuel of fuelNormList;">
+                                {{fuel.cdValue}}</option>
+                        </select>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+
+        <div formGroupName="vehicleDetails">
+            <div class="row mt-4">
+                <div class="col-md-4 col-sm-12">
+                    <h3>Vehicle Date Details</h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Vehicle Registration Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (ngModelChange)="validateDateRange()" (change)="dateChange()"
+                                [max]="dateYesterday" type="date" placeholder="dd-mm-yy"
+                                formControlName="vehicleRegDate">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Fc Expiry Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (focusout)="validateDateRange('FC')"
+                                pattern="^(19[5-9][0-9]|20[0-4][0-9]|2100)[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                [min]="dueDate" type="date" placeholder="dd-mm-yy" formControlName="fcExpiryDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="form.get('vehicleDetails')?.controls.fcExpiryDate.errors?.pattern">InValid
+                            Fc Expiry Date
+                        </small>
+
+                        <small class="text-danger" *ngIf="isFcExpireValid">
+                            Fc Expiry Date Must be greater then Reg Date
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Insurance Expiry Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (focusout)="validateDateRange('Insurance')"
+                                pattern="^(19[5-9][0-9]|20[0-4][0-9]|2100)[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                [min]="dueDate" type="date" placeholder="dd-mm-yy"
+                                formControlName="insuranceExpiryDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="form.get('vehicleDetails')?.controls.insuranceExpiryDate.errors?.pattern">InValid
+                            Insurance Expiry Date
+                        </small>
+
+                        <small class="text-danger" *ngIf="isInsuranceValid">
+                            Insurance Expiry Date Must be greater then Reg Date
+                        </small>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Tax Expiry Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (focusout)="validateDateRange('Tax')"
+                                pattern="^(19[5-9][0-9]|20[0-4][0-9]|2100)[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                [min]="dueDate" type="date" placeholder="dd-mm-yy" formControlName="taxExpiryDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="form.get('vehicleDetails')?.controls.taxExpiryDate.errors?.pattern">InValid
+                            Tax Expiry Date
+                        </small>
+
+                        <small class="text-danger" *ngIf="isTaxValid">
+                            Tax Expiry Date Must be greater then Reg Date
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Permit Expiry Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (focusout)="validateDateRange('Permit')"
+                                pattern="^(19[5-9][0-9]|20[0-4][0-9]|2100)[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                [min]="dueDate" type="date" placeholder="dd-mm-yy" formControlName="permitExpiryDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="form.get('vehicleDetails')?.controls.permitExpiryDate.errors?.pattern">InValid
+                            Permit Expiry Date
+                        </small>
+                        <small class="text-danger" *ngIf="isPermitValid">
+                            Permit Expiry Date Must be greater then Reg Date
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Pollution Expiry Date</label>
+                        <div class="input-group">
+                            <input class="form-control" (focusout)="validateDateRange('Popullation')"
+                                pattern="^(19[5-9][0-9]|20[0-4][0-9]|2100)[-/](0?[1-9]|1[0-2])[-/](0?[1-9]|[12][0-9]|3[01])$"
+                                [min]="dueDate" type="date" placeholder="dd-mm-yy"
+                                formControlName="pollutionExpiryDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="form.get('vehicleDetails')?.controls.pollutionExpiryDate.errors?.pattern">InValid
+                            Pollution Expiry Date
+                        </small>
+                        <small class="text-danger" *ngIf="isPollutionValid">
+                            Pollution Expiry Date Must be greater then Reg Date
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div
+                *ngIf="form.get('vehicleDetails')?.controls.fcExpiryDate.value || form.get('vehicleDetails')?.controls.insuranceExpiryDate.value || form.get('vehicleDetails')?.controls.taxExpiryDate.value">
+                <div class="row mt-4">
+                    <div class="col-md-4 col-sm-12">
+                        <h3>Vehicle Expense Details</h3>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div *ngIf="form.get('vehicleDetails')?.controls.fcExpiryDate.value"
+                        class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">FC Expense Amount</label>
+                        <input class="form-control" type="number" formControlName="fcExpiryAmount">
+                    </div>
+
+                    <div *ngIf="form.get('vehicleDetails')?.controls.insuranceExpiryDate.value"
+                        class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Insurance Expense Amount</label>
+                        <input class="form-control" type="number" formControlName="insuranceExpiryAmount">
+                    </div>
+
+                    <div *ngIf="form.get('vehicleDetails')?.controls.taxExpiryDate.value"
+                        class="form-group col-md-4 col-sm-12">
+                        <label class="text-gray">Tax Expense Amount</label>
+                        <input class="form-control" type="number" formControlName="taxExpiryAmount">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- 
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Fc Expiry Date</label>
+                    <div class="input-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="picker2" placeholder="dd-mm-yyyy"
+                                formControlName="fcExpiryDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                            <mat-datepicker #picker2 color="accent"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Insurance Expiry Date</label>
+                    <div class="input-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="picker3" placeholder="dd-mm-yyyy"
+                                formControlName="insuranceExpiryDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                            <mat-datepicker #picker3 color="accent"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Tax Expiry Date</label>
+                    <div class="input-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="picker4" placeholder="dd-mm-yyyy"
+                                formControlName="taxExpiryDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                            <mat-datepicker #picker4 color="accent"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="form-group col-md-4 col-sm-12">
+                    <label cla ss="text-gray">Permit Expiry Date</label>
+                    <div class="input-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="picker5" placeholder="dd-mm-yyyy"
+                                formControlName="permitExpiryDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker5"></mat-datepicker-toggle>
+                            <mat-datepicker #picker5 color="accent"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="form-group col-md-4 col-sm-12">
+                    <label class="text-gray">Pollution Expiry Date</label>
+                    <div class="input-group">
+                        <mat-form-field appearance="outline">
+                            <input matInput [matDatepicker]="picker6" placeholder="dd-mm-yyyy"
+                                formControlName="pollutionExpiryDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker6"></mat-datepicker-toggle>
+                            <mat-datepicker #picker6 color="accent"></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div> -->
+        <div [formGroup]="form">
+            <div class="row mt-4 justify-content-between bg-white align-items-center p-2">
+                <div class="col-md-4 col-sm-12">
+                    <h3 class="m-auto">Vehicle Toll Details</h3>
+                </div>
+                <div class="col-md-4 col-sm-12 text-right">
+                    <button type="button" class="btn btn-outline-success mb-1 mr-3 m-auto" (click)="getPassDetails()"
+                        data-target="#exampleModals1" data-toggle="modal"><i class="fa fa-plus mr-2"></i>
+                        Add Toll</button>
+                </div>
+            </div>
+
+            <div formArrayName="passList" class="mt-2">
+                <div class="table-responsive" *ngIf="passList?.length>0">
+                    <table class="table  table-hover table-striped">
+                        <thead>
+                            <tr class="bg-primary border-0 text-light">
+                                <th>#</th>
+                                <th>Start date</th>
+                                <th>End date</th>
+                                <!-- <th>Remainder Type</th> -->
+                                <th>Pass Amount</th>
+                                <th>Toll Name</th>
+                                <th>Toll Id</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let tollDetails of passList.value;let i =index;">
+                                <td>{{i+1}}</td>
+                                <td>{{tollDetails?.passStartDate | date:'dd-MM-yyyy'}}</td>
+                                <td>{{tollDetails?.passEndDate | date:'dd-MM-yyyy'}}</td>
+                                <!-- <td>{{tollDetails?.remainderTypeCdName}}</td> -->
+                                <td>{{tollDetails?.tollAmount}}</td>
+                                <td>{{tollDetails?.tollName}}</td>
+                                <td>{{tollDetails?.tollId}}</td>
+                                <!-- <td class="align-middle text-truncate text-light">
+                                                      <span *ngIf="row.kycStatus =='KYC Not Verified' && !row.rejectReason "
+                                                        class="badge rounded-pill bg-danger p-2  px-3 text-light">Not
+                                                        Verified</span>
+                                                      <span *ngIf="row.kycStatus =='KYC Verified'" class="badge p-2  px-3 rounded-pill bg-success text-light">Verified</span>
+                                                      <span *ngIf="row.kycStatus =='KYC Not Verified'&& row.rejectReason " class="badge p-2  px-3 rounded-pill bg-danger text-light">
+                                                        Rejected</span>
+                                                    </td> -->
+                                <!-- <td class="align-middle text-truncate text-light">
+                                                      <span *ngIf="row.kycStatus =='KYC Not Verified'"
+                                                        class="badge rounded-pill bg-secondary p-2  px-3 text-light">Not
+                                                        Verified</span>
+                                                      <span *ngIf="row.kycStatus =='KYC Verified'" class="badge p-2  px-3 rounded-pill bg-success text-light">Verified</span>
+                                                      <span *ngIf="row.kycStatus !='KYC Not Verified' && row.rejectReason " class="badge p-2  px-3 rounded-pill bg-danger text-light">
+                                                        Rejected</span>
+                                                    </td> -->
+
+                                <td class="align-middle">
+                                    <div class="btn-group" role="group">
+                                        <!-- <button data-toggle="tooltip" data-placement="top" title="View" class="btn btn-primary btn-sm"
+                                                          (click)="gotoviewVehicle(i)"><i class="fa fa-eye"></i></button> -->
+                                        <button data-toggle="tooltip" data-placement="top" title="Update"
+                                            class="btn btn-primary btn-sm" (click)="openDialog(i)"><i
+                                                class="fa fa-pencil"></i></button>
+                                        <button data-toggle="tooltip" data-placement="top" title="Delete"
+                                            class="btn btn-primary btn-sm" (click)="deletePass(i)"><i
+                                                class="fa-solid fa-trash-can"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <app-confirm-dialog></app-confirm-dialog>
+
+                <!-- <div *ngIf="count">
+                                  <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage"
+                                    (page)="getMoreVehicle($event)" aria-label="Select page" [pageIndex]="pageIndex">
+                                  </mat-paginator>
+                                </div> -->
+            </div>
+
+        </div>
+
+        <div class="row mt-4 justify-content-between bg-white align-items-center p-2">
+            <div class="col-md-4 col-sm-12">
+                <h3 class="m-auto">Vehicle Loan Details</h3>
+            </div>
+            <div class="col-md-4 col-sm-12 text-right">
+                <button type="button" class="btn btn-outline-success mb-1 mr-3 m-auto" data-toggle="modal"
+                    data-target=".laonDetailModal" (click)="clearModal()"><i class="fa fa-plus mr-2"></i>
+                    Add Loan Details</button>
+            </div>
+        </div>
+        <!-- </div> -->
+
+        <div formArrayName="loanList" class="mt-2">
+            <div class="table-responsive" *ngIf="loanList.length>0">
+                <table class="table  table-hover table-striped">
+                    <thead>
+                        <tr class="bg-primary border-0 text-light">
+                            <th>#</th>
+                            <th>Loan Bank Name</th>
+                            <th>Loan Account Number</th>
+                            <!-- <th>Remainder Type</th> -->
+                            <th>Due Amount</th>
+                            <th>Loan Close Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let loan of loanList?.value ;let i =index;">
+                            <td>{{i+1}}</td>
+                            <td>{{loan?.bankName}}</td>
+                            <td>{{loan?.bankAccountNumber}}</td>
+                            <!-- <td>{{loan?.remainderTypeCdName}}</td> -->
+                            <td>{{loan?.dueList[i].variableDueAmount}}</td>
+                            <!-- <td *ngIf="loanDetails?.value.dueTypeCd==130">{{loan?.dueList[i]?.variableDueAmount}}</td> -->
+                            <td>{{loan?.dueCloseDate | date:'dd-MM-yyyy'}}</td>
+                            <td class="align-middle">
+                                <div class="btn-group" role="group">
+                                    <!-- <button data-toggle="tooltip" data-placement="top" title="View"
+                                        class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></button> -->
+                                    <button type="button" class="btn btn-primary mx-1" data-toggle="modal"
+                                        data-target=".laonDetailModal" (click)="goToEditLoanDetails(i)"><i
+                                            class="fa fa-pencil"></i></button>
+                                    <button data-toggle="tooltip" data-placement="top" title="Delete"
+                                        (click)="deleteLoanDetails(i)" class="btn btn-primary btn-sm"><i
+                                            class="fa-solid fa-trash-can"></i></button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="text-center" *ngIf="form.value.vehicleRegNumber">
+            <qr-code [value]="form?.value?.vehicleRegNumber" size="200" errorCorrectionLevel="M"></qr-code>
+            <h2>{{form.value.vehicleRegNumber}}</h2>
+        </div>
+
+    </fieldset>
+
+
+
+    <div class="row mt-5 ">
+        <div class="col-12">
+            <button *ngIf="!form?.value?.vehicleSno" type="button" class="btn btn-primary mb-1 mr-3"
+                (click)="addVehicle()"
+                [disabled]="!form?.valid || isFcExpireValid || isInsuranceValid || isTaxValid || isPermitValid || isPollutionValid || isLoad">
+                <div class="spinner-border text-light" *ngIf="isLoad" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>Save
+            </button>
+            <button *ngIf="form?.value?.vehicleSno" type="button" class="btn btn-primary mb-1 mr-3"
+                [disabled]="!form?.valid || isFcExpireValid || isInsuranceValid || isTaxValid || isPermitValid || isPollutionValid || isLoad"
+                (click)="updatevehicle()">
+                <div class="spinner-border text-light" *ngIf="isLoad" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>Update
+            </button>
+
+            <button type="button" class="btn btn-outline-secondary mb-1 mr-3" (click)="location.back()">Cancel</button>
+        </div>
+    </div>
+    <!-- </div> -->
+
+</form>
+
+
+<div class="modal fade bd-example-modal-lg" data-backdrop="static" id="exampleModals1" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" [formGroup]="tollDetails">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="p-4">
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="text-gray">Start Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="date" placeholder="dd-mm-yy"
+                                formControlName="passStartDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="tollDetails?.get('passStartDate').touched && tollDetails?.get('passStartDate').errors?.required">
+                            Start date is required</small>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="text-gray">End Date <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="date" placeholder="dd-mm-yy"
+                                formControlName="passEndDate">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="tollDetails?.get('passEndDate').touched && tollDetails?.get('passEndDate').errors?.required">
+                            End date is required</small>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <!-- <div class="form-group col-md-6 col-sm-12">
+                        <label class="text-gray">Remainder Type <span class="text-danger">*</span></label>
+                        <mat-select formControlName="remainderTypeCd" class="form-control fa-select minimal"
+                            (selectionChange)="getremainderType()"
+                            style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                            <mat-option *ngFor="let remainder of remainderTypes; let i=index;"
+                                [value]="remainder.codesDtlSno">
+                                {{remainder.cdValue}}
+                            </mat-option>
+                        </mat-select>
+                        <small class="text-danger"
+                            *ngIf="tollDetails?.get('remainderTypeCd').touched && tollDetails?.get('remainderTypeCd').errors?.required">
+                            Remainder is required</small>
+                    </div> -->
+
+                    <div class="form-group col-md-6 col-sm-12">
+                        <label class="text-gray">Pass Amount <span class="text-danger">*</span></label>
+                        <input class="form-control" type="number" formControlName="tollAmount">
+                        <small class="text-danger"
+                            *ngIf="tollDetails?.get('tollAmount').touched && tollDetails?.get('tollAmount').errors?.required">
+                            Pass Amount is required</small>
+                    </div>
+
+                    <div class="form-group col-6">
+                        <label class="text-gray">Toll Name <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" formControlName="tollName">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="tollDetails.get('tollName')?.touched && tollDetails?.get('tollName')?.errors?.minlength">
+                            Toll name is Length must be maximum 3 Characters
+                        </small>
+                        <small class="text-danger" *ngIf="tollDetails?.get('tollName')?.errors?.pattern">InValid
+                            Toll Name
+                        </small>
+                    </div>
+
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-6">
+                        <label class="text-gray">Toll Id</label>
+                        <div class="input-group">
+                            <input class="form-control" type="text" formControlName="tollId">
+                        </div>
+                        <small class="text-danger"
+                            *ngIf="tollDetails?.get('tollId')?.touched && tollDetails?.get('tollId').errors?.pattern">InValid
+                            Toll ID
+                        </small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" #myModalClose1>Close</button>
+                    <button *ngIf="tollDetails?.value?.tollPassDetailSno == null" type="button" class="btn btn-primary"
+                        data-dismiss="modal" (click)="goToSave()" [disabled]="tollDetails.invalid">Save</button>
+                    <button *ngIf="tollDetails?.value?.tollPassDetailSno != null" type="button" class="btn btn-primary"
+                        data-dismiss="modal" (click)="goToUpdate()">Update</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade laonDetailModal" tabindex="-1" id="exampleModalLongTitle" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" [formGroup]="loanDetails" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    Add Vehicle Loan Details
+                </h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form [formGroup]="loanDetails" class="p-2">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="text-gray">Loan Bank Name <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="input-11" formControlName="bankName">
+                                </div>
+                                <small class="text-danger"
+                                    *ngIf="loanDetails?.get('bankName').touched && loanDetails?.get('bankName').errors?.required">
+                                    Bank Name is required</small>
+
+                                <small class="text-danger" *ngIf="loanDetails?.get('bankName').errors?.pattern">InValid
+                                    Bank Name
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-12">
+                            <div class="form-group">
+                                <label class="text-gray">Account Number <span class="text-danger">*</span></label>
+                                <input class="form-control" id="input-11" type="text"
+                                    formControlName="bankAccountNumber">
+                                <small class="text-danger"
+                                    *ngIf="loanDetails?.get('bankAccountNumber').touched && loanDetails?.get('bankAccountNumber').errors?.required">
+                                    Account Number is required</small>
+                                <small class="text-danger"
+                                    *ngIf="loanDetails?.get('bankAccountNumber').errors?.pattern">
+                                    InValid Account number</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-12">
+                            <label class="text-gray">Loan Close Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control" id="input-11" formControlName="dueCloseDate"
+                                (change)="dateChanges()">
+                            <small class="text-danger"
+                                *ngIf="loanDetails?.get('dueCloseDate').touched && loanDetails?.get('dueCloseDate').errors?.required">
+                                Due Close Date is required</small>
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-12">
+                            <label class="text-gray">Due Type <span class="text-danger">*</span></label>
+                            <select class="form-control fa-select minimal"
+                                style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+                                formControlName="dueTypeCd" (change)="onChanges($event)">
+                                <option [value]="due.codesDtlSno" *ngFor="let due of dueTypeList;">
+                                    {{due.cdValue}}</option>
+                            </select>
+                            <small class="text-danger"
+                                *ngIf="loanDetails?.get('dueTypeCd').touched && loanDetails?.get('dueTypeCd').errors?.required">
+                                Due Close Date is required</small>
+                        </div>
+
+                        <!-- <div class="form-group col-md-4 col-sm-12">
+                            <label class="text-gray">Remainder Type </label>
+                            <mat-select formControlName="remainderTypeCd" class="form-control fa-select minimal"
+                                style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;"
+                                (selectionChange)="getRemainderTypeCd()" multiple>
+                                <mat-option *ngFor="let remainder of remainderTypeList; let i=index;"
+                                    [value]="remainder.codesDtlSno">{{remainder.cdValue}}
+                                </mat-option>
+                            </mat-select>
+                        </div> -->
+
+                        <div class="form-group col-md-4 col-sm-12" *ngIf="loanDetails?.value.dueTypeCd==129">
+                            <label class="text-gray">Due Amount <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="input-11" formControlName="dueAmount"
+                                [disabled]="loanDetails?.value?.dueTypeCd == '130'">
+                            <small class="text-danger"
+                                *ngIf="loanDetails?.get('dueAmount').touched && loanDetails?.get('dueAmount').errors?.required">
+                                Loan Amount is required</small>
+                        </div>
+
+                        <div class=" form-group col-md-4 col-sm-12">
+                            <label class="text-gray">Account Details</label>
+                            <select class="form-control fa-select minimal" id="select-list"
+                                formControlName="bankAccountDetailSno" [(ngModel)]="selectedItem">
+                                <option [value]="account.bankAccountDetailSno" *ngFor="let account of accountType;">
+                                    {{account.bankAccountName}}</option>
+                                <option value="other" >Other</option>
+                            </select>
+
+                        </div>
+
+                        <div class="form-group col-md-4 col-sm-12" *ngIf="selectedItem === 'other'">
+                            <label class="text-gray">Pay Account Name</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="input-11" formControlName="bankAccountName">
+                                <small class="text-danger"
+                                *ngIf="loanDetails?.get('bankAccountName').touched && loanDetails?.get('bankAccountName').errors?.required">
+                                Bank Amount is required</small>
+                            </div>
+                        </div>
+
+
+                        <!-- <div class="row"> -->
+                        <div class="form-group col-md-4 col-sm-12">
+                            <label class="text-gray">Description </label>
+                            <input type="text" class="form-control" id="input-11" formControlName="discription">
+                        </div>
+                        <!-- </div> -->
+                    </div>
+
+                    <br><br>
+
+                    <div>
+                        <div class="table-responsive" *ngIf="loanDetails?.get('dueTypeCd').value == 130">
+                            <div formArrayName="dueList">
+                                <div *ngFor="let due of dueList.controls ;let i =index;">
+                                    <div [formGroup]="due">
+                                        <div class="form-group row">
+
+                                            <div class="col-md-4">
+                                                <label class="text-gray">Monthly Due Date <span
+                                                        class="text-danger">*</span></label>
+                                                <input class="form-control" disabled="due.value.duePayDate != null"
+                                                    type="date" formControlName="duePayDate"
+                                                    data-date-format="DD MM YYYY">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="text-gray">Due Amount <span
+                                                        class="text-danger">*</span></label>&nbsp;&nbsp;&nbsp;
+                                                <input class="form-control" type="number"
+                                                    formControlName="variableDueAmount">
+                                                <small class="text-danger"
+                                                    *ngIf="due?.get('variableDueAmount').touched && due?.get('variableDueAmount').errors?.required">
+                                                    Loan Amount is required</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary  mb-1 mr-3" data-dismiss="modal" #myModalClose>
+                    Cancel
+                </button>
+                <button *ngIf="!loanDetails?.value?.vehicleDueSno" type="button" class="btn btn-primary  mb-1 mr-3"
+                    (click)="goToSaveLoan()" [disabled]="!loanDetails.valid  || isLoad">
+                    <span class="spinner-border spinner-border-sm" *ngIf="isLoad"></span>&nbsp;&nbsp;Save
+                </button>
+                <button *ngIf="loanDetails?.value?.vehicleDueSno" type="button" class="btn btn-primary  mb-1 mr-3"
+                    (click)="updateLoanDetails()" [disabled]="!loanDetails.valid  || isLoad">
+                    <span class="spinner-border spinner-border-sm" *ngIf="isLoad"></span>&nbsp;&nbsp;Update
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<span #exampleModals1 data-target="#exampleModals1" data-toggle="modal" class="d-none">Add</span>
+
+
+
+<input type="file" name="file1" id="image" accept="image/*,video/*" multiple (change)="changeFile($event.target)"
+    class="d-none" #images />
+<!-- 
+<input type="file" name="file2" id="video" accept="video/*" multiple
+    (change)="changeFile($event.target,['mp4','mov'],'video')" class="d-none" #videos /> -->
+
+
+<!-- <input #myInput type="file" name="fileUploader" id="customFile"
+    (change)="changeFile($event.target,['png','jpeg','jpg','webp','webp'],'banner')" style="display: none;"
+    accept="image/*"> -->

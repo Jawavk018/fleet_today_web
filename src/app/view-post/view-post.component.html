@@ -1,0 +1,82 @@
+<div class="row mt-4 ">
+    <div class="col-3">
+      <h3 class="font-weight-bold">job Details</h3>
+    </div>
+  
+  </div>
+  
+  <section class="" style="background-color: #f4f5f7;">
+    <div class="  h-100">
+      <div class="row d-flex justify-content-center align-items-center  h-100">
+        <div class="col col-lg-8  mb-lg-5">
+          <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+              <div class="col-md-3 gradient-custom text-center text-white"
+                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                <h2 class="mt-4">{{job.orgName}}</h2>
+                <h4 style="font-weight:500;">Selected Area</h4>
+                <p>{{job.userLatLong}}</p>
+              </div>
+              <div class="col-md-9">
+                <!-- <div class="row pt-1" *ngIf="job.kycStatus == 'KYC Rejected'" style="margin: auto;">
+                    <h4 >Reaject Reason : </h4>
+                    <p class="text-danger" style="margin-left: 2%;">{{job.rejectReason}}</p>
+                 </div> -->
+                <div class="card-body p-4">
+                  <div class="row d-flex justify-content-between">
+                    <h4 class="fw-bold">Personal Details:</h4>
+                    <div>
+                      <button type="button" (click)="closeView()"
+                        class="btn btn-light btn-sm border border-primary mr-2"><i
+                          class="bi bi-x text-danger"></i></button>
+                    </div>
+                  </div>
+  
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">Start Date</p>
+                      <p class="fw-bold">{{job.startDate |
+                        date:'dd/MM/YYYY'}}</p>
+                    </div>
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">End Date</p>
+                      <p class="fw-bold">{{job.endDate |
+                        date:'dd/MM/YYYY'}}</p>
+                    </div>
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">description</p>
+                      <p class="fw-bold">{{job.description != null ? job.description : 'Nill' }}</p>
+                    </div>
+                  </div>
+  
+                  <div class="row pt-1">
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">Contact Name</p>
+                      <p class="fw-bold">{{job.contactName}}</p>
+                    </div>
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">Contact Number</p>
+                      <p class="fw-bold">{{job.contactNumber}}</p>
+                    </div>
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">Drive Type</p>
+                      <p class="fw-bold">{{job.driveTypeName}}</p>
+                    </div>
+  
+                  </div>
+  
+                  <div class="row pt-1">
+                    <div class="col-4 mb-3">
+                      <p class="text-primary">Job Type</p>
+                      <p class="fw-bold">{{job.jobTypename}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

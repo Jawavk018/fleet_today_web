@@ -1,0 +1,52 @@
+// .mainContainer{
+//     width: 70%;
+//     margin: auto;
+//     border: 1px solid lightgray;
+//     padding: 7vh;
+//  }
+
+//  .form-control{
+//     margin-top:16px;
+//  }
+
+//  .btn-success{
+//     width:80px;
+//     height:42px;
+//  }
+
+//  .btn-outline-secondary{
+//     width:80px;
+//     height:42px;
+//  }
+
+.form-control {
+    height: 41px !important;
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+    margin-left: 16px;
+}
+.waiting {
+    // background-color: red;
+    background-image: url("/assets/img/approval.png");
+    min-height: 200px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.munu-class{
+    font-size: 15vh;
+    color: black;
+}
+.btn-class{
+    font-size: 3vh;
+}
+.form-attendance{
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+}
+
+.customize{
+    padding-left: 25px !important;
+}
+
+

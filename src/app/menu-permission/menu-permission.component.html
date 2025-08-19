@@ -1,0 +1,113 @@
+<div class="container">
+    <div class="d-md-flex flex-row-reverse">
+        <mat-form-field appearance="outline" class="ml-2">
+            <mat-label>Select Menu</mat-label>
+            <mat-select [(ngModel)]="appMenuSno" placeholder="Select Menu" [multiple]="false"
+                (selectionChange)="onChange()">
+                <mat-option [value]="menu.appMenuSno" *ngFor="let menu of menuList">{{menu.title}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row  ">
+        <div class="col-md-6 p-1">
+            <div class="bg-primary text-light py-3 text-center font-weight-bold">
+                Un Assigned User
+            </div>
+            <div *ngIf="unAssignUserList?.length==0|| unAssignUserList==null" class="p-2 mt-2">
+                <img class="img-fluid p-3" src="assets/img/norecord.png" alt="">
+            </div>
+            <div *ngFor="let unAssign of unAssignUserList;let i=index">
+                <div class="card mt-1" *ngIf="unAssign">
+                    <div class="container">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-secondary">Name :</td>
+                                            <td>{{unAssign?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-secondary">Mobile :</td>
+                                            <td>{{unAssign?.mobileNumber}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-secondary">Email :</td>
+                                            <td>{{unAssign?.email ?? '--'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3">
+                                <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-plus"></i> Add</button> -->
+                                <div class="my-3 text-primary">{{unAssign?.contactRoleCdValue}}</div>
+
+                                <button mat-stroked-button class="my-3" (click)="addMenuUser(i);unAssign.isLoad = isLoad"
+                                    *ngIf="authUser.roleCd==2 || authUser.roleCd==1 || isAdmin">
+                                    <div class="spinner-border spinner-border-sm text-dark" *ngIf="unAssign?.isLoad" role="status" >
+                                        <span class="sr-only">Loading...</span></div>
+                                    <i *ngIf="!unAssign?.isLoad" class="bi bi-plus text-dark"></i>
+                                     Add </button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 p-1">
+            <div class="bg-primary text-light py-3 text-center font-weight-bold">
+                Assigned User
+            </div>
+            <div *ngIf="assignUserList?.length==0 || assignUserList==null" class="p-2 mt-2">
+                <img class="img-fluid p-3" src="assets/img/norecord.png" alt="">
+            </div>
+            <div *ngFor="let assign of assignUserList;let i=index">
+                <div class="card mt-1" *ngIf="assign">
+                    <div class="container">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <table class="table table-borderless">
+                                    <tbody>
+                                        <tr>
+                                            <td class="text-secondary">Name :</td>
+                                            <td>{{assign?.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-secondary">Mobile :</td>
+                                            <td>{{assign?.mobileNumber}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-secondary">Email :</td>
+                                            <td>{{assign?.email ?? '--'}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="mt-3">
+                                <!-- <button type="button" class="btn btn-outline-dark"><i class="bi bi-plus"></i> Add</button> -->
+                                <div class="my-3 text-primary">{{assign?.contactRoleCdValue}}</div>
+                                <div class="my-3 text-primary"
+                                    *ngIf="authUser.roleCd==2 || authUser.roleCd==1 || isAdmin">
+                                    <mat-slide-toggle class="example-margin" [checked]="assign?.isAdmin" color="primary" 
+                                     (change)="updateMenuUser(i,$event)">
+                                    </mat-slide-toggle>
+                                </div> 
+                                <button mat-stroked-button class="my-3" (click)="deleteMenuUser(i);assign.isLoad = false"
+                                    *ngIf="authUser.roleCd==2 || authUser.roleCd==1 || isAdmin">
+                                    <i class="bi bi-dash text-dark"></i> Remove</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<app-confirm-dialog></app-confirm-dialog>

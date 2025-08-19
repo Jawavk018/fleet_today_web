@@ -1,0 +1,133 @@
+<div class="row mt-4 ">
+  <div class="col-3">
+    <h3 class="font-weight-bold">Driver Details</h3>
+  </div>
+
+</div>
+<div *ngIf="driverList.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+
+<section class="" *ngIf="driverList.length>0" style="background-color: #f4f5f7;">
+  <div class="  h-100">
+    <div class="row d-flex justify-content-center align-items-center  h-100">
+      <div class="col col-lg-8  mb-lg-5">
+        <div class="card mb-3" *ngFor="let driver of driverList ;let i =index;" style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div class="col-md-3 gradient-custom text-center text-white"
+              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <img [src]="driver.media != null ? driver.media.mediaUrl : 'assets/img/users/profile.png'" alt="Avatar"
+                class="img-fluid my-5 circular_image" style="width: 90px;" />
+              <h2>{{driver.driverName}}</h2>
+              <h4 style="font-weight:500;">No.Of Days Drived</h4>
+              <p>{{driver.noOfDaysDrived ? driver.noOfDaysDrived : '0'}}</p>
+              <h4 style="font-weight:500;">Kilometers Drived</h4>
+              <p>{{driver.kmsDrived ? driver.kmsDrived : '0'}}</p>
+              <h4 style="font-weight:500;">Fuel consumed</h4>
+              <p>{{driver.fuelConsumed ? (driver.fuelConsumed | number: '1.0-0') : '0'}}</p>
+            </div>
+            <div class="col-md-9">
+              <!-- <div class="row pt-1" *ngIf="driver.kycStatus == 'KYC Rejected'" style="margin: auto;">
+                  <h4 >Reaject Reason : </h4>
+                  <p class="text-danger" style="margin-left: 2%;">{{driver.rejectReason}}</p>
+               </div> -->
+              <div class="card-body p-4">
+                <div class="row d-flex justify-content-between">
+                  <h4 class="fw-bold">Personal Details:</h4>
+                  <div>
+                    <button type="button" (click)="closeView()"
+                      class="btn btn-light btn-sm border border-primary mr-2"><i
+                        class="bi bi-x text-danger"></i></button>
+                  </div>
+                </div>
+
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Licence Number</p>
+                    <p class="fw-bold">{{driver.licenceNumber}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Driving Licence Type</p>
+                    <p class="fw-bold">{{driver.drivingLicenceCdVal}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Licence Expiry</p>
+                    <p class="fw-bold" [ngClass]=checkLicenseExpiry(driver)>{{driver.licenceExpiryDate |
+                      date:'dd/MM/YYYY'}}</p>
+                  </div>
+                </div>
+
+                <div class="row pt-1">
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Transport Licence Expiry Date</p>
+                    <p class="fw-bold" [ngClass]=checkTransportlicenceExpiry(driver)>{{driver.transportlicenceExpiryDate
+                      | date:'dd/MM/YYYY'}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Father's Name</p>
+                    <p class="fw-bold">{{driver.fatherName}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Date of Birth</p>
+                    <p class="fw-bold">{{driver.dob | date:'dd/MM/YYYY'}}</p>
+                  </div>
+
+                </div>
+
+                <div class="row pt-1">
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Blood Group</p>
+                    <p class="fw-bold">{{driver.bloodGroupType}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Mobile Number</p>
+                    <p class="fw-bold">{{driver.driverMobileNumber}}</p>
+                  </div>
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Whatsapp Number</p>
+                    <p class="fw-bold">{{driver.whatsappNumber ? driver.whatsappNumber :'-'}}</p>
+                  </div>
+
+                </div>
+                <div class="row pt-1">
+                  <div class="col-4 mb-3">
+                    <p class="text-primary">Address</p>
+                    <p class="fw-bold">{{driver.currentAddress ? driver.currentAddress : '-'}}</p>
+                  </div>
+                </div>
+
+                <h4 class="fw-bold">Mileage Details:</h4>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-4 mb-3" *ngFor="let mileage of driverList[0].mileageDetail ;let i =index;">
+                    <p class="text-primary">{{mileage.drivingLicenceType }}</p>
+                    <p class="fw-bold">{{mileage.mileage ? (mileage.mileage | number : '1.2-2') : '-'}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="d-flex p-2">
+              <div class="box bg-danger"></div>
+              <div class="pl-2">below 10 Days Or Expired</div>
+            </div>
+            <div class="d-flex p-2">
+              <div class="box bg-warning"></div>
+              <div class="pl-2">Above 10 Days</div>
+
+            </div>
+            <div class="d-flex p-2">
+              <div class="box bg-success"></div>
+              <div class="pl-2">Above 30 Days</div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

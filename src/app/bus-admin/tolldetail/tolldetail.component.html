@@ -1,0 +1,61 @@
+<div class="container-fluid">
+    <div class="row justify-content-md-end">
+      <div class="col-auto my-2">
+        <div class="input-group">
+          <div class="input-group-prepend mx-auto" style="width:50px">
+            <span class="input-group-text  text-center" style="width:50px"><i class="fa fa-search mx-auto"></i></span>
+          </div>
+          <input (input)="searchVehicle.next($event);" [(ngModel)]="searchKey" type="text" style="height:42px"
+            class="w-25" placeholder="Search Vehicle Number..." class="form-control border-1 ">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-responsive" *ngIf="tollExpiryList.length>0">
+    <form [formGroup]="tollPaid">
+    <!-- <app-confirm-dialog></app-confirm-dialog> -->
+    <table class="table  table-hover table-striped">
+      <thead>
+        <tr class="bg-primary border-0 text-light">
+          <th>#</th>
+          <th>Registration Number</th>
+          <th>Vehicle Name</th>
+          <th>Toll Name</th>
+          <th>Pass Amount</th>
+          <th>Pass End date</th>
+          <th>Expire Days</th>
+          <th *ngIf="vehicleExpiryCtrl.value == 'Toll Expiry'">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of tollExpiryList ;let i =index;">
+          <td>{{(pageIndex*limit)+i+1}}</td>
+          <td>{{row.vehicleRegNumber}}</td>
+          <td>{{row.vehicleName}}</td>
+          <td>{{row.tollName}}</td>
+          <td>{{row.tollAmount}}</td>
+          <td>{{row.passEndDate | date:'dd-MM-yyyy'}}</td>
+          <td class="align-middle">
+            <span *ngIf="vehicleExpiryCtrl.value == 'Toll Expiry' || 'Total Tolls'">{{row.tollExpiryDays ? row.tollExpiryDays :
+              '--'}}</span>
+          </td>
+          <td *ngIf="vehicleExpiryCtrl.value == 'Toll Expiry'" class="align-middle">
+              <div class="form-group">
+                <input class="form-check-input" type="checkbox" (change)="tollPaidDetails(i)" [checked]="isPaidToll" formControlName="isPaid" value="" id="flexCheckDefault">
+                <label class="form-check-label" for="flexCheckDefault">
+                  Paid
+                </label>
+              </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+
+    <div>
+      <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage"
+        (page)="getMoreVehicle($event)" aria-label="Select page" [pageIndex]="pageIndex">
+      </mat-paginator>
+    </div>
+  </div>

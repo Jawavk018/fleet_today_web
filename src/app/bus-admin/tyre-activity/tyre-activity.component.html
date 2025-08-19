@@ -1,0 +1,162 @@
+<div *ngIf="(data?.tyreActivityTypeCdName == 'Retreading') || (data?.tyreActivityTypeCdName == 'Bursted')
+|| (data?.tyreActivityTypeCdName == 'Insert') || (data?.tyreActivityTypeCdName == 'Puncture') || (data?.tyreActivityTypeCdName == 'Powdering')
+|| (data?.tyreActivityTypeCdName == 'Remove')">
+    <h3 mat-dialog-title class="font-weight-bold">{{data.tyreActivityTypeCdName}} Activity (Tyre Sno
+        -{{data.tyreSerialNumber}}) ({{data.wheelPosition}})</h3>
+    <div mat-dialog-content>
+        <div class="row" [formGroup]="form">
+            <div class="col-md-6 col-sm-6" *ngIf="(this.data?.tyreActivityTypeCdName != 'Powdering')">
+                <label class="text-gray">Select Change Tyre<span class="text-danger">*</span></label>
+                <mat-form-field appearance="outline" class="search-form-field w-100">
+                    <mat-select placeholder="Select tyre..." formControlName="tyreSno">
+                        <mat-option>
+                            <ngx-mat-select-search placeholderLabel="Find tyre..."
+                                noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                                toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                                [toggleAllCheckboxIndeterminate]="false" [toggleAllCheckboxChecked]="false">
+                                <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-option *ngFor="let tyre of searchTyreList;let j = index;"
+                            style="border-bottom:1px solid #ced4da !important;" [value]="tyre?.tyreSno">
+                            {{tyre?.tyreSerialNumber}} ({{tyre?.retreadingCount==0?'N':'R'+tyre?.retreadingCount}})
+                            <span *ngIf="tyre?.isStepney">Stepney</span>
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-6 mt-2">
+                <label class="text-gray">Odo Meter Value<span class="text-danger">*</span></label>
+                <input class="form-control" type="number" formControlName="odoMeter">
+                <p class="text-danger"
+                    *ngIf="form.controls.odoMeter?.touched && form.controls.odoMeter?.errors?.required">
+                    OdoMeter is required
+                </p>
+                <p class="text-danger m-0 mt-2" *ngIf="form.get('odoMeter').hasError('max')">
+                    Odometer value should be {{data?.vehicleOdoMeterValue}} or below
+                </p>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-6 mt-2">
+                <div class="form-group">
+                    <label for="input-11">Activity Date <span class="text-danger">*</span></label>
+                    <input type="datetime-local" [min]="data?.activityDate" class="form-control" id="input-11" formControlName="activityDate">
+                </div>
+                <small class="text-danger"
+                    *ngIf="form.controls.activityDate?.touched && form.controls.activityDate?.errors?.required">
+                    Activity Date is required</small>
+            </div>
+
+
+            <div class="form-group col-md-6 col-sm-6 mt-2">
+                <label class="text-gray">Description</label>
+                <textarea formControlName="description" class="form-control"></textarea>
+            </div>
+
+        </div>
+    </div>
+
+    <div mat-dialog-actions align="end" class="mt-3">
+        <button type="button" class="btn btn-light mb-1 mr-3" (click)="close()">Cancel</button>
+        <button *ngIf="!form?.value?.vehicleTyreSno" type="button" class="btn btn-primary mb-1 mr-3"
+            (click)="addActivity()" [disabled]="!form?.valid">Save</button>
+        <!-- <button *ngIf="form?.value?.vehicleTyreSno" type="button" class="btn btn-primary mb-1 mr-3"
+        [disabled]="!form?.valid" (click)="updateTyre()">Update</button> -->
+    </div>
+</div>
+<div *ngIf="data?.tyreActivityTypeCdName == 'Rotation'">
+    <h3 mat-dialog-title class="font-weight-bold">{{data.tyreActivityTypeCdName}} Activity</h3>
+    <div mat-dialog-content [formGroup]="form">
+        <div class="form-floating mb-3">
+            <label for="floatingInputOdo">Odo Meter Value <span class="text-danger">*</span></label>
+            <input class="form-control" type="number" id="floatingInputOdo" formControlName="odoMeter">
+        </div>
+
+        <div class="form-floating mb-3">
+            <label for="floatingInputActivity">Activity Date <span class="text-danger">*</span></label>
+            <input type="datetime-local" class="form-control" id="floatingInputActivity" formControlName="activityDate">
+        </div>
+
+        <div class="form-floating mb-3">
+            <label for="floatingInputDesc">Description</label>
+            <textarea formControlName="description" rows="3" id="floatingInputDesc" class="form-control"></textarea>
+        </div>
+        <div class="form-floating mb-3">
+            <label for="floatingInputDesc">Tyre Position <span class="text-danger">*</span></label>
+            <div formArrayName="rotationTyreList" class="card fixed-body">
+                <div class="row p-4" *ngFor="let tyre of rotationTyreList().controls; let i=index" [formGroupName]="i">
+                    <div class="col-3">
+                        position {{i+1}}
+                    </div>
+                    <div class="col-7">
+                        <mat-form-field appearance="outline" class="search-form-field w-100"
+                            *ngIf="!tyre.value?.changeTyreSno">
+                            <mat-select placeholder="Select tyre..." formControlName="changeTyreSno"
+                                (selectionChange)="removeTyre(i);">
+                                <mat-option *ngFor="let tyre of searchTyreList;let j = index;"
+                                    style="border-bottom:1px solid #ced4da !important;" [value]="tyre?.tyreSno">
+                                    {{tyre?.tyreSerialNumber}}
+                                    ({{tyre?.retreadingCount==0?'N':'R'+tyre?.retreadingCount}})
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div *ngIf="tyre.value?.changeTyreSno" class="d-flex justify-content-between">
+                            <span>{{tyre.value?.tyreSerialNumber}}</span>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <i class="fa fa-trash text-danger mr-4 pe-auto" *ngIf="tyre.value?.changeTyreSno"
+                            (click)="deleteTyre(i);" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <table class="table" [formGroup]="form">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Position</th>
+                    <th scope="col">Change Tyre <span class="text-danger">*</span></th>
+                    <th scope="col">Odo Meter Value <span class="text-danger">*</span></th>
+                    <th scope="col">Activity Date <span class="text-danger">*</span></th>
+                    <th scope="col">Description</th>
+                </tr>
+            </thead>
+            <tbody formArrayName="rotationTyreList">
+                <tr *ngFor="let tyre of rotationTyreList().controls; let i=index" [formGroupName]="i">
+                    <th scope="row" class="text-center align-middle">{{tyre.value?.wheelPosition}}</th>
+                    <td class="align-middle">
+                        <mat-form-field appearance="outline"  class="search-form-field w-100" *ngIf="!tyre.value?.changeTyreSno">
+                            <mat-select placeholder="Select tyre..." formControlName="changeTyreSno" (selectionChange)="removeTyre(i);">
+                                <mat-option *ngFor="let tyre of searchTyreList;let j = index;"
+                                    style="border-bottom:1px solid #ced4da !important;" [value]="tyre?.tyreSno">
+                                    {{tyre?.tyreSerialNumber}}
+                                    ({{tyre?.retreadingCount==0?'N':'R'+tyre?.retreadingCount}})
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div *ngIf="tyre.value?.changeTyreSno" class="d-flex justify-content-between">
+                           <span>{{tyre.value?.tyreSerialNumber}}</span>
+                           <i class="fa fa-trash text-danger mr-4 pe-auto" (click)="deleteTyre(i);" aria-hidden="true"></i>
+                        </div>
+                       
+                    </td>
+                    <td class="align-middle">
+                        <input class="form-control" type="number" formControlName="odoMeter">
+                    </td>
+                    <td class="align-middle">
+                        <input type="datetime-local" class="form-control" id="input-11" formControlName="activityDate">
+                    </td>
+                    <td>
+                        <textarea formControlName="description" rows="3" class="form-control"></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table> -->
+    </div>
+    <div mat-dialog-actions align="end" class="mt-3">
+        <button type="button" class="btn btn-light mb-1 mr-3" (click)="close()">Cancel</button>
+        <button type="button" class="btn btn-primary mb-1 mr-3" [disabled]="!form?.valid"
+            (click)="saveRotationTyre();">Save</button>
+    </div>
+</div>

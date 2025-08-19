@@ -1,0 +1,221 @@
+<!-- <div class="  mt-4 mb-4" [formGroup]="searchForm">
+  <div class="d-flex justify-content-end ">
+    <div class=" mx-3  pt-1">
+      <mat-form-field appearance="outline">
+        <mat-label>Search Vehicle</mat-label>
+        <mat-select formControlName="vehicleSno" name="food">
+          <mat-option *ngFor="let org of orgvehicles;" [value]=org.vehicleSno>
+            {{org.vehicleRegNumber}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div class=" mx-3 pt-1">
+      <mat-form-field appearance="outline">
+        <mat-label >Select Driver</mat-label>
+        <mat-select formControlName="driverSno" name="food">
+          <mat-option [value]=driver.driverSno *ngFor="let driver of driverList;">
+            {{driver.driverName}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="ml-3 pt-1">
+      <mat-form-field appearance="outline">
+        <mat-label>Choose a date</mat-label>
+        <input matInput [matDatepicker]="picker1" placeholder="dd-mm-yyyy"
+        formControlName="date">
+        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+        <mat-datepicker #picker1 color="primary"></mat-datepicker>
+    </mat-form-field>
+    </div>
+    <div class=" mt-1  px-4">
+      <button mat-raised-button color="primary" class="px-4 mx-3 " (click)="getAttendanceInfo()">
+        <mat-icon>search</mat-icon>&nbsp;Search
+      </button>
+    </div>
+  </div>
+</div> -->
+
+
+<form [formGroup]="searchForm">
+  <div class=" mt-4 p-2 m-auto">
+    <div class="row ">
+      <div class="col-lg-2 col-md-2 col-sm-12">
+        <div class="form-group 	dropdown-container">
+          <select formControlName="vehicleSno" class="form-control  minimal">
+            <option value="null">Select Vehicle</option>
+            <option [value]=org.vehicleSno *ngFor="let org of orgvehicles;">
+              {{org.vehicleRegNumber}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-12">
+        <div class="form-group dropdown-container">
+          <select formControlName="driverSno" class="form-control  minimal">
+            <option value="null">Select Driver</option>
+            <option [value]=driver.driverSno *ngFor="let driver of driverList;">
+              {{driver.driverName}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-12">
+        <div class="form-group">
+          <input class="form-control" type="date" placeholder="selectDate" formControlName="date">
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-6">
+        <button mat-raised-button color="primary" class="px-4 mx-3 " (click)="getAttendanceInfo()">
+          <mat-icon>search</mat-icon>&nbsp;Search
+        </button>
+      </div>
+
+      <div class="col-lg-2 col-md-2 col-sm-6">
+        <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" mat-raised-button color="primary" class="px-4 mx-3 "
+          (click)="goToManualAttendance()">
+          <i class="bi bi-cloud-fog2"></i> Manual Entry Fuel
+        </button>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+<br><br>
+<div class="text-start" *ngIf="attendanceList">
+  <div class="h6" style="font-size: 18px; font-weight: 700;">Attendance Summary (Last 7 days)</div>
+</div>
+<div class="text-center" *ngIf="attendanceList.length==0">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+<div class="row" *ngIf="attendanceList">
+  <div class="col-md-6 col-lg-4 order-2 mb-4" *ngFor="let attendance of attendanceList;let i=index">
+    <div class="card attendance-card h-100  ">
+      <div class="card-body ">
+        <ul class="p-0 m-0">
+          <li class="d-flex mb-4 pb-1">
+            <div class="avatar flex-shrink-0 me-3">
+              <img src="assets/img/profile.png" alt="User" class="rounded" />
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <label class="text-muted d-block mb-1"><b>{{attendance.driverName}} </b></label>
+                <h4 class="mb-0 tLabel">{{attendance.vehicleNumber}} </h4>
+              </div>
+              <div class="user-progress d-flex align-items-center gap-1">
+                <small *ngIf="!attendance.endTime" class="text-danger">Running</small>
+                <small *ngIf="attendance.endTime" class="text-primary"><b>Completed</b></small>
+              </div>
+            </div>
+          </li>
+          <li class="d-flex mb-4 pb-1">
+            <div class="avatar flex-shrink-0 me-3">
+              <img src="assets/img/clock.png" width="30px" alt="User" class="rounded" />
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <label class="text-muted d-block mb-1 tLabel">Start Time</label>
+                <h4 class="mb-0"><b>{{attendance.startTime | date:'d/M/yy, h:mm a' }}</b></h4>
+              </div>
+              <div class="user-progress d-flex align-items-center gap-1">
+                <!-- <label class="mb-0"> Odo meter Value</label> -->
+                <i class="fa fa-tachometer iconCenter" aria-hidden="true"></i>&nbsp;
+                <span><input [disabled]="attendance.acceptStatus" class="tInput" type="number"
+                    [(ngModel)]="attendance.startValue" placeholder="Start Odometer"></span>
+                <!-- <h4 class="text-muted">{{attendance.startValue}}</h4> -->
+              </div>
+            </div>
+          </li>
+          <li class="d-flex mb-4 pb-1">
+            <div class="avatar flex-shrink-0 me-3">
+              <img src="assets/img/endClock.png" width="30px" alt="User" class="rounded" />
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <label class="text-muted d-block tLabel mb-1">End Time</label>
+                <h4 class="mb-0"><b>{{attendance.endTime | date:'d/M/yy, h:mm a' }}</b></h4>
+              </div>
+              <div class="user-progress d-flex align-items-center gap-1">
+                <!-- <label class="mb-0"> Odo meter Value</label> -->
+                <i class="fa fa-tachometer iconCenter" aria-hidden="true"></i>&nbsp;
+                <span><input [disabled]="attendance.acceptStatus" class="tInput" type="number"
+                    [(ngModel)]="attendance.endValue" placeholder="End Odometer"></span>
+                <!-- <h4 class="text-muted">{{attendance.endValue}}</h4> -->
+              </div>
+            </div>
+          </li>
+          <li class="d-flex mb-4 pb-1">
+            <div class="avatar flex-shrink-0 me-3">
+              <img src="../assets/img/img.png" width="30px" alt="User" class="rounded" />
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <label class="text-muted d-block tLabel mb-1">Start Odo meter Media</label>
+                <img (click)="lightbox.open(0, 'lightbox', {panelClass: 'fullscreen'});imageGallery(i)" class="imgView"
+                  *ngIf="attendance?.startMedia?.length>0" [src]=attendance?.startMedia[0]?.mediaUrl width="60px"
+                  height="60px">
+                <h4 class="mb-0 text-danger" *ngIf="!attendance.startMedia">***</h4>
+              </div>
+            </div>
+          </li>
+          <li class="d-flex mb-4 pb-1">
+            <div class="avatar flex-shrink-0 me-3">
+              <img src="../assets/img/img.png" width="30px" alt="User" class="rounded" />
+            </div>
+            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+              <div class="me-2">
+                <label class="text-muted d-block tLabel mb-1">End Odo meter Media</label>
+                <img (click)="lightbox.open(1, 'lightbox', {panelClass: 'fullscreen'});imageGallery(i)" class="imgView"
+                  *ngIf="attendance?.endMedia?.length>0" [src]=attendance?.endMedia[0]?.mediaUrl width="60px"
+                  height="60px">
+                <h4 class="mb-0 text-danger" *ngIf="!attendance.endMedia">***</h4>
+              </div>
+            </div>
+          </li>
+
+        </ul>
+        <tr class="row">
+          <td class="col-3 text-gray">Running Km</td>
+          <td class="col-3"><b>{{attendance.endValue - attendance.startValue}} km</b></td>
+
+          <td class="col-3 text-gray" *ngIf="attendance.fuelQuantity">Fuel</td>
+          <td class="col-3" *ngIf="attendance.fuelQuantity"><b>{{attendance.fuelQuantity | number :
+              '1.2-2'}} Lt</b></td>
+
+          <td class="col-3 pt-3 text-gray" *ngIf="attendance.mileage">Mileage</td>   
+          <td class="col-3 pt-3" *ngIf="attendance.mileage"><b>{{attendance.mileage | number :
+                '1.2-2'}} Mil</b></td>    
+          <td class="col-3 text-danger" *ngIf="!attendance.fuelQuantity"><b>Fuel not filled</b></td>
+        </tr><br>
+        <button *ngIf="!attendance.acceptStatus && (user.roleCd==2 || user.roleCd==1 || isAdmin)"
+          class="custom-btn btn-5" [disabled]="isDisabled || !attendance.endTime" (click)="goToAccept(i)"><b>
+            <span *ngIf="isLoad" class="spinner-border text-light" role="status"></span><span class="fa fa-check"
+              aria-hidden="true"></span>
+            Accept</b></button>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+<div style="display: none;">
+  <gallery id="basic-test" fluid [items]="items" [itemTemplate]="itemTemplate" gestures="false"></gallery>
+  <div class="lightbox-example">
+    <h2>Lightbox Example</h2>
+    <button mat-raised-button color="primary" (click)="lightbox.open(0)">Open Lightbox</button>
+
+
+    <button mat-raised-button color="accent" (click)="lightbox.open(0, 'lightbox', {panelClass: 'fullscreen'})">Open
+      Lightbox in fullscreen mode</button>
+  </div>
+</div>
+
+<ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+  <ng-container *ngIf="type === 'imageViewer' && index === currIndex">
+    <ngx-imageviewer [src]="data.src"></ngx-imageviewer>
+  </ng-container>
+</ng-template>

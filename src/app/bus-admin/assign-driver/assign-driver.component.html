@@ -1,0 +1,190 @@
+<div class="container-fluid w-75 float-right m-4 p-2">
+    <div class=" row justify-content-md-end">
+        <form [formGroup]="searchForm">
+            <div class="row col-md-10 col-sm-12">
+                <div class="col-md-10 col-sm-12 row" *ngIf="totalCount>10">
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="ng-autocomplete col-lg-12">
+                            <ng-autocomplete [data]="orgvehicles" [searchKeyword]="keyword" placeholder="Select Vehicle"
+                                (selected)='selectVehicleEvent($event)' [itemTemplate]="driverItemTemplate"
+                                (opened)="removeVehicle()" [notFoundTemplate]="notFoundTemplate">
+                            </ng-autocomplete>
+                            <ng-template #driverItemTemplate let-item>
+                                <a [innerHTML]="item.vehicleRegNumber"></a>
+                            </ng-template>
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-12">
+                        <div class="ng-autocomplete col-lg-12">
+                            <ng-autocomplete [data]="driverList" [searchKeyword]="driverkeyword"
+                                placeholder="Select Driver" (selected)='selectDriverEvent($event)'
+                                [itemTemplate]="itemTemplate" (opened)="removeDriver()"
+                                [notFoundTemplate]="notFoundTemplate">
+                            </ng-autocomplete>
+
+                            <ng-template #itemTemplate let-item>
+                                <a [innerHTML]="item.driverName"></a>
+                            </ng-template>
+
+                            <ng-template #notFoundTemplate let-notFound>
+                                <div [innerHTML]="notFound"></div>
+                            </ng-template>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-2 col-md-4 col-sm-12 ms-auto">
+                        <button mat-raised-button color="primary" class="px-4 mx-3 " (click)="getVehicleDriver()">
+                            <mat-icon>search</mat-icon>&nbsp;Search
+                        </button>
+                    </div>
+                </div>
+
+
+
+                <div class="col-lg-2 col-md-4 col-sm-12">
+                    <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" mat-raised-button color="primary"
+                        class="px-4 mx-3" data-toggle="modal" data-target="#assignDriverModal"
+                        (click)="clearDriverVehicleForm()">
+                        <mat-icon>add</mat-icon>&nbsp;Assign driver
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br>
+<div *ngIf="!vehecleDriverList?.length" class="text-center h-100 min-height-30">
+    <img class="mt-2 mb-2 w-25 centered" src="assets/img/norecord.png" />
+</div>
+
+<br>
+<!-- <div class="container"> -->
+<div class="table-responsive" *ngIf="vehecleDriverList?.length>0">
+    <app-confirm-dialog></app-confirm-dialog>
+    <table class="table  table-hover table-striped">
+        <thead>
+            <tr class="bg-primary border-0 text-light">
+                <th>#</th>
+                <th>Vehicle Number</th>
+                <th>Driver Name</th>
+                <!-- <th>Vehicle Type</th>
+          <th>Odo Meter Reading</th> -->
+                <th *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of vehecleDriverList ;let i =index;">
+                <td>{{(pageIndex*limit)+i+1}}</td>
+                <td>{{row.vehicleRegNumber}}</td>
+                <td>{{row.driverName}}</td>
+                <td class="align-middle" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                    <div class="btn-group" role="group">
+                        <!-- <button data-toggle="tooltip" data-placement="top" title="Update" class="btn btn-primary btn-sm"
+                (click)="goToEditProject(i,'add')"><i class="fa fa-pencil"></i></button> -->
+                        <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" data-toggle="tooltip"
+                            data-placement="top" title="Delete" class="btn btn-primary btn-sm"
+                            (click)="deleteVehicle(i)"><i class="fa-solid fa-trash-can"></i></button>
+                        <!-- <button data-toggle="tooltip" data-placement="top" title="##COPY_BUTTON_TOOL_TIP##"
+                  class="btn btn-secondary btn-sm" (click)="goToEditProject(i,'copy')"><i
+                    class="fa fa-copy"></i></button> -->
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- <div *ngIf="count">
+      <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage"
+        (page)="getMoreVehicle($event)" aria-label="Select page" [pageIndex]="pageIndex">
+      </mat-paginator>
+    </div> -->
+</div>
+
+<!-- </div> -->
+
+<div>
+    <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage"
+        (page)="getMoreAssignDriver($event)" aria-label="Select page" [pageIndex]="pageIndex">
+    </mat-paginator>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="modal fade" id="assignDriverModal"  tabindex="-1" role="dialog" aria-labelledby="assignDriverModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="assignDriverModalLabel">Assign Driver</h4><br>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <small class="text-secondary text-center">Here you can able to assign your vehicle for a particular
+                    driver.If you
+                    assign the driver to the particular vehicle the driver only can able to access the assigned
+                    vehicle</small>
+                <form [formGroup]="driverVehicleForm">
+                    <div class="mt-4 p-2">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="ng-autocomplete col-lg-12">
+                                    <ng-autocomplete [data]="orgvehicles" [searchKeyword]="keyword"
+                                        placeholder="Select Vehicle" (selected)='assigntVehicleEvent($event)'
+                                        [itemTemplate]="driverItemTemplate" [notFoundTemplate]="notFoundTemplate"
+                                        (opened)="clearVehicle()" #auto>
+                                    </ng-autocomplete>
+
+                                    <ng-template #driverItemTemplate let-item>
+                                        <a [innerHTML]="item.vehicleRegNumber"></a>
+                                    </ng-template>
+
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div [innerHTML]="notFound"></div>
+                                    </ng-template>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-12">
+                                <div class="ng-autocomplete col-lg-12">
+                                    <ng-autocomplete [data]="driverList" [searchKeyword]="driverkeyword"
+                                        placeholder="Select Driver" (selected)='assignDriverEvent($event)'
+                                        (opened)="clearDriver()" [itemTemplate]="itemTemplate"
+                                        [notFoundTemplate]="notFoundTemplate" #auto>
+                                    </ng-autocomplete>
+
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.driverName"></a>
+                                    </ng-template>
+
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div [innerHTML]="notFound"></div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" [disabled]="driverVehicleForm.invalid" (click)="save()">
+                    <div class="spinner-border text-light" *ngIf="isLoad" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div> Save changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

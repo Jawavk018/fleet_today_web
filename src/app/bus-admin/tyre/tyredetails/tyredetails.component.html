@@ -1,0 +1,60 @@
+<div class="row mt-4 ">
+    <div class="col-4">
+        <h3 class="font-weight-bold">Tyre Details</h3>
+    </div>
+</div>
+
+<section style="background-color: #f4f5f7;">
+    <div class="ontainer py-2  h-100">
+      <div class="row d-flex justify-content-center align-items-center  h-100">
+        <div class="col col-lg-8  mb-lg-5">
+          <div class="card mb-3" style="border-radius: .5rem;">
+            <div class="row g-0">
+              <div class="col-md-4 gradient-custom text-center text-white"
+                style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                <img *ngIf="tyre.invoiceMedia" src="{{tyre.invoiceMedia.mediaUrl}}" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                <img *ngIf="!tyre.invoiceMedia" src="assets/img/users/bus.png" alt="Avatar" class="img-fluid my-5" style="width: 80px;" />
+                <h2>{{tyre.tyreSerialNumber}}</h2>
+                <p>{{tyre.tyreTypeName}}</p>
+                <p>{{tyre.agencyName}}</p>
+              </div>
+              <div class="col-md-8">
+                <div class="card-body p-4">
+                  <h4 class="fw-bold">Information</h4>
+                  <hr class="mt-0 mb-4">
+                  <div class="row pt-1">
+                    <div class="col-6 mb-3">
+                      <p class="text-primary">Size</p>
+                      <p class="fw-bold">{{tyre.tyreSize}}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <p class="text-primary">Price</p>
+                      <p class="fw-bold">{{tyre.tyrePrice}}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <p class="text-primary">Payment</p>
+                      <p class="fw-bold">{{tyre.paymentMethod}}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                      <p class="text-primary">Invoice</p>
+                      <p class="fw-bold">{{tyre.invoiceDate | date:'dd/MM/YYYY'}}</p>
+                    </div>
+                    <div class="col-6 mb-3" *ngIf="tyre.incomingDate != null">
+                        <p class="text-primary">Incoming</p>
+                        <p class="fw-bold">{{tyre.incomingDate | date:'dd/MM/YYYY'}}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <p class="text-primary">Efficiency</p>
+                        <p class="fw-bold">{{tyre.efficiencyValue}}%</p>
+                    </div>
+                  </div>
+              
+             
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>

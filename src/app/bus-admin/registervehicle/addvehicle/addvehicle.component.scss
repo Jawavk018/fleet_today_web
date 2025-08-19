@@ -1,0 +1,357 @@
+#cryTextArea {
+    height: auto;
+    width: 100%;
+ }
+ 
+ .checkBox {
+    width: 20px;
+    height: 20px;
+ }
+ 
+//  .modal-backdrop {
+//   z-index: 9999 !important;
+// }
+
+.modal-open .navbar {
+  z-index: 1100;
+}
+ 
+ .imgWidth{
+     width: 100%;
+     height: 200%;
+     border-radius: 1pc;
+   }
+ 
+ 
+ $card-height: 180px;
+ $card-width:400px;
+
+ input:focus::placeholder {
+  color: transparent;
+}
+
+.spinner-border {
+  display: inline-block;
+  width: 1rem !important;
+  height: 1rem !important;
+  vertical-align: -0.125em;
+  border: 0.25em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: 0.75s linear infinite spinner-border;
+}
+
+.cdk-overlay-container::after {
+  z-index: 999999 !important;
+  position: absolute !important;
+}
+.app.light .modal {
+  z-index: 99 !important;
+  padding-top: 5%;
+}
+ 
+ .flip {
+     width: 100%;
+     height: $card-height;
+     position: relative;
+     -webkit-perspective: 800px;
+     -moz-perspective: 800px;
+     -o-perspective: 800px;
+     perspective: 800px;
+     .content{
+         width: 100%;
+         height: 100%;
+         position: absolute;
+         -webkit-transition: -webkit-transform 0.6s;
+         -moz-transition: -moz-transform 0.6s;
+         -o-transition: -o-transform 0.6s;
+         transition: transform 0.6s;
+         -webkit-transform-style: preserve-3d;
+         -moz-transform-style: preserve-3d;
+         -o-transform-style: preserve-3d;
+         transform-style: preserve-3d;
+         div.front, div.back{
+             height: 100%;
+             width: 100%;
+             position: absolute;
+             z-index: 0;
+             -webkit-backface-visibility: hidden;
+             -moz-backface-visibility: hidden;
+             -o-backface-visibility: hidden;
+             backface-visibility: hidden;
+             .card{
+                 height: $card-height;
+                 width:  $card-width;   
+             }
+         }
+         div.back{
+             z-index: 1;
+             -webkit-transform: rotateY( 180deg );
+             -moz-transform: rotateY( 180deg );
+             -o-transform: rotateY( 180deg );
+             transform: rotateY( 180deg );
+             .dropdown{
+                 width: 100%;
+                 .dropdown-menu{
+                     width: 100%;
+                     margin-top: -1px;
+                     a{
+                         color: #666;
+                         .fa-check{
+                             color: #378D3B;
+                         }
+                         .fa-times{
+                             color: #D22E2E;
+                         }
+                     }
+                 }
+             }
+         }
+         &.flipped{
+             -webkit-transform: rotateY( 180deg );
+             -moz-transform: rotateY( 180deg );
+             -o-transform: rotateY( 180deg );
+             transform: rotateY( 180deg );
+         }
+     }
+ }
+ 
+ .z-index-1{
+     z-index: 1;
+ }
+ 
+//  .modal-body{
+//      width: 800px;
+//  }
+ 
+ .col-9 {
+     flex: 1 0 75%;
+     max-width: 100%;
+ }
+ 
+ 
+ .via{
+     width: 50%;
+ }
+ 
+ 
+ .mt{
+ 
+     margin-top: 5%;
+ 
+ }
+ 
+ 
+ .selectDiv{
+     margin-top: 3vh;
+ }
+ select {
+ 
+     /* styling */
+     background-color: white;
+     border: thin solid blue;
+     border-radius: 4px;
+     display: inline-block;
+     font: inherit;
+     line-height: 1.5em;
+     padding: 0.5em 3.5em 0.5em 1em;
+   
+     /* reset */
+   
+     margin: 0;      
+     -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+     box-sizing: border-box;
+     -webkit-appearance: none;
+     -moz-appearance: none;
+   }
+   
+   
+   /* arrows */
+   
+   select.classic {
+     background-image:
+       linear-gradient(45deg, transparent 50%, blue 50%),
+       linear-gradient(135deg, blue 50%, transparent 50%),
+       linear-gradient(to right, skyblue, skyblue);
+     background-position:
+       calc(100% - 20px) calc(1em + 2px),
+       calc(100% - 15px) calc(1em + 2px),
+       100% 0;
+     background-size:
+       5px 5px,
+       5px 5px,
+       2.5em 2.5em;
+     background-repeat: no-repeat;
+   }
+   
+   select.classic:focus {
+     background-image:
+       linear-gradient(45deg, white 50%, transparent 50%),
+       linear-gradient(135deg, transparent 50%, white 50%),
+       linear-gradient(to right, gray, gray);
+     background-position:
+       calc(100% - 15px) 1em,
+       calc(100% - 20px) 1em,
+       100% 0;
+     background-size:
+       5px 5px,
+       5px 5px,
+       2.5em 2.5em;
+     background-repeat: no-repeat;
+     border-color: grey;
+     outline: 0;
+   }
+   
+   
+   
+   
+   select.round {
+     background-image:
+       linear-gradient(45deg, transparent 50%, gray 50%),
+       linear-gradient(135deg, gray 50%, transparent 50%),
+       radial-gradient(#ddd 70%, transparent 72%);
+     background-position:
+       calc(100% - 20px) calc(1em + 2px),
+       calc(100% - 15px) calc(1em + 2px),
+       calc(100% - .5em) .5em;
+     background-size:
+       5px 5px,
+       5px 5px,
+       1.5em 1.5em;
+     background-repeat: no-repeat;
+   }
+   
+   select.round:focus {
+     background-image:
+       linear-gradient(45deg, white 50%, transparent 50%),
+       linear-gradient(135deg, transparent 50%, white 50%),
+       radial-gradient(gray 70%, transparent 72%);
+     background-position:
+       calc(100% - 15px) 1em,
+       calc(100% - 20px) 1em,
+       calc(100% - .5em) .5em;
+     background-size:
+       5px 5px,
+       5px 5px,
+       1.5em 1.5em;
+     background-repeat: no-repeat;
+     border-color: green;
+     outline: 0;
+   }
+   
+   
+   
+   
+   
+   select.minimal {
+     background-image:
+       linear-gradient(45deg, transparent 50%, rgb(18, 7, 7) 50%),
+       linear-gradient(135deg, rgb(12, 3, 3) 50%, transparent 50%),
+       linear-gradient(to right, #ccc, #ccc);
+     background-position:
+       calc(100% - 20px) calc(1em + 2px),
+       calc(100% - 15px) calc(1em + 2px),
+       calc(100% - 2.5em) 0.5em;
+     background-size:
+       5px 5px,
+       5px 5px,
+       1px 1.5em;
+     background-repeat: no-repeat;
+   }
+   
+   select.minimal:focus {
+     background-image:
+       linear-gradient(45deg, green 50%, transparent 50%),
+       linear-gradient(135deg, transparent 50%, green 50%),
+       linear-gradient(to right, #ccc, #ccc);
+     background-position:
+       calc(100% - 15px) 1em,
+       calc(100% - 20px) 1em,
+       calc(100% - 2.5em) 0.5em;
+     background-size:
+       5px 5px,
+       5px 5px,
+       1px 1.5em;
+     background-repeat: no-repeat;
+     border-color: green;
+     outline: 0;
+   }
+   
+   
+   select:-moz-focusring {
+     color: transparent;
+     text-shadow: 0 0 0 #000;
+   }
+   
+ 
+//    ::ng-deep {
+//      .mat-form-field-appearance-outline .mat-form-field-flex {
+//          padding: 0 0.75em 0 0.75em;
+//          margin-top: -0.65em;
+//          position: relative;
+//      }
+//  }
+//  ::ng-deep {
+//      .mat-form-field-flex {
+//          display: inline-flex;
+//          align-items: center;
+//          box-sizing: border-box;
+//          width: 38vh !important;
+//          background: white !important;
+//          height: 37px !important;
+//      }
+//  }
+//  ::ng-deep {
+//      .mat-form-field-prefix,
+//      .mat-form-field-suffix {
+//          white-space: nowrap;
+//          flex: none;
+//          position: none !important;
+//      }
+//  }
+ 
+//  ::ng-deep {
+//      .mat-form-field-appearance-outline .mat-form-field-prefix,
+//      .mat-form-field-appearance-outline .mat-form-field-suffix {
+//          margin: auto;
+//      }
+//  }
+//  ::ng-deep{
+//      input.mat-input-element {
+//          margin-top: -0.0625em;
+//          width: 14vh;
+//          height: 2vh;
+//          margin-top:-15px;
+//          display: block;
+//      }
+//  }
+//  ::ng-deep{
+//      .mat-form-field-appearance-outline .mat-form-field-outline {
+//          display: flex;
+//          position: absolute;
+//          top: 0em !important;
+//          left: 0;
+//          right: 0;
+//          bottom: 0;
+//          pointer-events: none;
+//      } 
+//  }
+
+ .text-lights::placeholder{
+  opacity: 50%; 
+}
+ .delete{
+  position: absolute;
+  left: 87%;
+  width: 10%;
+  height: 15%;
+  background: black;
+  text-align: center;
+  border-radius: 1pc;
+  margin: 0px;
+  top: 5%;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 99999999;
+ }

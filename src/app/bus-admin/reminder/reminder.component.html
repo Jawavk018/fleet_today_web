@@ -1,0 +1,30 @@
+<div class="col-12">
+  <div class="row">
+    <div class="col-3">
+
+      <div class="bg-primary p-2 box-shadow header rounded">
+        <p class=" fs-5 text-light pt-2">Vehicle Registration Number</p>
+      </div>
+      <div class="table-responsive bg-white box-shadow" style="height:70vh">
+
+        <div *ngIf="orgvehicles.length==0" class="text-center">
+          <img class="w-50 top-50" style="margin-top:10%"   src="assets/img/norecord.png" />
+        </div>
+
+        <ul class="list-group list-group-flush fs-4" style="line-height:40px">
+          <li class="list-group-item" *ngFor="let trip of orgvehicles; let i=index;"
+            [ngClass]="{'active': selectedBooking == trip } " (click)="listClick($event, trip)"
+            (click)="displayRoute(i)">
+            {{trip?.vehicleRegNumber}}
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-9">
+      <div class="row">
+        <app-trip-calendar [data]="tripList" style="width: 95%;"></app-trip-calendar>
+      </div>
+    </div>
+  </div>
+</div>

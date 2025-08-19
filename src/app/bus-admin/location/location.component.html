@@ -1,0 +1,366 @@
+<div>
+    <div class="mainDiv">
+        <div>
+            <div class="container">
+                <div class="main-body">
+                    <div class="row gutters-sm ">
+                        <div class="col-sm-4 col-md-4 mt-4">
+                            <div class="bg-primary col-12 rounded text-light p-3">Location</div><br>
+                            <div>
+                                <select style="width: 100%;" class="minimal" [(ngModel)]="selectedOption">
+                                    <option value="state">State</option>
+                                    <option value="district">District</option>
+                                    <option value="city">City</option>
+                                </select>
+                            </div>
+
+
+                            <div *ngIf="selectedOption=='city'">
+                                <div class="bg-header mt-0 header">
+                                    <span>Add City</span>
+                                    <span
+                                        *ngIf="cityform.value.stateSno != null && cityform.value.stateSno != undefined && cityform.value.stateSno != ''"
+                                        style="float: right;" (click)="add()"><i class="fa fa-refresh"></i></span>
+                                </div>
+                                <div class="mainorDiv">
+                                    <div>
+                                        <form [formGroup]="cityform">
+                                            <label>Select State</label>
+                                            <select style="width: 100%;" class="minimal" formControlName="stateSno"
+                                                (change)="getDistrict();" #sname required>
+                                                <option [value]="state.stateSno" *ngFor="let state of stateList">
+                                                    {{state.stateName}}</option>
+                                            </select>
+
+
+                                            <label>Select District</label>
+                                            <select style="width: 100%;" class="minimal" formControlName="districtSno"
+                                                #sname required>
+                                                <option [value]="dist.districtSno" *ngFor="let dist of districtList">
+                                                    {{dist.districtName}}</option>>
+                                            </select>
+
+                                            <label>City Name</label>
+                                            <input style="width: 100%;" type="text" formControlName="cityName">
+                                            <small class="text-danger"
+                                                *ngIf="cityform.controls.cityName?.errors?.pattern">
+                                                Enter Valid City Name</small>
+
+                                            <div class="mt-2">
+                                                <label>Status</label><br>
+                                                <select style="width: 100%;" class="minimal"
+                                                    formControlName="activeFlag">
+                                                    <option value="true">Active</option>
+                                                    <option value="false">InActive</option>
+                                                </select>
+                                            </div>
+
+
+                                        </form>
+                                    </div>
+                                    <div class="text-center m-4" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="cityform.invalid || isLoad" *ngIf="!isEdit "
+                                            (click)="saveCity()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Save</button>
+
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="cityform.invalid || isLoad" *ngIf="isEdit"
+                                            (click)="updatCity()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Update</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="selectedOption=='district'">
+                                <div class="bg-header mt-4 header">
+                                    <span>Add District</span>
+                                    <span
+                                        *ngIf="districtform.value.stateSno != null && districtform.value.stateSno != undefined && districtform.value.stateSno != ''"
+                                        style="float: right;" (click)="add()"><i class="fa fa-refresh"></i></span>
+                                </div>
+                                <div class="mainorDiv">
+                                    <div>
+                                        <form [formGroup]="districtform">
+                                            <label>Select State</label>
+                                            <select style="width: 100%;" formControlName="stateSno" class="minimal"
+                                                (change)="getDistrict();" #sname required>
+                                                <option [value]="state.stateSno" *ngFor="let state of stateList">
+                                                    {{state.stateName}}</option>
+                                            </select>
+
+                                            <label>District Name</label>
+                                            <input style="width: 100%;" type="text" formControlName="districtName">
+
+                                            <label>Status</label><br>
+                                            <select style="width: 100%;" class="minimal" formControlName="activeFlag">
+                                                <option value="true">Active</option>
+                                                <option value="false">InActive</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                    <div class="text-center m-4" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="districtform.invalid || isLoad" *ngIf="!isEdit"
+                                            (click)="savedistrict()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Save</button>
+
+
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="districtform.invalid || isLoad" *ngIf="isEdit"
+                                            (click)="updateDistrict()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="selectedOption=='state'">
+                                <div class="bg-header mt-4 header">
+                                    <span>Add State</span>
+                                    <span
+                                        *ngIf="stateform.value.stateName != null && stateform.value.stateName != undefined && stateform.value.stateName != ''"
+                                        style="float: right;" (click)="add()"><i class="fa fa-refresh"></i></span>
+                                </div>
+                                <div class="mainorDiv">
+                                    <div>
+                                        <form [formGroup]="stateform">
+                                            <label>State Name</label>
+                                            <input style="width: 100%;" type="text" formControlName="stateName">
+
+                                            <label>Status</label><br>
+                                            <select style="width: 100%;" class="minimal" formControlName="activeFlag">
+                                                <option value="true">Active</option>
+                                                <option value="false">InActive</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                    <div class="text-center m-4" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="stateform.invalid || isLoad" *ngIf="!isEdit"
+                                            (click)="saveState()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Save</button>
+
+
+                                        <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;"
+                                            [disabled]="stateform.invalid || isLoad" *ngIf="isEdit"
+                                            (click)="updateState()"><span class="spinner-border spinner-border-sm"
+                                                *ngIf="isLoad"></span>&nbsp;&nbsp;Update</button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-8">
+                            <div class="rounded bg-primary p-3 mt-4">
+                                <span style="color: rgb(249, 244, 244);">Locations</span>
+                            </div>
+                            <div id="loading" *ngIf="isPageLoading">
+                            </div>
+                            <div class="row d-flex align-items-center"
+                                *ngIf="!isPageLoading && cityList.length == 0 && districtList.length == 0  && stateList.length == 0">
+                                <div class="col" style="text-align: center;">
+                                    <div>
+                                    </div>
+                                    <p style="margin-top: 10px;">No Locations yet</p>
+                                </div>
+                            </div>
+                            <div *ngIf="moreCityList?.length==0" class="m-auto">
+                                <img src="assets/img/norecord.png" alt="">
+                            </div>
+                            <div class="pt-2" *ngIf="moreCityList.length > 0 && selectedOption=='city'">
+                                <table class="table table-striped table-hover">
+                                    <thead class="bg-primary text-light border-0">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col" class="text-left">City Name</th>
+                                            <th scope="col" class="text-left">District Name</th>
+                                            <!-- <th scope="col" class="text-left">Status</th> -->
+                                            <th scope="col" class="text-left" *ngIf="user.roleCd == 1">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let city of moreCityList;let i = index;">
+                                            <th scope="row">{{(cityPageIndex*cityLimit)+i+1}}</th>
+                                            <td class="text-left">{{city.cityName}}</td>
+                                            <td class="text-left">{{city.districtName}}</td>
+
+                                            <!-- <td>
+                                                <span style="color: green;" *ngIf="city.activeFlag==1">Active</span>
+                                                <span style="color: red;" *ngIf="city.activeFlag!=1">InActive</span>
+                                            </td> -->
+                                            <td *ngIf="user.roleCd == 1" style="padding:5px;">
+                                                <div class="btn-toolbar" role="toolbar"
+                                                    aria-label="Toolbar with button groups">
+                                                    <div class="btn-group mr-2 btn-group-sm" style="margin-right: 5px;"
+                                                        role="group" aria-label="First group">
+                                                        <button type="button" class="btn btn-light"
+                                                            (click)="editCity(i)">
+                                                            <i class="fa fa-edit" style="color: green;"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="btn-group btn-group-sm" role="group"
+                                                        aria-label="Third group">
+                                                        <button type="button" class="btn btn-light" data-toggle="modal"
+                                                            data-placement="center" data-target="#pxp-open-modal"
+                                                            (click)="openModal(i)">
+                                                            <i class="fa fa-trash" style="color: red;"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div>
+                                <mat-paginator *ngIf="selectedOption=='city' && moreCityList?.length>0"
+                                    [length]="cityCount" [pageSize]="cityPageSize" [pageIndex]="cityPageIndex"
+                                    [pageSizeOptions]="cityItemPerPage" (page)="getMoreCity($event)"
+                                    aria-label="Select page">
+                                </mat-paginator>
+
+                            </div>
+
+                            <div class="pt-2" *ngIf="moreStateList.length > 0 && selectedOption=='state'">
+                                <table class="table table-striped table-hover">
+                                    <thead class="border-0 text-light bg-primary">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col" class="text-left">State Name</th>
+                                            <th scope="col" class="text-left">Status</th>
+                                            <th scope="col" class="text-left"
+                                                *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let state of moreStateList;let i = index;">
+                                            <th scope="row">{{(statePageIndex*stateLimit)+i+1}}</th>
+                                            <td class="text-left">{{state.stateName}}</td>
+                                            <td>
+                                                <span style="color: green;" *ngIf="state.activeFlag==1">Active</span>
+                                                <span style="color: red;" *ngIf="state.activeFlag!=1">InActive</span>
+                                            </td>
+                                            <td style="padding:5px;"
+                                                *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                                <div class="btn-toolbar" role="toolbar"
+                                                    aria-label="Toolbar with button groups">
+                                                    <div class="btn-group mr-2 btn-group-sm" style="margin-right: 5px;"
+                                                        role="group" aria-label="First group">
+                                                        <button type="button" class="btn btn-light"
+                                                            (click)="editState(i)">
+                                                            <i class="fa fa-edit" style="color: green;"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="btn-group btn-group-sm" role="group"
+                                                        aria-label="Third group">
+                                                        <button type="button" class="btn btn-light" data-toggle="modal"
+                                                            data-toggle="modal" data-placement="center"
+                                                            data-target="#pxp-open-modal" data-bs-toggle="modal"
+                                                            (click)="openModal(i)">
+                                                            <span class="fa fa-trash-o" style="color: red;"></span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <!-- <nav aria-label="Page navigation example">
+                                    <ul class="pagination pxp-pagination mt-4">
+                                        <li class="page-item" [ngClass]="skip == 0?'disabled':'none'">
+                                            <a class="page-link" aria-label="Previous">
+                                                <span aria-hidden="true" (click)="updateIndex('Previous')">Prev</span>
+                                            </a>
+                                        </li>
+
+                                        <li class="page-item" [ngClass]="skip>=count?'disabled':'none'">
+                                            <a class="page-link" aria-label="Next">
+                                                <span aria-hidden="true" (click)="updateIndex('Next')">Next</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav> -->
+                            </div>
+                            <div>
+                                <mat-paginator *ngIf="selectedOption=='state'" [length]="stateCount"
+                                    [pageSize]="statePageSize" [pageIndex]="statePageIndex"
+                                    [pageSizeOptions]="stateItemPerPage" (page)="getMoreState($event)"
+                                    aria-label="Select page">
+                                </mat-paginator>
+
+                            </div>
+
+                            <div class="pt-2" *ngIf="moreDistrictList.length > 0 && selectedOption=='district'">
+                                <table class="table table-striped table-hover">
+                                    <thead class="border-0 text-light bg-primary">
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col" class="text-left">District Name</th>
+                                            <th scope="col" class="text-left">Status</th>
+                                            <th scope="col" class="text-left"
+                                                *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let dist of moreDistrictList;let i = index;">
+                                            <th scope="row">{{(districtPageIndex*districtLimit)+i+1}}</th>
+                                            <td class="text-left">{{dist.districtName}}</td>
+                                            <td>
+                                                <span style="color: green;" *ngIf="dist.activeFlag==1">Active</span>
+                                                <span style="color: red;" *ngIf="dist.activeFlag!=1">InActive</span>
+                                            </td>
+                                            <td style="padding:5px;"
+                                                *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                                <div class="btn-toolbar" role="toolbar"
+                                                    aria-label="Toolbar with button groups">
+                                                    <div class="btn-group mr-2 btn-group-sm" style="margin-right: 5px;"
+                                                        role="group" aria-label="First group">
+                                                        <button type="button" class="btn btn-light"
+                                                            (click)="editDistrict(i)">
+                                                            <i class="fa fa-edit" style="color: green;"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="btn-group btn-group-sm" role="group"
+                                                        aria-label="Third group">
+                                                        <button type="button" class="btn btn-light" data-toggle="modal"
+                                                            data-bs-toggle="modal" data-placement="center"
+                                                            data-bs-target="#pxp-open-modal" data-bs-toggle="modal"
+                                                            (click)="openModal(i)">
+                                                            <mat-icon aria-hidden="false"
+                                                                aria-label="Example delete icon">close</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div *ngIf="selectedOption=='district'">
+                                <mat-paginator [length]="districtCount" [pageSize]="districtPageSize"
+                                    [pageIndex]="districtPageIndex" [pageSizeOptions]="districtItemPerPage"
+                                    (page)="getMoreDistrict($event)" aria-label="Select page">
+                                </mat-paginator>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="pxp-open-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <p class="pstyle">Are you sure you want to delete</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn bg-danger" (click)="delete()"
+                            style="color: white;">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" #close>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>

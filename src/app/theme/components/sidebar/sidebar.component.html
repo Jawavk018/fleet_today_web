@@ -1,0 +1,8 @@
+<div class="sidebar-outer">
+    <a class="logo d-flex align-items-center" routerLink="/" (click)="closeSubMenus()" *ngIf="settings.theme.sidebarIsFixed">
+        <!-- <span class="start">start</span><span class="ng">NG</span> -->
+        <!-- <img src="assets/img/logo/logo.png" width="100px" /> -->
+        <h2 class="mt-3 ml-3">Bus <span class="text-primary">Today</span></h2>
+    </a>
+    <app-vertical-menu [menuItems]="menuItems"></app-vertical-menu>    
+</div>

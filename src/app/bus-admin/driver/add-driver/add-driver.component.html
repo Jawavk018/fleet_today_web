@@ -1,0 +1,199 @@
+<form [formGroup]="form" class="mainContainer">
+    <div class="row">
+        <div class="col-12">
+            <div class="row mt-3">
+                <div class="col-12 text-center ">
+                    <h5>Add Driver</h5>
+                </div>
+            </div>
+            <div class="user-menu">
+                <div class="user-info text-center p-3">
+                    <!-- <input type="file" accept="image/*" class="d-none" > -->
+                    <img [src]="form.value.mediaSno?.mediaUrl ? form.value.mediaSno.mediaUrl:'assets/img/users/user.jpg'" onerror="this.src='assets/img/users/user.jpg';" alt="user-img"
+                        class="user-img rounded-circle" data-target="#document" (click)="changeDriverProfile()">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Driver Name <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" formControlName="driverName"
+                        onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode == 32
+                        '
+                        minlength="3">
+                        <small class="text-danger"
+                            *ngIf="form.controls.driverName?.touched && form.controls.driverName?.errors?.required">Driver
+                            Name
+                            is required</small>
+                        <small class="text-danger"
+                            *ngIf="form.controls.driverName?.touched && form.controls.driverName?.errors?.minlength">Driver
+                            Name
+                            isn't long enough, minimum of 3 characters</small>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Dob <span class="text-danger">*</span></label>
+                        <input type="date" [max]="maxBirthDate" (change)="DateChange()"  class="form-control" id="input-11" formControlName="dob">
+                        <small class="text-danger"
+                            *ngIf="form.controls.dob.touched && form.controls.dob.errors?.required">DOB
+                            is required</small>
+                            <small class="text-danger"
+                            *ngIf="form.get('dob').valid && isNotAdult">You
+                            must be above 18 Years
+                        </small>   
+                    </div>
+                </div>
+                
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Father's Name <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" formControlName="fatherName" 
+                        onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode == 32'
+                        minlength="3">
+                        <small class="text-danger"
+                            *ngIf="form.controls.fatherName?.touched && form.controls.fatherName?.errors?.required">Father
+                            Name is required</small>
+                        <small class="text-danger"
+                            *ngIf="form.controls.fatherName?.touched && form.controls.fatherName?.errors?.minlength">father
+                            Name
+                            isn't long enough, minimum of 3 characters</small>
+                    </div>
+                </div>
+
+            </div>
+            <div class="row">
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Mobile Number <span class="text-danger">*</span></label>
+                        <input class="form-control" type="number" formControlName="driverMobileNumber"
+                        maxlength="10" pattern="^((\\+91-?)|0)?[0-9]{10}$" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                        <small class="text-danger"
+                            *ngIf="form.controls.driverMobileNumber.touched && form.controls.driverMobileNumber.errors?.required">Please
+                            enter driver's mobile number</small>
+                        <small class="text-danger" *ngIf="form.controls.driverMobileNumber.errors?.pattern">
+                            Please check your mobile number!</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Whatsapp Number </label>
+                        <input class="form-control" type="number" formControlName="whatsappNumber" minlength="10"
+                            maxlength="10" pattern="^((\\+91-?)|0)?[0-9]{10}$">
+                         <small class="text-danger" *ngIf="form.controls.whatsappNumber.errors?.pattern">
+                                Please check your mobile number!</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Licence Number <span class="text-danger">*</span></label>
+                        <input class="form-control" type="text" formControlName="licenceNumber" 
+                        onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 48 && event.charCode <= 57'
+                        minlength="3" oninput="this.value = this.value.toUpperCase()">
+                        <small class="text-danger"
+                            *ngIf="form.controls.licenceNumber.touched && form.controls.licenceNumber.errors?.required">Licence Number
+                            is required</small>
+                        <small class="text-danger"
+                            *ngIf="form.controls.licenceNumber.touched && form.controls.licenceNumber.errors?.minlength">mobileNumber
+                            isn't long enough, minimum of 3 characters</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Licence ExpiryDate <span class="text-danger">*</span></label>
+                        <input type="date" [max]="year"  class="form-control" id="input-11" formControlName="licenceExpiryDate">
+                        <small class="text-danger"
+                            *ngIf="form.controls.licenceExpiryDate.touched && form.controls.licenceExpiryDate.errors?.required">Licence
+                            Expiry Date is required</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Transport licence ExpiryDate <span class="text-danger">*</span></label>
+                        <input type="date" [max]="yearChange"  class="form-control" id="input-11" formControlName="transportlicenceExpiryDate">
+                        <small class="text-danger"
+                            *ngIf="form.controls.transportlicenceExpiryDate.touched && form.controls.transportlicenceExpiryDate.errors?.required"> Transport Licence
+                            Expiry Date is required</small>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <mat-label>Driving Licence Type <span class="text-danger">*</span></mat-label>
+                        <mat-select formControlName="drivingLicenceType" class="form-control fa-select"  
+                            style="background-color:white;height:35px;border-radius: 4px;" multiple>
+                            <mat-option *ngFor="let driveType of drivingLicenceTypeList; let i=index;"
+                                [value]="driveType.codesDtlSno">
+                                {{driveType.cdValue}}</mat-option>
+                        </mat-select>
+                        <small class="text-danger"
+                            *ngIf="form.controls.drivingLicenceType.touched && form.controls.drivingLicenceType.errors?.required">Licence
+                            Driving Licence Type is required</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="text-gray">Blood Group</label>
+                        <select formControlName="bloodGroupCd" class="form-control fa-select minimal">
+                            <!-- <option value="null">B Vehicle</option> -->
+                            <option [value]=bloodGroup.codesDtlSno *ngFor="let bloodGroup of driverBloodTypeList;">
+                                {{bloodGroup.cdValue}}</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <label class="form-control-label">Current Address</label>
+                        <textarea formControlName="currentAddress" class="form-control"></textarea>
+                        <small class="text-danger" *ngIf="form.controls.currentAddress?.errors?.pattern">
+                            Enter Valid Address</small>	
+                    </div>        
+                </div>
+                
+                <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                        <mat-label>Current District </mat-label>
+                        <mat-select formControlName="currentDistrict" class="form-control fa-select"  
+                            style="background-color:white;height:35px;border-radius: 4px;">
+                            <mat-option *ngFor="let district of districtList; let i=index;"
+                                [value]="district.districtSno">
+                                {{district.districtName}}</mat-option>
+                        </mat-select>
+                        <small class="text-danger"
+                            *ngIf="form.controls.drivingLicenceType.touched && form.controls.drivingLicenceType.errors?.required">Licence
+                            Driving Licence Type is required</small>
+                    </div>
+                </div>
+            </div>
+        <div class="row mt-5 " style="margin: auto;">
+            <div class="col-12 text-center">
+                <button type="button" *ngIf="!isEdit" class="btn btn-success  mb-1 mr-3" [disabled]="!form.valid"
+                    (click)="save()">Save</button>
+                <button type="button" *ngIf="isEdit" class="btn btn-success  mb-1 mr-3" [disabled]="!form.valid"
+                    (click)="update()">Update</button>
+                <!-- <button *ngIf="form.value?.orgSno " type="button" class="btn btn-success  mb-1 mr-3"
+                    [disabled]="!form.valid" (click)="update()">Update</button> -->
+                <button type="button" class="btn btn-outline-secondary  mb-1 mr-3"
+                    (click)="location.back()">Cancel</button>
+            </div>
+        </div>
+    </div>
+    </div>
+</form>
+
+
+<input #myInput class="logo d-none" type="file" (change)="onFileChange($event.target , ['png','jpeg','jpg','webp'])"
+id="pxp-company-cover-choose-file" accept="image/*">

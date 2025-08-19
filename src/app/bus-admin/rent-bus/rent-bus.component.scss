@@ -1,0 +1,113 @@
+.flipped-image {
+  height: 20;
+  width: 20;
+}
+
+::ng-deep .mat-form-field-wrapper {
+  padding-bottom: 0px;
+}
+
+.arrow {
+  -webkit-text-stroke: 2px;
+}
+
+.rounded-card {
+  border-radius: 10px;
+  /* You can adjust the value to control the roundness of the corners */
+  overflow: hidden;
+  /* Ensures that content does not overflow beyond the rounded corners */
+}
+
+.carousel-item {
+  text-align: center;
+}
+
+// img {
+//   width: 100%;
+//   height: auto;
+// }
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 10px;
+}
+
+.next-button {
+  font-size: 30px;
+  position: absolute;
+  right: 5px;
+  top: 40%;
+  color: white;
+}
+
+.prev-button {
+  position: absolute;
+  left: 5px;
+  top: 40%;
+  font-size: 30px;
+  color: white;
+}
+
+.direction {
+  font-size: 20px;
+  font-weight: bold;
+  color: #3d2cbb;
+}
+
+.date-format {
+  font-size: 16px;
+  font-weight: bold;
+  color: #3d2cbb;
+}
+
+.vline {
+  border-left: 1px solid grey;
+  position: absolute;
+  margin-left: -3px;
+  top: 55px;
+  left: 500px;
+  height: 75%;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.showAmenities {
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  z-index: 1;
+}
+
+.blur-card {
+  filter: blur(1px); /* Adjust the blur radius as needed */
+  transform: scale(0.8); /* Adjust the scale factor as needed */
+  transition: transform 0.3s ease; /* Add a smooth transition effect */
+  // max-height: 200px; /* Set a maximum height for the scrollable content */
+  // overflow-y: auto; /* Enable vertical scrolling */
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  display: inline;
+  margin-right: 5px;
+}
+
+.via-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: red;
+}
+
+.arrow-via {
+  font-size: 18px;
+  font-weight: bold;
+  color: gray;
+}

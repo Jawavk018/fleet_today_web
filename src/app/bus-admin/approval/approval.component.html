@@ -1,0 +1,340 @@
+<div class="row">
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mt-2 ">
+        <div class="card h-100">
+            <h5 class="card-header text-primary font-weight-bold">
+                Operators
+            </h5>
+            <div *ngIf="orgList?.length" class="scroll">
+                <div class="d-flex pointer p-2 card-body border-bottom" *ngFor="let org of orgList;let i =index;">
+                    <div class="col-12 px-3 py-2">
+                        <div class="media">
+                            <div class="media-body">
+                                <h5 class="m-0 font-weight-bold d-flex">
+                                    <i class="bi bi-building-fill"></i>&nbsp;&nbsp;
+                                    <p class="m-0">
+                                        {{org?.orgName}}
+                                    </p>
+                                </h5>
+                                <h5 class="m-0">
+                                    <i class="bi bi-person-fill"></i>&nbsp;&nbsp;
+                                    {{org?.ownerName}}
+                                </h5>
+                                <h5 class="m-0">
+                                    <i class="bi bi-geo-alt-fill"></i>&nbsp;&nbsp;
+                                    {{org?.districtName}} - {{org?.cityName}}
+                                </h5>
+                                <div *ngIf="org?.orgStatusCd == 58" class="mt-2">
+                                    <h5 class="m-0">Reject</h5>
+                                    <h5 class="m-0 text-danger text-truncate-container">
+                                        {{org?.reason}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button *ngIf="org?.orgStatusCd == 20" class="btn btn-outline-success btn-sm" data-target="#approve-modal-operator"
+                                data-toggle="modal" (click)="openModal(i)">
+                                Approve
+                            </button>
+                            <button class="btn btn-outline-danger btn-sm" data-target="#reject-modal-operator"
+                                data-toggle="modal" (click)="openModal(i)">
+                                Reject
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" (click)="goToEdit(i);">
+                                Edit
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" (click)="viewOperatorPage(i);">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!orgList?.length" class="text-center h-100 min-height-30">
+                <img class="mt-2 mb-2 w-25 centered" src="assets/img/norecord.png" />
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mt-2 ">
+        <div class="card h-100">
+            <h5 class="card-header text-primary font-weight-bold">
+                Vehicles
+            </h5>
+            <div *ngIf="vehicleList?.length" class="scroll">
+                <div class="d-flex pointer p-2 card-body border-bottom"
+                    *ngFor="let vehicle of vehicleList;let i =index;">
+                    <div class="col-12 px-3 py-2">
+                        <div class="media">
+                            <div class="media-body">
+                                <h5 class="m-0 font-weight-bold d-flex">
+                                    <i class="bi bi-building-fill"></i>&nbsp;&nbsp;
+                                    {{vehicle?.vehicleName}}
+                                </h5>
+                                <h5 class="m-0" [class]="vehicle.isShow ? '' : 'd-flex'">
+                                    <i class="bi bi-people-fill"></i>&nbsp;&nbsp;
+                                    <div [class]="vehicle.isShow ? '' : 'd-flex'">
+                                        <div *ngFor="let owner of vehicle.ownerList,let j=index">
+                                            <div class="d-flex" *ngIf="vehicle.isShow ? j >= 0 : j <= 1">
+                                                <span>{{owner?.ownerName}}</span>
+                                                <span>{{ (vehicle?.ownerList?.length - 1 != j) && (vehicle?.isShow ?
+                                                    true : j ==
+                                                    0 ) ? ',':''}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="btn text-primary"
+                                        *ngIf="vehicle?.ownerList?.length > 2 && !vehicle?.isShow"
+                                        (click)="vehicle.isShow = !vehicle.isShow">+{{vehicle?.ownerList?.length - 2}}
+                                        More</div>
+                                    <div class="btn text-primary" *ngIf="vehicle?.isShow"
+                                        (click)="vehicle.isShow = !vehicle.isShow">
+                                        -{{vehicle?.ownerList?.length - 2}} less
+                                    </div>
+                                </h5>
+                                <h5 class="m-0 font-weight-bold">
+                                    <i class="bi bi-truck-front-fill"></i>&nbsp;&nbsp;
+                                    {{vehicle?.vehicleRegNumber}}
+                                </h5>
+                                <h5 class="m-0">
+                                    <i class="bi bi-boxes"></i>&nbsp;&nbsp;
+                                    {{vehicle?.vehicleTypeCd}}
+                                </h5>
+                                <!-- <h5 class="m-0 font-weight-bold" [class]="vehicle?.colorClass">
+                                    <i class="bi bi-recycle"></i>&nbsp;&nbsp;
+                                    {{vehicle?.kycStatusValue}}
+                                </h5> -->
+                                <div *ngIf="vehicle?.kycStatus == 58" class="mt-2">
+                                    <h5 class="m-0">Reject</h5>
+                                    <h5 class="m-0 text-danger text-truncate-container">
+                                        {{vehicle?.reason}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button *ngIf="vehicle?.kycStatus == 20" class="btn btn-outline-success btn-sm" data-target="#approve-modal-vehicle"
+                            data-toggle="modal" (click)="openVehicleModal(i)">
+                            Approve
+                        </button>
+                            <button class="btn btn-outline-danger btn-sm" data-target="#reject-modal-vehicle"
+                                data-toggle="modal" (click)="openVehicleModal(i)">
+                                Reject
+                            </button>
+                            <button class="btn btn-outline-warning btn-sm" (click)="goToEditVehicle(i);">
+                                Edit
+                            </button>
+                            <button class="btn btn-outline-primary btn-sm" (click)="gotoviewVehicle(i);">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!vehicleList?.length" class="text-center h-100 min-height-30">
+                <img class="mt-2 mb-2 w-25 centered" src="assets/img/norecord.png" />
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-sm-12 col-md-6 col-lg-4 mt-2 ">
+        <div class="card h-100">
+            <h5 class="card-header text-primary font-weight-bold">
+                Drivers
+            </h5>
+            <div *ngIf="driverList?.length">
+                <div class="d-flex pointer p-2 card-body border-bottom" *ngFor="let driver of driverList;let i =index;">
+                    <div class="col-12 px-3 py-2">
+                        <div class="media">
+                            <div class="media-body">
+                                <h5 class="m-0 font-weight-bold d-flex">
+                                    <i class="bi bi-building-fill"></i>&nbsp;&nbsp;
+                                    {{driver?.orgName}} - {{driver?.ownerName}}
+                                </h5>
+                                <h5 class="m-0 d-flex">
+                                    <i class="bi bi-car-front-fill"></i>&nbsp;&nbsp;
+                                    {{driver?.driverName}}
+                                </h5>
+                                <h5 class="m-0 d-flex">
+                                    <i class="bi bi-person-vcard-fill"></i>&nbsp;&nbsp;
+                                    {{driver?.licenceNumber}}
+                                </h5>
+                                <h5 class="m-0 d-flex">
+                                    <i class="bi bi-credit-card-2-front-fill"></i>&nbsp;&nbsp;
+                                    {{driver?.drivingLicenceCdVal}}
+                                </h5>
+                                <div *ngIf="driver?.kycStatus == 58" class="mt-2">
+                                    <h5 class="m-0">Reject</h5>
+                                    <h5 class="m-0 text-danger text-truncate-container">
+                                        {{driver?.reason}}
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button *ngIf="driver?.kycStatus == 20" class="btn btn-outline-success btn-sm" data-target="#approve-modal-driver"
+                            data-toggle="modal" (click)="openDriverModal(i)">
+                            Approve
+                        </button>
+
+                            <button class="btn btn-outline-danger btn-sm" data-target="#reject-modal-driver"
+                                data-toggle="modal" (click)="openDriverModal(i)">
+                                Reject
+                            </button>
+                            <!-- <button class="btn btn-outline-warning btn-sm" (click)="goToEditVehicle(i);">
+                                Edit
+                            </button> -->
+                            <button class="btn btn-outline-primary btn-sm" (click)="gotoViewDriver(i);">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!driverList?.length" class="text-center h-100 min-height-30">
+                <img class="mt-2 mb-2 w-25 centered" src="assets/img/norecord.png" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="reject-modal-operator" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-danger">
+                <h4 class="modal-title m-0" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Operator
+                    KYC
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control w-100" rows="5" id="pxp-candidate-about" placeholder="Type reason here..."
+                    [(ngModel)]="reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" [disabled]="!api.isEmptyString(reason)"
+                    data-dismiss="modal" (click)="changeStatus('Reject')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="approve-modal-operator" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-success">
+                <h4 class="modal-title m-0" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Operator KYC
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to approve this operator Kyc?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                    (click)="changeStatus('Approve')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="reject-modal-vehicle" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-danger">
+                <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Vehicle KYC
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control w-100" rows="5" id="pxp-candidate-about" placeholder="Type reason here..."
+                    [(ngModel)]="reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" [disabled]="!reason" data-dismiss="modal"
+                    (click)="changeStatusVehicle('Reject')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="approve-modal-vehicle" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-success">
+                <h4 class="modal-title" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Vehicle KYC</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to approve this Vehicle Kyc?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                    (click)="changeStatusVehicle('Approve')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="approve-modal-driver" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-success">
+                <h4 class="modal-title" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Driver KYC</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to approve this Driver Kyc?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                    (click)="changeStatusDriver('Approve')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="reject-modal-driver" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-danger">
+                <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Driver KYC
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" style="height: 100px;" id="pxp-candidate-about"
+                    placeholder="Type reason here..." [(ngModel)]="reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" [disabled]="!reason" data-dismiss="modal"
+                    (click)="changeStatusDriver('Reject')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>

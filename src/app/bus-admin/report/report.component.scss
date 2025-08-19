@@ -1,0 +1,91 @@
+// @import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap");
+*,
+*::before,
+*::after {
+    margin : 0;
+    padding: 0;
+}
+
+.container {
+    position: absolute;
+    width   : 80%;
+}
+
+.card1 {
+    width        : 80%;
+    height       : 80%;
+    border-radius: 10px;
+
+    &__container {
+        display              : grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items          : center;
+        justify-items        : center;
+        color                : black;
+    }
+
+    &__content {
+        border       : 1px solid lavender;
+        width        : 42vh;
+        height       : 45vh;
+        margin       : 10px auto;
+        border-radius: 5px;
+        padding      : 20px;
+        cursor       : pointer;
+        transition   : 0.3s all ease-in-out;
+
+        &:hover {
+            margin-top: -10px;
+        }
+    }
+
+}
+
+.imgDiv {
+    margin    : auto;
+    text-align: center;
+}
+
+@media only screen and (max-width: 450px) {
+    .card1__content{
+        background: aliceblue;
+
+    }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 450px) {
+    .card1__content{
+        width: 20vh;
+        background: aliceblue;
+
+    }
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .card1__content{
+        width: 25vh;
+        background: aliceblue;
+
+    }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 892px) {
+    .card1__content{
+        width: 35vh;
+        background: aliceblue;
+
+    }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1000px) {
+.card1__content{
+    width: 35vh;
+    background: aliceblue;
+
+}
+    
+}

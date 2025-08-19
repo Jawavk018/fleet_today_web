@@ -1,0 +1,191 @@
+<div class="container">
+    <div class="row mt-4 ">
+        <div class="col-md-4 col-sm-12">
+            <h3>Add Job Details</h3>
+        </div>
+    </div>
+    <form [formGroup]="jobForm" class="mainContainer">
+        <div class="row">
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Job Start Date <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input class="form-control" type="datetime-local" [min]="today" (change)="dateChange()" placeholder="dd-mm-yy" formControlName="startDate">
+                </div>
+                <small class="text-danger"
+                *ngIf="jobForm.controls.startDate?.touched && jobForm.controls.startDate?.errors?.required">
+                Start Date is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Job End Date <span class="text-danger">*</span></label>
+                <input type="datetime-local" [min]="dueDate" (focusout)="validateDateRange('End')"
+                [readonly]="jobForm.value.startDate == '' ? true : false" class="form-control" id="input-11"
+                formControlName="endDate" [(ngModel)]="this.jobForm.value.endDate" (input)=" calculateDateDifference()">
+            <small class="text-danger"
+              *ngIf="jobForm.controls.endDate?.touched && jobForm.controls.endDate?.errors?.required">
+              End Date is required</small>
+            <small class="text-danger" *ngIf="isEnddateValid">
+              End Date Must be greater then Start Date
+            </small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Drive Type <span class="text-danger">*</span></label>
+                <select class="form-control fa-select minimal" (change)="clearInput()" formControlName="driveTypeCd">
+                    <option  *ngFor="let drive of drivingTypes; let i = index;" [value]="drive.codesDtlSno" >
+                        {{drive.cdValue}}</option>
+                </select>
+                <small class="text-danger"
+                *ngIf="jobForm?.get('driveTypeCd')?.touched && jobForm?.get('driveTypeCd').errors?.required">
+                Tyre Type is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="jobForm.value.driveTypeCd != null">
+                <label class="text-gray">Job Type <span class="text-danger">*</span></label>
+                <mat-select formControlName="jobTypeCd" class="form-control fa-select minimal"
+                    style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                    <mat-option  *ngFor="let job of jobTypes; let i = index;" [value]="job.codesDtlSno" >
+                        {{job.cdValue}}
+                    </mat-option>
+                </mat-select>
+                <small class="text-danger"
+                    *ngIf="jobForm?.get('jobTypeCd')?.touched && jobForm?.get('jobTypeCd').errors?.required">
+                    Tyre Type is required</small>
+            </div>
+
+<!-- 
+            <div class="form-group col-md-6 col-sm-12" *ngIf="jobForm.value.driveTypeCd == '137'">
+                <label class="text-gray">Job Type <span class="text-danger">*</span></label>
+                <mat-select formControlName="jobTypeCd" class="form-control fa-select minimal"
+                    style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                    <mat-option  *ngFor="let job of jobTypes; let i = index;" [value]="job.codesDtlSno" >
+                        {{job.cdValue}}
+                    </mat-option>
+                </mat-select>
+                <small class="text-danger"
+                    *ngIf="jobForm?.get('jobTypeCd')?.touched && jobForm?.get('jobTypeCd').errors?.required">
+                    Tyre Type is required</small>
+            </div> -->
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Fuel Type <span class="text-danger">*</span></label>
+                <mat-select formControlName="fuelTypeCd" class="form-control fa-select minimal"
+                    style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                    <mat-option  *ngFor="let fuel of fuelTypes; let i = index;" [value]="fuel.codesDtlSno" >
+                        {{fuel.cdValue}}
+                    </mat-option>
+                </mat-select>
+                <small class="text-danger"
+                    *ngIf="jobForm?.get('fuelTypeCd')?.touched && jobForm?.get('fuelTypeCd').errors?.required">
+                    Tyre Type is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Transmission Type <span class="text-danger">*</span></label>
+                <mat-select formControlName="transmissionTypeCd" class="form-control fa-select minimal"
+                    style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;" multiple>
+                    <mat-option  *ngFor="let transmission of transmissionTypes; let i = index;" [value]="transmission.codesDtlSno" >
+                        {{transmission.cdValue}}
+                    </mat-option>
+                </mat-select>
+                <small class="text-danger"
+                    *ngIf="jobForm?.get('transmissionTypeCd')?.touched && jobForm?.get('transmissionTypeCd').errors?.required">
+                    Tyre Type is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Pickup Location <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input class="form-control" type="text" (click)="loadMap('userLatLong')" formControlName="userLatLong">
+                </div>
+                <small class="text-danger"
+                    *ngIf="jobForm.controls.userLatLong?.touched && jobForm.controls.userLatLong?.errors?.required">
+                    Pickup Location is required, Search your location in map...</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+            <label class="text-gray">Distance</label>
+            <input class="form-control" type="number" formControlName="distance">
+            </div>
+
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label class="text-gray">Name <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <!-- <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        </div> -->
+                        <input class="form-control" type="text" formControlName="contactName"
+                        onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90'>
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="jobForm.controls.contactName?.touched && jobForm.controls.contactName?.errors?.required">
+                        Name is required</small>
+                </div>
+            </div>
+            
+
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label class="text-gray">Mobile <span class="text-danger">*</span></label>
+                    <div class="input-group">
+                        <!-- <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                        </div> -->
+                        <input class="form-control" type="number" maxlength="10"
+                        pattern="^((\\+91-?)|0)?[0-9]{10}$" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                        formControlName="contactNumber">
+                    </div>
+                    <small class="text-danger"
+                        *ngIf="jobForm.controls.contactNumber?.touched && jobForm.controls.contactNumber?.errors?.required">
+                        Mobile Number is required</small>
+                    <small class="text-danger" *ngIf="jobForm.controls.contactNumber?.errors?.pattern">
+                        Please check your mobile number!</small>
+                </div>
+            </div>
+            
+
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Description </label>
+                <input type="text" class="form-control" id="input-11" formControlName="description">
+            </div>
+        </div>
+
+        <div class="row mt-5 ">
+            <div class="col-12">
+                <button *ngIf="!jobForm?.value?.jobPostSno" type="button" class="btn btn-primary mb-1 mr-3"
+                    (click)="addJob()" [disabled]="!jobForm?.valid">Save</button>
+
+                <button *ngIf="jobForm?.value?.jobPostSno" type="button" class="btn btn-primary mb-1 mr-3"
+                    [disabled]="!jobForm?.valid" (click)="updateJob()">Update</button>
+
+                <button type="button" class="btn btn-outline-secondary mb-1 mr-3">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="col-md-12">
+            <!-- <div class="map-container"> -->
+                <div class="mt-4">
+                    <div class="input-group">
+                        <input class="form-control rounded round" ngx-google-places-autocomplete [options]='option'
+                            (onAddressChange)="handleAddressChange($event)" #mapInput [(ngModel)]="inputValue1"
+                            (focus)="clearInputField('inputValue1')" placeholder="Start typing..." />
+                        <div><i class="fa fa-search search "></i></div>
+                    </div>
+                </div>
+                <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+                    <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="showCurrent">
+                    </agm-marker>
+                    <agm-marker *ngFor="let coordinate of markerList; let i=index" [latitude]="coordinate[0]"
+                        [longitude]="coordinate[1]"></agm-marker>
+                        
+                </agm-map>
+            <!-- </div> -->
+    </div>
+
+    <!-- <input #myInput class="logo d-none" type="file" (change)="onFileChange($event.target , ['png','jpeg','jpg','webp'])"
+        id="pxp-company-cover-choose-file" accept="image/*"> -->
+</div>

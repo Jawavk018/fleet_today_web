@@ -1,0 +1,423 @@
+<div class="row">
+  <app-confirm-dialog></app-confirm-dialog>
+  <div class="col-md-4" [formGroup]="tripForm">
+    <div class="rounded bg-primary p-3 mt-4">
+      <span style="color: rgb(249, 244, 244);">Trip Calculate</span>
+    </div>
+    <div class="card rounded-3 mt-4">
+      <div class="card-body">
+        <div class="form-group">
+          <span *ngFor="let type of returnTypeList; let i = index;">
+            <input type="radio" [id]="type.codesDtlSno" formControlName="returnTypeCd" [value]="type.codesDtlSno"
+              (change)="onReturnTypeCdChange(type.codesDtlSno)" 
+              [checked]="tripForm.get('returnTypeCd').value === type.codesDtlSno">&nbsp;
+            <label
+              [for]="type.codesDtlSno">{{type.cdValue}}</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label *ngIf="selectedReturnTypeCd == 72" class="text-gray">Pickup Location <span
+              class="text-danger">*</span></label>
+          <label *ngIf="selectedReturnTypeCd == 73" class="text-gray">Pickup and Drop Location <span
+              class="text-danger">*</span></label>
+          <div class="input-group">
+            <input class="form-control" type="text" (click)="loadMap('tripSource')" formControlName="tripSource"
+              readonly>
+          </div>
+          <small class="text-danger"
+            *ngIf="tripForm.controls.tripSource?.touched && tripForm.controls.tripSource?.errors?.required">
+            Pickup Location is required, Search your location in map...</small>
+        </div>
+        <div class="form-group">
+          <label for="input-11">Pickup Date <span class="text-danger">*</span></label>
+          <input type="datetime-local" appDisableDatetimeLocalScroll (input)="onDateTimeChange($event)" [min]="today"
+            (change)="dateChange()" class="form-control" id="input-11" formControlName="tripStartingDate"
+            [(ngModel)]="this.tripForm.value.tripStartingDate">
+        </div>
+        <small class="text-danger"
+          *ngIf="tripForm.controls.tripStartingDate?.touched && tripForm.controls.tripStartingDate?.errors?.required">
+          Pickup Date is required</small>
+
+        <div class="form-group">
+          <label for="input-11">Drop Date <span class="text-danger">*</span></label>
+          <input type="datetime-local" [min]="dueDate" [readonly]="tripForm.value.tripStartingDate == '' ? true : false"
+            class="form-control" id="input-11" formControlName="tripEndDate"
+            [(ngModel)]="this.tripForm.value.tripEndDate">
+        </div>
+        <small class="text-danger"
+          *ngIf="tripForm.controls.tripEndDate?.touched && tripForm.controls.tripEndDate?.errors?.required">
+          Drop Date is required</small>
+
+        <div class="form-group" *ngIf="selectedReturnTypeCd == 72">
+          <label class="text-gray">Drop Location <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <input class="form-control" type="text" (click)="loadMap('tripDestination')"
+              formControlName="tripDestination" readonly>
+          </div>
+          <small class="text-danger"
+            *ngIf="tripForm.controls.tripDestination?.touched && tripForm.controls.tripDestination?.errors?.required">
+            Drop Location is required</small>
+          <small class="text-danger"
+            *ngIf="tripForm.controls.tripDestination?.touched && tripForm.controls.tripDestination?.errors?.required && !tripForm.controls.tripSource.valid">
+            Select Source Location First</small>
+        </div>
+        <div class="form-group">
+          <label class="text-gray">Via <span class="text-danger">*</span></label>
+          <div class="input-group">
+            <input class="form-control" type="text" (click)="loadViaMap('tripVia')" formControlName="tripVia" readonly>
+          </div>
+          <small class="text-danger"
+            *ngIf="tripForm.controls.tripVia?.touched && tripForm.controls.tripVia?.errors?.required && !tripForm.controls.tripSource.valid">
+            Select Source Location</small>
+          <small class="text-danger"
+            *ngIf="tripForm.controls.tripVia?.touched && tripForm.controls.tripVia?.errors?.required && !tripForm.controls.tripDestination.valid">
+            Select Destination Location</small>
+        </div>
+        <!-- <div *ngIf="selectedReturnTypeCd == 73">
+          <div class="row">
+            <div class="col-md-6 mt-4">
+              Return Trip
+            </div>
+            <div class="col-md-6">
+              <mat-slide-toggle class="tp-margin mt-4" formControlName="isReturnTrip" [disabled]="disabled"
+                (change)="selecReturn(tripForm.get('isReturnTrip').value)" style="float: right;">
+              </mat-slide-toggle>
+            </div>
+          </div>
+
+          <div class="mt-4" *ngIf="showExtraFields && isReturnTrip">
+            <div class="form-group"><label class="label-text">Return Trip Details</label></div>
+            <div>
+              <div class="form-group">
+                <label class="text-gray">Source <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input class="form-control" type="text" formControlName="tripDestination" readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="text-gray">Destination <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input class="form-control" type="text" (click)="loadMap('returnDestination')"
+                    formControlName="returnDestination" readonly>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="text-gray">Return Via <span class="text-danger">*</span></label>
+                <div class="input-group">
+                  <input class="form-control" type="text" (click)="loadViaMap('returnTripVia')"
+                    formControlName="returnTripVia" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+        <div class="text-center m-4">
+          <button class="btn rounded bg-primary p-3 text-light" style="width: 100%;" [disabled]="tripForm.invalid"
+            (click)="goToSearch()">&nbsp;&nbsp;Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="mt-4">
+      <div class="map-container">
+        <div *ngIf="type !== 'tripVia' && type !== 'returnTripVia'">
+          <div class="input-group">
+            <input class="form-control rounded round" ngx-google-places-autocomplete [options]='option'
+              (onAddressChange)="handleAddressChange($event,type)" #mapInput [(ngModel)]="inputValue1"
+              (focus)="clearInputField('inputValue1')" placeholder="Start typing..." />
+            <div><i class="fa fa-search search "></i></div>
+          </div>
+        </div>
+
+        <!-- -------------------------Changing------------------------------------------ -->
+        <!-- <div *ngIf="tripForm.controls.tripSource.valid && tripForm.controls.tripDestination.valid"> -->
+        <div>
+          <div *ngIf="tripForm.controls.tripSource.valid">
+          <div class="overlay" *ngIf="type === 'tripVia' || type === 'returnTripVia'">
+            <div class="body rounded-3 mt-2 map-card">
+              <div class="card-body card-map-body">
+                <div class="scrollable-content">
+                  <div class="row">
+                    <div class="col-md-2">
+                      <i class="fa-regular fa-circle-dot" style="font-size: 20px; color: blue;"></i>
+                    </div>
+                    <div class="col-md-6" *ngIf="type === 'tripVia' && selectedReturnTypeCd == 72">
+                      <h3>{{sourceName}}</h3>
+                    </div>
+                    <div class="col-md-6" *ngIf="type === 'tripVia' && selectedReturnTypeCd == 73">
+                      <h3>{{sourceName}}</h3>
+                    </div>
+                    <div class="col-md-2">
+                      <img src="assets/img/road.png" style="width: 40px; height: 40px;" />
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"></i>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-1">
+                      <i class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                    </div>
+                    <div class="col-md-10">
+                      <hr class="hr-margin" width="100%">
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-2">
+                      <div class="circle">A</div>
+                    </div>
+                    <div class="col-md-6" *ngIf="type === 'tripVia' && selectedReturnTypeCd == 72">
+                      <h3>{{destinationName}}</h3>
+                    </div>
+
+                    <div class="col-md-6" *ngIf="type === 'tripVia' && selectedReturnTypeCd == 73">
+                      <h3>{{sourceName}}</h3>
+                    </div>
+                    <div class="col-md-2">
+                      <img src="assets/img/road.png" style="width: 40px; height: 40px;" />
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"></i>
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="type === 'tripVia' && viaNameAlphList != null">
+                    <div class="col-md-1">
+                      <i class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                    </div>
+                    <div class="col-md-10">
+                      <hr class="hr-margin" width="100%">
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="type === 'tripVia' && viaNameAlphList == null && showViaButton">
+                    <div class="col-md-1">
+                      <i class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                    </div>
+                  </div>
+
+                  <div class="row" *ngIf="type === 'returnTripVia' && viaNameAlphList != null">
+                    <div class="col-md-1">
+                      <i class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                    </div>
+                    <div class="col-md-10">
+                      <hr class="hr-margin" width="100%">
+                    </div>
+                  </div>
+                  <div class="row" *ngIf="type === 'returnTripVia' && viaNameAlphList == null && showViaButton">
+                    <div class="col-md-1">
+                      <i class="fa-solid fa-ellipsis-vertical three-dots"></i>
+                    </div>
+                  </div>
+
+                  <div *ngIf="type === 'tripVia' && selectedReturnTypeCd == 72">
+                    <div *ngFor="let via of viaNameAlphList; let i=index">
+                      <div class="row">
+                        <div class="col-md-2" *ngIf="i !== viaNameAlphList.length - 1">
+                          <div class="circle">{{via.index}}</div>
+                        </div>
+                        <div class="col-md-2" *ngIf="i === viaNameAlphList.length - 1 && showViaButton">
+                          <div class="circle">{{via.index}}</div>
+                        </div>
+                        <div class="col-md-2" *ngIf="i === viaNameAlphList.length - 1 && !showViaButton">
+                          <i class="fa-solid fa-location-dot"
+                            style="font-size: 25px; color: red; margin-left: 1px; margin-top: 1px;"></i>
+                        </div>
+                        <div class="col-md-6">
+                          <h3>{{via.viaLocation}}</h3>
+                        </div>
+                        <div class="col-md-2">
+                          <img src="assets/img/road.png" style="width: 40px; height: 40px;" />
+                        </div>
+                        <div class="col-md-2">
+                          <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"
+                            (click)="removeVia(via, i)"></i>
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="i !== viaNameAlphList.length -1">
+                        <div class="col-md-1">
+                          <i class="fa-solid fa-ellipsis-vertical top"></i>
+                        </div>
+                        <div class="col-md-10">
+                          <hr class="hr-margin" width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="type === 'tripVia' && selectedReturnTypeCd == 73">
+                    <div *ngFor="let via of viaNameAlphList; let i=index">
+                      <div class="row">
+                        <div class="col-md-2" *ngIf="i !== viaNameAlphList.length - 1">
+                          <div class="circle">{{via.index}}</div>
+                        </div>
+                        <div class="col-md-2" *ngIf="i === viaNameAlphList.length - 1 && showViaButton">
+                          <div class="circle">{{via.index}}</div>
+                        </div>
+                        <div class="col-md-2" *ngIf="i === viaNameAlphList.length - 1 && !showViaButton">
+                          <i class="fa-solid fa-location-dot"
+                            style="font-size: 25px; color: red; margin-left: 1px; margin-top: 1px;"></i>
+                        </div>
+                        <div class="col-md-6">
+                          <h3>{{via.viaLocation}}</h3>
+                        </div>
+                        <div class="col-md-2">
+                          <img src="assets/img/road.png" style="width: 40px; height: 40px;" />
+                        </div>
+                        <div class="col-md-2">
+                          <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"
+                            (click)="removeVia(via, i)"></i>
+                        </div>
+                      </div>
+                      <div class="row" *ngIf="i !== viaNameAlphList.length -1">
+                        <div class="col-md-1">
+                          <i class="fa-solid fa-ellipsis-vertical top"></i>
+                        </div>
+                        <div class="col-md-10">
+                          <hr class="hr-margin" width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mt-2" *ngIf="type === 'tripVia' && !showViaButton">
+                    <div class="col-md-2">
+                      <img src="assets/img/circle.png" (click)="showAddVia('tripVia', 'inputValue2')">
+                    </div>
+                    <div class="col-md-8">
+                      <label style="font-size: 20px; color: gray;">Choose Via... </label>
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"></i>
+                    </div>
+                  </div>
+
+                  <div class="row mt-4" *ngIf="type === 'tripVia' && showViaButton">
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-location-dot"
+                        style="font-size: 25px; color: red; margin-left: 1px; margin-top: -4px;"></i>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="input-group">
+                        <input class="form-control rounded round1" ngx-google-places-autocomplete [options]='option'
+                          (onAddressChange)="handleAddressChange($event,type)" [(ngModel)]="inputValue2" #cardMapInput
+                          placeholder="Choose Via..." (focus)="clearViaInputField('inputValue')" />
+                        <div><i class="fa fa-search via-search"></i></div>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"
+                        (click)="closeSearchBox()"></i>
+                    </div>
+                  </div>
+                  <div class="row mt-2" *ngIf="type === 'returnTripVia' && !showViaButton">
+                    <div class="col-md-2">
+                      <img src="assets/img/circle.png" (click)="showAddVia('returnTripVia', 'inputValue2')">
+                    </div>
+                    <div class="col-md-8">
+                      <label style="font-size: 20px; color: gray;">Choose Via... </label>
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"></i>
+                    </div>
+                  </div>
+
+                  <div class="row mt-4" *ngIf="type === 'returnTripVia' && showViaButton">
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-location-dot"
+                        style="font-size: 25px; color: red; margin-left: 1px; margin-top: -4px;"></i>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="input-group">
+                        <input class="form-control rounded round1" ngx-google-places-autocomplete [options]='option'
+                          (onAddressChange)="handleAddressChange($event,type)" [(ngModel)]="inputValue2" #cardMapInput
+                          placeholder="Choose Via..." (focus)="clearViaInputField('inputValue')" />
+                        <div><i class="fa fa-search via-search"></i></div>
+                      </div>
+                    </div>
+                    <div class="col-md-2">
+                      <i class="fa-solid fa-xmark" style="font-size: 20px; margin-top: 3px;"
+                        (click)="closeSearchBox()"></i>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+        <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+          <agm-marker [latitude]="lat" [longitude]="lng" *ngIf="showCurrent">
+          </agm-marker>
+          <agm-marker *ngFor="let coordinate of latLongSourceList; let i=index" [latitude]="coordinate[0]"
+            [longitude]="coordinate[1]"></agm-marker>
+
+          <agm-marker *ngFor="let coordinate of latLongDestList; let i=index" [latitude]="coordinate[0]"
+            [longitude]="coordinate[1]"></agm-marker>
+
+          <agm-marker *ngFor="let coordinate of markerList; let i=index " [latitude]="coordinate[0]"
+            [longitude]="coordinate[1]" [iconUrl]="getViaMarkerIcon(i)"></agm-marker>
+
+          <!-- <agm-marker *ngFor="let coordinate of ReturnMarkerList; let i=index" [latitude]="coordinate[0]"
+            [longitude]="coordinate[1]" [iconUrl]="getReturnViaMarkerIcon(i)"></agm-marker>
+
+          <agm-marker *ngFor="let coordinate of returnLatLongDestList" [latitude]="coordinate[0]"
+            [longitude]="coordinate[1]"></agm-marker> -->
+
+
+
+          <!-- <agm-polyline [visible]="true" [strokeWeight]="5" [strokeColor]="'#1b37cd'" *ngIf="markerList.length == 0">
+            <agm-polyline-point *ngFor="let coordinate of latLongList; let i=index" [latitude]="coordinate[0]"
+              [longitude]="coordinate[1]">
+            </agm-polyline-point>
+          </agm-polyline> -->
+
+          <agm-polyline [visible]="true" [strokeWeight]="5" [strokeColor]="'#1b37cd'" [zIndex]="" *ngIf="selectedReturnTypeCd == 72">
+            <agm-polyline-point *ngFor="let coordinate of markerList" [latitude]="coordinate[0]"
+              [longitude]="coordinate[1]"></agm-polyline-point>
+          </agm-polyline>
+
+          <agm-polyline [visible]="true" [strokeWeight]="5" [strokeColor]="'#0da514'" [zIndex]="" *ngIf="selectedReturnTypeCd == 73">
+            <agm-polyline-point *ngFor="let coordinate of markerList" [latitude]="coordinate[0]"
+              [longitude]="coordinate[1]"></agm-polyline-point>
+          </agm-polyline>
+
+          <!-- <agm-polyline [visible]="true" [strokeWeight]="5" [strokeColor]="'#1b37cd'"
+            *ngIf="ReturnMarkerList.length == 0">
+            <agm-polyline-point *ngFor="let coordinate of returnLatLongDestList; let i=index" [latitude]="coordinate[0]"
+              [longitude]="coordinate[1]">
+            </agm-polyline-point>
+          </agm-polyline>
+
+          <agm-polyline [visible]="true" [strokeWeight]="5" [strokeColor]="'#0da514'">
+            <agm-polyline-point *ngFor="let coordinate of ReturnMarkerList" [latitude]="coordinate[0]"
+              [longitude]="coordinate[1]"></agm-polyline-point>
+          </agm-polyline> -->
+        </agm-map>
+        <!-- ------ map-directions --------- -->
+        <!-- <agm-map [latitude]="yourLatitude" [longitude]="yourLongitude" [zoom]="yourZoom">
+          <agm-direction
+            [origin]="sourceLocation1"
+            [destination]="destinationLocation1"
+          ></agm-direction>
+        </agm-map> -->
+
+
+        <!-- <agm-map [latitude]="yourLatitude" [longitude]="yourLongitude" [zoom]="yourZoom">
+          <agm-direction
+            *ngFor="let route of routes"
+            [origin]="sourceLocation1"
+            [destination]="destinationLocation1"
+            [renderOptions]="{ suppressMarkers: true }"
+          ></agm-direction>
+        </agm-map> -->
+
+        <!-- <agm-map [latitude]="lat" [longitude]="lng"> 
+          <agm-marker [latitude]="lat" [longitude]="lng">
+           </agm-marker> 
+        </agm-map> -->
+      </div>
+    </div>
+  </div>
+</div>

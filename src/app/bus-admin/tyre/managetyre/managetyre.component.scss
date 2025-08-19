@@ -1,0 +1,213 @@
+.popup {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+  visibility: hidden;
+  width: 210px;
+  background-color: #000;
+  color: #fff;
+  text-align: center;
+  border-radius: 30px;
+  padding: 20px;
+  position: absolute;
+  z-index: 1;
+  bottom: 105%;
+  left: 30%;
+  margin-left: -85px;
+
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+
+  li {
+    float: left;
+    padding: 8px;
+    width: 85px;
+  }
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #000 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+.popup .hide {
+  visibility: hidden;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.bottom-left1 {
+  position: absolute;
+  bottom: 0%;
+  left: 12%;
+  transform: translate(-50%, -50%);
+}
+
+.bottom-left2 {
+  position: absolute;
+  bottom: 0%;
+  left: 28%;
+  transform: translate(-50%, -50%);
+}
+
+.top-left {
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  transform: translate(-50%, -50%);
+}
+
+.top-right {
+  position: absolute;
+  top: 20%;
+  right: 7%;
+  transform: translate(-50%, -50%);
+}
+
+.bottom-right1 {
+  position: absolute;
+  bottom: 0%;
+  right: 12%;
+  transform: translate(-50%, -50%);
+}
+.bottom-right2 {
+  position: absolute;
+    bottom: 0%;
+    right: -4%;
+    transform: translate(-50%, -50%);
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.centered1 {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.card-container {
+  position: relative;
+}
+.card-container1 {
+  position: relative;
+  margin-top: 10.5rem !important;
+}
+
+.order-track {
+  transition: all 0.3s height 0.3s;
+  transform-origin: top center;
+}
+
+$blueShade1: #2c3e50;
+$melorraOrange: #3e50b4 !important;
+
+.order-track {
+  padding: 0 1rem;
+
+  &-step {
+    display: flex;
+    height: 9rem; //line-height
+
+    &:last-child {
+      overflow: hidden;
+      height: 7.5rem;
+      & .order-track-status span:last-of-type {
+        display: none;
+      }
+    }
+  }
+
+  &-status {
+    margin-right: 1.5rem;
+    position: relative;
+    &-dot {
+      display: block;
+      width: 2.2rem;
+      height: 2.2rem;
+      border-radius: 50%;
+      background: $melorraOrange;
+    }
+    &-line {
+      display: block;
+      margin: 0 auto;
+      width: 2px;
+      height: 9rem; //line-height
+      background: $melorraOrange;
+    }
+  }
+
+  &-text {
+    &-stat {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    &-sub {
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+  }
+}
+
+.managatyre_scroll {
+  height: 600px;
+  overflow: auto;
+}
+
+.tyre_selection {
+  pointer-events: all;
+}
+.tyre_un_selection {
+  pointer-events: none;
+}

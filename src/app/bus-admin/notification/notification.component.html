@@ -1,0 +1,114 @@
+<div class="row mt-4 ">
+  <div class="col-12">
+    <h3 class="font-weight-bold">Notification Details</h3>
+  </div>
+  <!-- <div class="col-md-5 col-sm-12">
+        <div class="row">
+            <div class="col-md-7 col-sm-12">
+                <div class="input-group mb-2">
+                    <span class="input-group-prepend"><span class="input-group-text"><i
+                                class="fa fa-search"></i></span></span>
+                    <input class="form-control" type="text" placeholder="Search Notification..." />
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-12">
+          <div class="btn-group mb-4 border" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-primary" ><i class="fa fa-plus mr-2"></i>Add
+              Notification</button>
+          </div>
+        </div>
+        </div>
+    </div> -->
+</div>
+
+
+
+<div class="card">
+  <div class="card-header bg-primary text-light">
+    Notifications
+  </div>
+  <ul class="list-group list-group-flush btn p-0" *ngFor="let notification of notificationList;let i = index;" (click)="readNotification(i)">
+    <li class="list-group-item p-2" [class]="notification?.notificationStatusCd == 117 ? 'lightcyan':''" >
+      <p class="text-secondary m-0" style="text-align: left;">{{notification.title}}</p>
+      <p class="d-flex justify-content-between m-0">{{notification.message}} <span>{{notification.createdOn | date :'dd/MM/yyyy hh:mm'}}</span></p>
+    </li>
+    <!-- <li class="list-group-item">Dapibus ac facilisis in</li>
+      <li class="list-group-item">Vestibulum at eros</li> -->
+  </ul>
+</div>
+
+<div *ngIf="notificationList.length==0" class="text-center">
+  <img class="mt-4 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+
+<!-- <div class="card">
+    <div class="card-header bg-primary text-light">
+        Notifications
+    </div>
+    <div class="d-flex justify-content-between ">
+        <div>
+            Muthu
+        </div>
+        <div>
+            3 min ago
+        </div>
+
+    </div><hr>
+    <div class="d-flex justify-content-between ">
+        <div>
+            Muthu
+        </div>
+        <div>
+            3 min ago
+        </div>
+
+    </div><hr>
+    <div class="d-flex justify-content-between ">
+        <div>
+            Muthu
+        </div>
+        <div>
+            3 min ago
+        </div>
+
+    </div>
+</div> -->
+<!-- <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+    <div class="toast" style="position: absolute; top: 0; right: 0;">
+      <div class="toast-header">
+        <img src="..." class="rounded mr-2" alt="...">
+        <strong class="mr-auto">Bootstrap</strong>
+        <small>11 mins ago</small>
+        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="toast-body">
+        Hello, world! This is a toast message.
+      </div>
+    </div>
+  </div> -->
+
+
+
+<!-- <div class="container shadow my-3 bg-light">
+    <div class="mt-4">
+      <div class="row">
+        <div class="col-md-4 col-sm-12 p-3" *ngFor="let notification of notificationList;">
+          <div class="card shadow p-3">
+            <div class="row">
+              <div class="col-4">
+                <i [ngClass]="count.icon" class="fs-2 text-primary"></i>
+              </div>
+              <div class="col-8">
+                <div class="p-1">{{count.title}}</div>
+                <div class="p-1">{{count.count}}</div>
+              </div>
+            </div>
+  
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> -->

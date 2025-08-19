@@ -1,0 +1,217 @@
+<form [formGroup]="form">
+  <div class="row">
+    <div class="col-12">
+      <label class="text-gray">Vehicle Search<span class="text-danger">*</span></label><br>
+      <mat-form-field  appearance="outline" class="search-form-field">
+        <mat-select [disabled]="user.roleCd!=2 && !isAdmin" [formControl]="vehicleCtrl" placeholder="Select vehicle..."
+          (selectionChange)="setSelectedVehicle()">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="vehicleFilterCtrl" placeholderLabel="Find vehicle..."
+              noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+              toggleAllCheckboxTooltipMessage="Select / Unselect All" [toggleAllCheckboxIndeterminate]="false"
+              [toggleAllCheckboxChecked]="false">
+              <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+            </ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let vehicle of filteredVehicle | async"
+            style="border-bottom:1px solid #ced4da !important;" [value]="vehicle?.VehicleSno">
+            {{vehicle?.vehicleRegNumber}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="row" [formGroup]="form">
+
+    <div class="col-xl-6  h-100">
+      <div class="card card-container  p-5" *ngIf="selectedVehicle?.tyrePositionList?.tyreList?.length && !isShow">
+        <div class="row mb-4" [ngClass]="isAlready ?'tyre_un_selection':'tyre_selection'">
+          <div class="form-group col-md-6 col-sm-6 ">
+            <label class="text-gray">Odometer Value<span class="text-danger">*</span></label>
+            <input class="form-control" type="number" formControlName="odoMeter">
+            <p class="text-secondary m-0 mt-2" *ngIf="!form.controls.odoMeter?.errors?.max">
+              Current Odometer Value : {{selectedVehicle?.odoMeterValue}}
+            </p>
+            <p class="text-danger m-0 mt-2"
+              *ngIf="form.controls.odoMeter?.touched && form.controls.odoMeter?.errors?.required">
+              Odometer is value required
+            </p>
+            <p class="text-danger m-0 mt-2" *ngIf="form.controls.odoMeter?.errors?.max">
+              Odometer value should be {{selectedVehicle?.odoMeterValue}} or less
+            </p>
+          </div>
+          <div class="form-group col-md-6 col-sm-6 ">
+            <label for="input-11">Activity Date <span class="text-danger">*</span></label>
+            <input type="datetime-local" class="form-control" id="input-11" formControlName="activityDate">
+            <small class="text-danger"
+              *ngIf="form.controls.activityDate?.touched && form.controls.activityDate?.errors?.required">
+              Activity Date is required</small>
+          </div>
+        </div>
+        <div [ngClass]="form.invalid?'tyre_un_selection':'tyre_selection'">
+          <p class="h5">Main Tyres</p>
+          <div class="row p-3" *ngFor="let vehicle of selectedVehicle?.tyrePositionList?.tyreList;let i = index;">
+            <div class="col-5 mt-3">
+              T{{i+1}} (position {{i+1}})
+            </div>
+            <div class="col-7">
+              <mat-form-field appearance="outline" *ngIf="!vehicle?.tyreSno" class="search-form-field w-100"
+                (click)="getAvailableTyre(i)">
+                <mat-select placeholder="Select tyre..." [(ngModel)]="vehicle.tyreSno"
+                  [ngModelOptions]="{standalone: true}" (selectionChange)="addActivity(i,$event,'main');">
+                  <mat-option>
+                    <ngx-mat-select-search placeholderLabel="Find tyre..." noEntriesFoundLabel="'no matching found'"
+                      [showToggleAllCheckbox]="true" toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                      [toggleAllCheckboxIndeterminate]="false" [toggleAllCheckboxChecked]="false">
+                      <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let tyre of vehicle?.searchTyreList;let j = index;"
+                    style="border-bottom:1px solid #ced4da !important;" [value]="tyre?.tyreSno">
+
+                    {{tyre?.tyreSerialNumber}} ({{tyre?.isNew == true?'OT':tyre?.retreadingCount==0?'RT':'RT'+tyre?.retreadingCount}})                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p *ngIf="vehicle?.tyreSerialNumber" class="mt-3">
+                {{vehicle?.tyreSerialNumber}}
+              </p>
+            </div>
+            <!-- <div class="col-2">
+              <button class="btn text-danger" (click)="removeTyre(i)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div> -->
+          </div>
+          <p class="h5 mt-4" *ngIf="selectedVehicle?.tyrePositionList?.stepneyList?.length">Stepney Tyre<span
+              *ngIf="selectedVehicle?.tyrePositionList?.stepneyList?.length > 1">s</span></p>
+          <div class="row p-3" *ngFor="let vehicle of selectedVehicle?.tyrePositionList?.stepneyList;let i = index;">
+            <div class="col-5 mt-3">
+              S{{i+1}}
+            </div>
+            <div class="col-7">
+              <mat-form-field appearance="outline" *ngIf="!vehicle?.tyreSno" class="search-form-field w-100"
+                (click)="getAvailableTyre(i,true)">
+                <mat-select placeholder="Select tyre..." [(ngModel)]="vehicle.tyreSno"
+                  [ngModelOptions]="{standalone: true}" (selectionChange)="addActivity(i,$event,'stepney');">
+                  <mat-option>
+                    <ngx-mat-select-search placeholderLabel="Find tyre..." noEntriesFoundLabel="'no matching found'"
+                      [showToggleAllCheckbox]="true" toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                      [toggleAllCheckboxIndeterminate]="false" [toggleAllCheckboxChecked]="false">
+                      <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+                    </ngx-mat-select-search>
+                  </mat-option>
+                  <mat-option *ngFor="let tyre of vehicle?.searchTyreList;let j = index;"
+                    style="border-bottom:1px solid #ced4da !important;" [value]="tyre?.tyreSno">
+                    {{tyre?.tyreSerialNumber}} ({{tyre?.isNew == true?'OT':tyre?.retreadingCount==0?'RT':'RT'+tyre?.retreadingCount}})                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <p *ngIf="vehicle?.tyreSerialNumber" class="mt-3">
+                {{vehicle?.tyreSerialNumber}}
+              </p>
+
+            </div>
+          </div>
+        </div>
+        <!-- <div class="form-group col-md-12 col-sm-12 mt-2">
+          <label class="text-gray">Description</label>
+          <textarea formControlName="description" class="form-control"></textarea>
+      </div> -->
+        <div class="row mt-5">
+          <div class="col-12 text-right">
+            <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" class="btn btn-primary" (click)="validateTyreSno();selectTyre(0);">View</button>
+          </div>
+        </div>
+      </div>
+      <div class="card card-container " style="padding:10% 0%" *ngIf="selectedVehicle?.tyreCountCd==113 && isShow">
+        <img src="assets/img/projects/bus.png" class="mx-auto" width="300px" />
+        <div class="popup text-center" [ngClass]="vehicle.className"
+          *ngFor="let vehicle of selectedVehicle?.tyrePositionList?.tyreList;let i = index;">
+          <span class="popuptext" id="myPopup{{i}}">
+            <ul>
+              <p>T-SNO:{{vehicle.tyreSerialNumber}}</p>
+              <li *ngIf="selectedTyre?.tyreTypeCd != 75" (click)="openDialog(i,99,'Retreading');closeActivityPopup();"
+                class="flex-column"><i class="fas fa-tools"></i><br>Retreading</li>
+              <li (click)="openDialog(i,100,'Rotation');closeActivityPopup();" class="flex-column"><i
+                  class="fas fa-retweet"></i><br>Rotation</li>
+              <li (click)="openDialog(i,101,'Puncture');closeActivityPopup();" class="flex-column"><i
+                  class="fas fa-virus"></i><br>Puncture</li>
+              <li (click)="openDialog(i,102,'Bursted');closeActivityPopup();" class="flex-column"><i
+                  class="fas fa-tape"></i><br>Bursted</li>
+              <li (click)="openDialog(i,103,'Powdering');closeActivityPopup();" class="flex-column"><i
+                  class="fas fa-paint-roller"></i><br>Powdering</li>
+              <li (click)="openDialog(i,98,'Remove');closeActivityPopup();" class="flex-column"><i
+                  class="fas fa-close"></i><br>Remove</li>
+            </ul>
+          </span>
+          <span>
+            <h3 class="m-0">T{{i+1}}
+              ({{(vehicle?.retreadingCount==0&&vehicle.isNew==false)?'OT':(vehicle?.retreadingCount==0&&vehicle.isNew!=false)?'RT':'RT'+vehicle?.retreadingCount}})
+            </h3>
+            <p style="font-size:10px" class="text-secondary m-0">{{vehicle.tyreSerialNumber}}</p>
+            <img src="assets/img/projects/tyre.png" width="94px" (click)="open(i)" />
+            <h4 class="text-dark font-weight-bold"><i class="bi bi-speedometer text-primary"> </i>
+              {{vehicle?.overAllRunningKm}} Km</h4>
+
+          </span>
+        </div>
+        <div class="popup text-center btn" [ngClass]="vehicle.className"
+          *ngFor="let vehicle of selectedVehicle?.tyrePositionList?.stepneyList;let i = index;"
+          (click)="vehicle?.tyreSerialNumber ? selectTyre(i,true) : openDialog(i,97,'Insert',true);">
+          <h3 class="m-0 text-light">S{{i+1}}
+            ({{(vehicle?.retreadingCount==0&&vehicle.isNew==false)?'OT':(vehicle?.retreadingCount==0&&vehicle.isNew!=false)?'RT':'RT'+vehicle?.retreadingCount}})
+          </h3>
+          <p style="font-size:10px" class="text-light m-0">{{vehicle.tyreSerialNumber}}</p>
+          <p style="font-size:10px" class="text-light m-0" *ngIf="!vehicle.tyreSerialNumber">no tyre</p>
+          <img src="assets/img/projects/tyre.png" width="94px" />
+          <h4 class="text-dark font-weight-bold"><i class="bi bi-speedometer text-primary"> </i>
+            {{vehicle?.overAllRunningKm}} Km</h4>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-xl-6">
+      <div class="card  card-container h-100"
+        *ngIf="isShow && selectedTyre?.tyreLifeCycleList && selectedTyre?.tyreLifeCycleList.length > 0">
+        <div class="card" style="margin: 2rem;">
+          <div class="card-header">
+            <!-- T-SNO:{{selectedTyre?.tyreSerialNumber}} -->
+            {{selectedTyre?.displayName}}{{selectedTyre?.index + 1}}
+            ({{(selectedTyre?.retreadingCount==0&& selectedTyre?.isNew==false)?'N':(selectedTyre?.retreadingCount==0&&
+            selectedTyre?.isNew!=false)?'O':'R'+selectedTyre?.retreadingCount}})
+            <p class="text-secondary mt-1 m-0">Serial No : {{selectedTyre?.tyreSerialNumber}}</p>
+          </div>
+          <div class="managatyre_scroll">
+            <div class="order-track" style="margin: 1rem;">
+              <div class="order-track-step" style="margin-bottom: 1rem;"
+                *ngFor="let tyre of selectedTyre?.tyreLifeCycleList;let i = index;">
+                <div class="order-track-status">
+                  <span class="order-track-status-dot"></span>
+                  <span class="order-track-status-line"></span>
+                </div>
+                <div class="order-track-text">
+                  <p class="order-track-text-stat mb-2">{{tyre?.vehicleName}} ({{tyre?.vehicleRegNumber}} -
+                    {{tyre?.wheelPosition}})</p>
+                  <p class="order-track-text-stat mb-2"><span class="text-secondary">Activity Type : </span>
+                    {{tyre?.status}}</p>
+                  <p class="order-track-text-stat mb-2"><span class="text-secondary">Activity Date : </span>
+                    {{tyre?.activityStartDate | date:'dd-MM-yyyy'}} <span *ngIf="!tyre?.isRunning">to
+                      {{tyre?.activityEndDate | date:'dd-MM-yyyy'}} ({{tyre?.runningLife}})</span></p>
+                  <!-- <p class="order-track-text-stat mb-2" *ngIf="!tyre?.isRunning">Tyre Serial No : {{tyre?.tyreSerialNumber}}</p> -->
+                  <p class="order-track-text-stat mb-2" *ngIf="!tyre?.isRunning"><span class="text-secondary">Total
+                      Running KMS:</span> {{tyre?.runningKm || 0}} Km</p>
+                  <p class="order-track-text-stat mb-0" *ngIf="tyre?.isRunning"><span class="text-secondary">Running
+                      :</span> {{(tyre?.isRunning==true&&tyre?.wheelPosition!=('s1'||'s2'))?(selectedTyre?.currentOdoMeter-selectedTyre.odometer )+" Km" :'Stepney'}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div class="text-center" *ngIf="!selectedVehicle">
+  <img class="mt-5 mb-2 w-25" src="assets/img/norecord.png" />
+</div>

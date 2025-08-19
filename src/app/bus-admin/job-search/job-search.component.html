@@ -1,0 +1,166 @@
+<form [formGroup]="jobForm">
+  <div class=" p-2">
+    <div class="row justify-content-start">
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">Start date</label>
+          <div class="input-group">
+            <input class="form-control" type="date" [min]="today" (change)="dateChange()" placeholder="dd-mm-yy" formControlName="fromDate">
+        </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">End date</label>
+          <div class="input-group">
+            <input class="form-control" [min]="dueDate" type="date" placeholder="To Date" formControlName="toDate">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+        <div class="form-group">
+        <mat-form-field appearance="outline" class="ml-2">
+          <mat-label>Filter By Fuel Type</mat-label>
+          <mat-select [formControl]="fuelTypeCtrl" (ngModelChange)="getDriveType()" placeholder="Project"
+            [multiple]="true">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="fuelTypeFilterCtrl" placeholderLabel="Find Fuel type..."
+                noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                [toggleAllCheckboxIndeterminate]="isIndeterminate" [toggleAllCheckboxChecked]="isChecked"
+                (toggleAll)="toggleFuelTypeSelectAll($event)" formControlName="fuelTypeCd">
+                <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let fuelType of filteredFuelTypes | async "
+              style="border-bottom:1px solid #ced4da !important;" [value]="fuelType.codesDtlSno">
+              {{ fuelType.cdValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+      </div>
+
+
+      <div class="col-lg-3 col-md-3 col-sm-12 mt-2">
+        <div class="form-group">
+        <mat-form-field appearance="outline" class="ml-2">
+          <mat-label>Filter By Transmission Type</mat-label>
+          <mat-select [formControl]="transmissionTypeCtrl" (ngModelChange)="getDriveType()" placeholder="Project"
+            [multiple]="true">
+            <mat-option>
+              <ngx-mat-select-search [formControl]="transmissionTypeFilterCtrl" placeholderLabel="Find Transmission type..."
+                noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                [toggleAllCheckboxIndeterminate]="isIndeterminate" [toggleAllCheckboxChecked]="isChecked"
+                (toggleAll)="toggleTransmissionTypeSelectAll($event)" formControlName="transmissionTypeCd">
+                <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+              </ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let transmissionType of filteredTransmissionTypes | async "
+              style="border-bottom:1px solid #ced4da !important;" [value]="transmissionType.codesDtlSno">
+              {{ transmissionType.cdValue }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row justify-content-start">
+        <div class="col-lg-4 col-md-4 col-sm-12 mt-2 spacing">
+          <div class="form-group">
+          <mat-form-field appearance="outline" class="ml-2">
+            <mat-label>Filter By Vehicle Type</mat-label>
+            <mat-select [formControl]="driveTypeCtrl" (ngModelChange)="getDriveType()" placeholder="Project"
+              [multiple]="true">
+              <mat-option>
+                <ngx-mat-select-search [formControl]="driveTypeFilterCtrl" placeholderLabel="Find Job type..."
+                  noEntriesFoundLabel="'no matching found'" [showToggleAllCheckbox]="true"
+                  toggleAllCheckboxTooltipMessage="Select / Unselect All"
+                  [toggleAllCheckboxIndeterminate]="isIndeterminate" [toggleAllCheckboxChecked]="isChecked"
+                  (toggleAll)="toggleDriveTypeSelectAll($event)" formControlName="jobTypeCd">
+                  <mat-icon ngxMatSelectSearchClear style="font-size: 14px;">close</mat-icon>
+                </ngx-mat-select-search>
+              </mat-option>
+              <mat-option *ngFor="let driveType of filteredDriveTypes | async "
+                style="border-bottom:1px solid #ced4da !important;" [value]="driveType.codesDtlSno">
+                {{ driveType.cdValue }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-4 col-sm-12 mx-auto spacing">
+          <label class="text-gray">Location</label>
+          <div class="input-group">
+            <div class="input-group-prepend mx-auto" style="width:50px">
+              <span class="input-group-text  text-center" style="width:50px"><i class="fa fa-search mx-auto"></i></span>
+            </div>
+            <input class="form-control" ngx-google-places-autocomplete [options]='option'
+            (onAddressChange)="handleAddressChange($event)" #mapInput [(ngModel)]="inputValue1"
+            (focus)="clearInputField('inputValue1')" placeholder="Start typing..." formControlName="latLang" />
+          </div>
+        </div>
+  
+        <div class="col-lg-4 col-md-4 col-sm-12 spacing">
+          <button type="button"class="input-group-text btn btn-primary my-4  px-4"
+          (click)="getDriveType()">Driver Search</button>
+          <!-- <div class="input-group-text btn btn-primary my-4  px-4"><i class="fa fa-search"></i> &nbsp; Search</div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<br>
+<div *ngIf="postList.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+<div class="table-responsive-sm" *ngIf="postList?.length">
+  <app-confirm-dialog></app-confirm-dialog>
+  <table class="table table-striped table-hover" #reportTable>
+    <thead class="bg-primary text-light border-0">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Number</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Location</th>
+        <th>Post On</th>
+        <th>Job Type</th>
+        <th *ngIf="appUser.roleCd==2 || appUser.roleCd==1 || isAdmin">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let bus of postList ;let i =index;">
+        <td>{{(pageIndex*limit)+i+1}}</td>
+        <td>{{bus.driverName}}</td>
+        <td>{{bus.driverNumber}}</td>
+        <td>{{bus.startDate | date:'dd/MM/yyyy'}}</td>
+        <td>{{bus.endDate | date:'dd/MM/yyyy'}}</td>
+        <td>{{bus.userLatLong.split(', ')[0]}}</td>
+        <td>{{bus.postedOn | date:'dd/MM/yyyy, h:mm a'}}</td>
+        <td>{{bus.jobTypename}}</td>
+        <td class="align-middle" *ngIf="appUser.roleCd==2 || appUser.roleCd==1 || isAdmin">
+          <div class="btn-group" role="group">
+            <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-primary btn-sm"
+              (click)="gotoViewPost(i)"><i class="fa fa-eye"></i></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="postList.length > 0" class="d-flex justify-content-between">
+  <!-- <div>
+    <button type="button" (click)="getReportPdf()" class="btn btn-light btn-lg border border-primary"><i class="bi bi-file-pdf-fill text-danger"></i> Report</button>
+  </div> -->
+  <!-- <div>
+    <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage" (page)="getMoreBus($event)"
+      aria-label="Select page" [pageIndex]="pageIndex">
+    </mat-paginator>
+  </div> -->
+</div>

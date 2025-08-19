@@ -1,0 +1,189 @@
+<form [formGroup]="searchForm">
+    <div class="mt-4 p-2">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="form-group dropdown-container">
+                    <select formControlName="vehicleSno" class="form-control fa-select minimal">
+                        <option value="null">Select Vehicle</option>
+                        <option [value]=org.vehicleSno *ngFor="let org of orgvehicles;">
+                            {{org.vehicleRegNumber}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="form-group dropdown-container">
+                    <select formControlName="driverSno" class="form-control fa-select minimal">
+                        <option value="null">Select Driver</option>
+                        <option [value]=driver.driverSno *ngFor="let driver of driverList;">
+                            {{driver.driverName}}</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <div class="form-group">
+                    <input class="form-control" type="date" placeholder="select Date" formControlName="date">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-4 col-sm-12">
+                <button mat-raised-button color="primary" class="px-4 mx-3 " (click)="getFuelInfo()">
+                    <mat-icon>search</mat-icon>&nbsp;Search
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+
+<br><br>
+<div class="text-start" *ngIf="fuelList">
+    <div class="h6" style="font-size: 18px; font-weight: 700;">Fuel Summary (Last 7 days)</div>
+  </div>
+<div class="text-center" *ngIf="fuelList.length==0">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+<div class="row" *ngIf="fuelList">
+    <div class="col-md-6 col-lg-4 order-2 mb-4" *ngFor="let fuel of fuelList;let i=index">
+        <div class="card attendance-card h-100  ">
+            <div class="card-body ">
+                <ul class="p-0 m-0">
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="assets/img/profile.png" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block mb-1"><b>{{fuel.driverName}} </b></label>
+                                <h4 class="mb-0 tLabel">{{fuel.vehicleNumber}} </h4>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="assets/img/clock.png" width="30px" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block mb-1 tLabel">Tank Fill Time</label>
+                                <h4 class="mb-0"><b>{{fuel.filledDate | date:'d/M/yy, h:mm a' }}</b></h4>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                                <!-- <label class="mb-0"> Odo meter Value</label> -->
+                                <i class="fa fa-filter iconCenter" aria-hidden="true"></i>&nbsp;
+                                <span><input [disabled]="fuel.acceptStatus" class="tInput" type="number"
+                                        [(ngModel)]="fuel.fuelQuantity " placeholder="Fuel Quantity"></span>
+                                <!-- <h4 class="text-muted">{{fuel.startValue}}</h4> -->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="assets/img/money.png" width="30px" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block tLabel mb-1">Total Amount</label>
+                                <h4 class="mb-0"><span><label>{{fuel.fuelQuantity * fuel.pricePerLtr | number :
+                                            '1.2-2'}}</label>
+                                    </span>
+                                </h4>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                                <!-- <label class="mb-0"> Odo meter Value</label> -->
+                                <i class="fa fa-inr iconCenter" aria-hidden="true"></i>&nbsp;
+                                <span><input [disabled]="fuel.acceptStatus" class="tInput" type="number"
+                                        [(ngModel)]="fuel.pricePerLtr" placeholder="Fuel Price"></span>
+                                <!-- <h4 class="text-muted">{{fuel.endValue}}</h4> -->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="../assets/img/img.png" width="30px" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block tLabel mb-1"> Odometer </label>
+                                <img (click)="lightbox.open(0, 'lightbox', {panelClass: 'fullscreen'});imageGallery(i)"
+                                    class="imgView" *ngIf="fuel?.odoMeterMedia" [src]="fuel?.odoMeterMedia?.mediaUrl"
+                                    width="60px" height="60px">
+                                <h4 class="mb-0 text-danger" *ngIf="!fuel.odoMeterMedia">***</h4>
+
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-1">
+                                <!-- <label class="mb-0"> Odo meter Value</label> -->
+                                <i class="fa fa-tachometer iconCenter" aria-hidden="true"></i>&nbsp;
+                                <span><input [disabled]="fuel.acceptStatus" class="tInput" type="number"
+                                        [(ngModel)]="fuel.odoMeterValue" placeholder=" Odometer Reading"></span>
+                                <!-- <h4 class="text-muted">{{attendance.endValue}}</h4> -->
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="../assets/img/img.png" width="30px" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block tLabel mb-1">Fuel Pump Reading </label>
+                                <img (click)="lightbox.open(1, 'lightbox', {panelClass: 'fullscreen'});imageGallery(i)"
+                                    class="imgView" *ngIf="fuel?.fuelMedia" [src]="fuel?.fuelMedia?.mediaUrl"
+                                    width="60px" height="60px">
+                                <h4 class="mb-0 text-danger" *ngIf="!fuel.fuelMedia">***</h4>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="d-flex mb-4 pb-1">
+                        <div class="avatar flex-shrink-0 me-3">
+                            <img src="../assets/img/img.png" width="30px" alt="User" class="rounded" />
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <label class="text-muted d-block tLabel mb-1">Fuel Filled Tank </label>
+                                <img (click)="lightbox.open(2, 'lightbox', {panelClass: 'fullscreen'});imageGallery(i)"
+                                    class="imgView" *ngIf="fuel?.tankMedia" [src]="fuel?.tankMedia?.mediaUrl"
+                                    width="60px" height="60px">
+                                <h4 class="mb-0 text-danger" *ngIf="!fuel.tankMedia">**</h4>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+                    <button *ngIf="!fuel.acceptStatus && (user.roleCd==2 || user.roleCd==1 || isAdmin)" class="custom-btn btn-5" [disabled]="isDisabled"
+                    (click)="goToAccept(i)"><b>
+                        <span *ngIf="isLoad" class="spinner-border text-light" role="status"></span><span
+                            class="fa fa-check" aria-hidden="true"></span>
+                        Accept</b></button>
+            
+
+                <!-- <tr *ngIf="fuel.acceptStatus">
+                    <td class="col-3 text-gray">Running Km</td>
+                    <td class="col-3"><b>{{fuel.endValue - fuel.startValue}} km</b></td>
+
+                    <td class="col-3 text-gray">Millage</td>
+                    <td class="col-3"><b>{{(fuel.endValue - fuel.startValue)/(fuel.fuelQuantity) | number :
+                            '1.2-2'}} km</b></td>
+                </tr> -->
+            </div>
+        </div>
+    </div>
+</div>
+<div style="display: none;">
+    <gallery id="basic-test" fluid [items]="items" [itemTemplate]="itemTemplate" [gestures]="false"></gallery>
+    <div class="lightbox-example">
+        <h2>Lightbox Example</h2>
+        <button mat-raised-button color="primary" (click)="lightbox.open(0)">Open Lightbox</button>
+
+
+        <button mat-raised-button color="accent" (click)="lightbox.open(0, 'lightbox', {panelClass: 'fullscreen'})">Open
+            Lightbox in fullscreen mode</button>
+    </div>
+</div>
+
+<ng-template #itemTemplate let-index="index" let-type="type" let-data="data" let-currIndex="currIndex">
+    <ng-container *ngIf="type === 'imageViewer' && index === currIndex">
+        <ngx-imageviewer [src]="data.src"></ngx-imageviewer>
+    </ng-container>
+</ng-template>

@@ -1,0 +1,15 @@
+li{
+    cursor: pointer;
+}
+
+.active {
+    z-index: 2 !important;
+    color: #fff !important;
+    background-color: blue !important;
+    border-color: blue !important;
+}
+
+.img-img{
+    right:70px; 
+    top: 90px;
+}

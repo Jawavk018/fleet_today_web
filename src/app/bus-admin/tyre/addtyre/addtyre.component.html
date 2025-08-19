@@ -1,0 +1,201 @@
+<div class="container">
+    <div class="row mt-4 ">
+        <div class="col-md-4 col-sm-12">
+            <h3>Add Tyre Details</h3>
+        </div>
+    </div>
+    <form [formGroup]="tyreForm" class="mainContainer">
+        <div class="row">
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Category</label>
+                <select class="form-control" (change)="isNewValue()" type="text" formControlName="isNew">
+                    <option value='true'>New</option>
+                    <option value='false'>Old</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6 col-sm-12"
+                *ngIf="(tyreForm.value.isNew == 'false'||tyreForm.value.isNew == false)">
+                <label class="text-gray">Tyre Tread</label>
+                <select class="form-control" (change)="isTreadValue()" type="text" formControlName="isTread">
+                    <option value='true'>Original tread</option>
+                    <option value='false'>Re-Tread</option>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12"
+                *ngIf="(tyreForm.value.isNew == false||tyreForm.value.isNew == 'false') && (tyreForm.value.isTread || tyreForm.value.isTread=='true' )">
+                <label class="text-gray">KM Driving<span class="text-danger">*</span></label>
+                <input class="form-control" type="number" formControlName="kmDrive">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('kmDrive').touched && tyreForm?.get('kmDrive').errors?.required">
+                    Tyre Driving Km is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12"
+                *ngIf="(tyreForm.value.isTread == false||tyreForm.value.isTread == 'false')">
+                <label class="text-gray">No.Of treads<span class="text-danger">*</span></label>
+                <input class="form-control" type="number" formControlName="noOfTread">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyrePrice').touched && tyreForm?.get('tyrePrice').errors?.required">
+                    Number of Treads is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Company Name<span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="tyreCompanySno">
+                    <option [value]="Comapany.tyreCompanySno" *ngFor="let Comapany of tyreCompanyList;">
+                        {{Comapany.tyreCompany}}</option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreCompanySno')?.touched && tyreForm?.get('tyreCompanySno').errors?.required">
+                    Tyre Comapny Name is required</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Type <span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="tyreTypeSno" (change)='onOptionsSelected($event)'>
+                    <option [value]="type.tyreTypeSno" *ngFor="let type of tyreTypeList;">
+                        {{type.tyreType}}</option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreTypeSno')?.touched && tyreForm?.get('tyreTypeSno').errors?.required">
+                    Tyre Type is required</small>
+            </div>
+
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Model <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" formControlName="tyreModel">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreModel').touched && tyreForm?.get('tyreModel').errors?.required">
+                    Tyre Model is required</small>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreModel').touched && tyreForm?.get('tyreModel').errors?.pattern">Tyre Model
+                    is invalid</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Size <span class="text-danger">*</span></label>
+                <select class="form-control" formControlName="tyreSizeSno">
+                    <option [value]="size.tyreSizeSno" *ngFor="let size of tyreSizeList;">
+                        {{size.tyreSize}}</option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreSizeSno').touched && tyreForm?.get('tyreSizeSno').errors?.required">
+                    Tyre Size is required</small>
+            </div>
+            <!-- <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tyre Size <span class="text-danger">*</span></label>
+                <input class="form-control" type="text" formControlName="tyreSize">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreSize').touched && tyreForm?.get('tyreSize').errors?.required">
+                    Tyre Size is required</small>
+            </div> -->
+
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Serial Number <span class="text-danger">*</span></label>
+                <input class="form-control" oninput="this.value = this.value.toUpperCase()" type="text" formControlName="tyreSerialNumber">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreSerialNumber').touched && tyreForm?.get('tyreSerialNumber').errors?.required">
+                    Serial Number is required</small>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyreSerialNumber').touched && tyreForm?.get('tyreSerialNumber').errors?.pattern">Serial
+                    number is invalid</small>
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'false'">
+                <label class="text-gray">Efficiency Value (Tyre Condition %) </label>
+                <input class="form-control" max="100" type="number" formControlName="efficiencyValue">
+                <small class="text-danger" *ngIf="tyreForm?.get('efficiencyValue').errors?.max">Efficiency
+                    isn't long enough</small>
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('efficiencyValue').touched && tyreForm?.get('efficiencyValue').errors?.required">
+                    Tyre Size is required</small>
+            </div>
+
+
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'true'">
+                <label class="text-gray">Agency Name</label>
+                <input class="form-control" type="text" value="agencyName"
+                    onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode == 32'
+                    formControlName="agencyName">
+                <!-- <small class="text-danger"
+                    *ngIf="tyreForm?.get('agencyName').touched && tyreForm?.get('agencyName').errors?.required">
+                    Agency Name is required</small> -->
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'true'">
+                <label class="text-gray">Tyre Price</label>
+                <input class="form-control" type="number" formControlName="tyrePrice">
+                <!-- <small class="text-danger"
+                    *ngIf="tyreForm?.get('tyrePrice').touched && tyreForm?.get('tyrePrice').errors?.required">
+                    Tyre Price is required</small> -->
+            </div>
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'true'">
+                <label for="input-11">Invoice Date</label>
+                <input type="date" class="form-control" max="9999-01-01" id="input-11" formControlName="invoiceDate">
+                <!-- <small class="text-danger"
+                *ngIf="tyreForm?.get('invoiceDate').touched && tyreForm?.get('invoiceDate').errors?.required">
+                Invoice Date is required</small> -->
+            </div>
+
+
+
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'false'">
+                <label for="input-11">Incoming Date</label>
+                <input type="date" class="form-control" max="9999-01-01" id="input-11" formControlName="incomingDate">
+                <small class="text-danger"
+                    *ngIf="tyreForm?.get('incomingDate').touched && tyreForm?.get('incomingDate').errors?.required">
+                    Incoming Date is required</small>
+                <!-- </div>
+    
+            <div class="form-group col-md-6 col-sm-12" *ngIf="tyreForm.value.isNew == 'true'">
+                <label class="text-gray">Payment Method</label>
+                <select class="form-control" formControlName="paymentModeCd">
+                    <option [value]="Payment.codesDtlSno" *ngFor="let Payment of paymentList;">
+                        {{Payment.cdValue}}</option>
+                </select>
+               <small class="text-danger"
+                    *ngIf="tyreForm?.get('paymentModeCd').touched && tyreForm?.get('paymentModeCd').errors?.required">
+                    Tyre Usage is required</small> -->
+            </div>
+
+
+
+            <div class="col-md-6 col-sm-12">
+                <div>
+                    <label class="text-gray">Invoice Media</label>
+                </div>
+
+                <div>
+                    <img [src]="tyreForm.value.invoiceMedia?.mediaUrl ? tyreForm.value.invoiceMedia.mediaUrl:'assets/img/users/bus.png'"
+                        onerror="this.src='assets/img/users/user.jpg';" alt="user-img" class="user-img"
+                        data-target="#document" (click)="billUpload()" style="border-radius: 25px;">
+                </div>
+                <div>
+                    <label class="text-gray mt-2">png, jpeg, jpg, webp</label>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row mt-5 ">
+            <div class="col-12">
+                <button *ngIf="!tyreForm?.value?.tyreSno" type="button" class="btn btn-primary mb-1 mr-3"
+                    (click)="addTyre()" [disabled]="!tyreForm?.valid">Save</button>
+
+                <button *ngIf="tyreForm?.value?.tyreSno" type="button" class="btn btn-primary mb-1 mr-3"
+                    [disabled]="!tyreForm?.valid" (click)="updatevehicle()">Update</button>
+
+                <button type="button" class="btn btn-outline-secondary mb-1 mr-3"
+                    (click)="location.back()">Cancel</button>
+            </div>
+        </div>
+    </form>
+
+    <input #myInput class="logo d-none" type="file" (change)="onFileChange($event.target , ['png','jpeg','jpg','webp'])"
+        id="pxp-company-cover-choose-file" accept="image/*">
+</div>

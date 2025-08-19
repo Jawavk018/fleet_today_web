@@ -1,0 +1,494 @@
+<div class="d-md-flex flex-row-reverse">
+
+    <div class="p-2">
+        <br>
+        <button type="button" class="btn btn-primary mx-1" (click)="getFuelType('manual')" data-toggle="modal"
+            data-target="#selectionModal">Manual Attendance</button>
+        <!-- <button type="button" class="btn btn-primary mx-1" data-toggle="modal" data-target=".bd-example-modal-lg"
+            (click)="getReportId(selectedVehicle)">Manual Attendance</button>     -->
+
+    </div>
+    <div class="p-2" *ngIf="reportList?.length>1">
+        <br>
+        <button type="button" class="btn btn-success mx-1" data-toggle="modal" data-target="#reportConfirmModalCenter"
+            (click)="getAllReportId()">Generate Overall Report</button>
+    </div>
+    <div class="col-md-3 col-sm-12">
+        <div class="form-group">
+            <label class="text-gray">Vehicle Number <span class="text-danger">*</span></label>
+            <ng-autocomplete [data]="data" #ngAutoCompleteStatic [searchKeyword]="vehicleKey"
+                (selected)='selectVehicleEvent($event)' placeholder="Search Vehicle Number"
+                [itemTemplate]="itemTemplate1" [notFoundTemplate]="notFoundTemplate1">
+            </ng-autocomplete>
+
+            <ng-template #itemTemplate1 let-item>
+                <a [innerHTML]="item.vehicleRegNumber"></a>
+            </ng-template>
+
+            <ng-template #notFoundTemplate1 let-notFound>
+                <div [innerHTML]="notFound"></div>
+            </ng-template>
+        </div>
+    </div>
+</div>
+
+<br><br>
+<div class="h6"><span class="text-danger">*</span> Kindly Use Manual attendance for single Full to Full Entry</div>
+<div class="h6"><span class="text-danger">*</span> Kindly Check and Accept All Fuel and attendance Before generate
+    Report</div>
+
+
+<div class="text-center" *ngIf="reportList.length==0">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+<!-- <div class="h6"><span class="text-danger">*</span> Kindly Use Manual attendance for single Full to Full Entry</div>
+<div class="h6"><span class="text-danger">*</span> Kindly Check and Accept All Fuel and attendance Before generate Report</div> -->
+<br>
+<div class="row g-2 mx-auto" *ngIf="reportList?.length>0">
+
+    <div class="col-md-4 col-sm-12  p-2" [ngClass]="(!lastItem&&report?.report)?'card':'card'"
+        *ngFor="let report of reportList;let lastItem = first;">
+        <div>
+            <table class="table table-hover table-borderless" *ngIf="report?.report">
+                <thead class="bg-primary text-light">
+                    <tr>
+                        <th>Driver Name</th>
+                        <!-- <th>Start Time</th>
+                        <th>End Time</th> -->
+                        <th>Drived Km</th>
+                        <th>Fuel Filled</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let data of report?.report ;let i =index;">
+                        <td>{{data?.driverName}}</td>
+                        <!-- <td>{{data?.startTime | date:'d/M/yy, h:mm a'}}</td>
+                        <td>{{data?.endTime | date:'d/M/yy, h:mm a'}}</td> -->
+                        <td>{{data?.driveKm}} Km</td>
+                        <td>{{data?.fuelConsumed??0}} Lt</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <div class="d-flex justify-content-between p-2" *ngIf="report?.report">
+                <div class=" text-secondary"><span class="text-success"><b>
+                            {{report?.report[0]?.reNumber}}</b></span></div>
+                <div><button type="button" class="btn btn-primary mx-1" data-toggle="modal"
+                        data-target="#selectionModal"
+                        (click)="getFuelType('Add');getReportId(report?.report[0]?.vehicleSno,report?.report[0]?.reportId)">Add</button>
+                    <button type="button" class="btn btn-success mx-1" data-toggle="modal"
+                        data-target="#reportConfirmModalCenter"
+                        (click)="getReportId(report?.report[0]?.vehicleSno,report?.report[0]?.reportId)">Generate
+                        Report</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="selectionModal" tabindex="-1" role="dialog" aria-labelledby="selectionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="selectionModalLabel">Fuel Selection</h5>
+                <button type="button" class="close" (click)="closeModel()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="driverAttendance">
+                    <div class="row py-2" *ngIf="isAdd">
+                        <div class="form-check mx-auto" *ngFor="let fuel of fuelmodalList ;let i =index;">
+                            <label><input class="form-check-input" type="radio" formControlName="fuelFillTypeCd"
+                                    [value]="fuel.codesDtlSno" data-toggle="modal"
+                                    (click)="getFuelValue(fuel.codesDtlSno)" data-target=".bd-example-modal-lg"
+                                    data-dismiss="modal" id="fuelfilled">{{fuel.cdValue}}</label>
+                        </div>
+                    </div>
+
+                    <div class="row py-2" *ngIf="!isAdd">
+                        <div class="form-check mx-auto" *ngFor="let fuel of fuelmodalList | slice:1;let i =index;">
+                            <label *ngIf="fuel.codesDtlSno"><input class="form-check-input" type="radio"
+                                    formControlName="fuelFillTypeCd" [value]="fuel.codesDtlSno" data-toggle="modal"
+                                    (click)="getFuelValue(fuel.codesDtlSno)" data-target=".bd-example-modal-lg"
+                                    data-dismiss="modal" id="fuelfilled">{{fuel.cdValue}}</label>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" data-backdrop='static' tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true" data-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header customize">
+                <h3 class="modal-title" id="exampleModalLongTitle">
+                    Add Attendance/Fuel Details
+                </h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <h4 class="p-1 font-weight-bold"><span class="text-danger">*</span> Give accurate details for
+                    accurate reporting
+                </h4>
+                <button type="button" class="close" (click)="closeModel()" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="driverAttendance" class="form-attendance">
+                    <div class="row">
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label for="sel1">Vehicle Number </label>
+                                <select class="form-control" (change)="getReport()" id="sel1"
+                                    formControlName="vehicleSno">
+                                    <option *ngFor="let vehicle of orgvehicles" [value]="vehicle.vehicleSno">
+                                        {{vehicle.vehicleRegNumber}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label class="text-gray">Driver Name <span class="text-danger">*</span></label>
+                                <ng-autocomplete [data]="driverData" #ngAutoCompleteStatic [searchKeyword]="driverKey"
+                                    (selected)='selectDriver($event)' placeholder="Search"
+                                    [itemTemplate]="itemTemplate2" [notFoundTemplate]="notFoundTemplate2"
+                                    formControlName="driverSno">
+                                </ng-autocomplete>
+
+                                <small class="text-danger"
+                                    *ngIf="driverAttendance?.controls?.driverSno?.touched && driverAttendance?.controls?.driverSno?.errors?.required">
+                                    Driver Name is required
+                                </small>
+
+                                <ng-template #itemTemplate2 let-item>
+                                    <a [innerHTML]="item.driverName"></a>
+                                </ng-template>
+
+                                <ng-template #notFoundTemplate2 let-notFound>
+                                    <div [innerHTML]="notFound"></div>
+                                </ng-template>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12">
+                            <label class="text-gray">Driving Start Date <span class="text-danger">*</span></label>
+                            <input type="datetime-local" [max]="today" (change)="dateChange()" class="form-control"
+                              [(ngModel)]="this.driverAttendance.value.startTime"  id="input-11" formControlName="startTime">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance?.controls?.startTime?.touched && driverAttendance?.controls?.startTime?.errors?.required">
+                                Driving Start Date is required
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12">
+                            <label class="text-gray">Driving End Date <span class="text-danger">*</span></label>
+                            <input type="datetime-local" [min]="dueDate" class="form-control" id="input-11"
+                                formControlName="endTime">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.endTime?.touched && driverAttendance.controls.endTime?.errors?.required">
+                                Driving End Date is required
+                            </small>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="form-group col-md-3 col-sm-12">
+                            <label class="text-gray">Start Odometer Reading <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="input-11" formControlName="startValue"
+                                (input)="kmCalculate()"  [(ngModel)]="this.driverAttendance.value.startValue">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.startValue?.touched && driverAttendance.controls.startValue?.errors?.required">
+                                Starting Odometer Reading is required
+                            </small>
+                            <small class="text-danger" *ngIf="maxOdometerValue">
+                                Start Odometer Reading is must be greater than Vehicle Odometer Reading
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12">
+                            <label class="text-gray">End Odometer Reading <span class="text-danger">*</span></label>
+                            <input type="number" (change)=" onChangeValue()"
+                                [(ngModel)]="this.driverAttendance.value.endValue" class="form-control" id="input-11"
+                                formControlName="endValue" (input)="kmCalculate()">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.endValue?.touched && driverAttendance.controls.endValue?.errors?.required">
+                                End Odometer Reading is required
+                            </small>
+                            <small class="text-danger" *ngIf="maxValue">
+                                End Odometer Reading is must be greater than Start Odometer Reading
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12">
+                            <label class="text-gray">Total Running Km</label>
+                            <input type="number" class="form-control" id="input-11" formControlName="totalRunningKm"
+                                [readonly]="true" [value]="totalRunningKm">
+                        </div>
+                        
+                        <div *ngIf="isAdd && (driverAttendance.value.fuelFillTypeCd==134|| driverAttendance.value.fuelFillTypeCd==135)"
+                            class="form-group col-md-3 col-sm-12">
+                            <div class="form-group">
+                                <label class="text-gray">Report Select <span class="text-danger">*</span></label>
+                                <select class="form-control" formControlName="reportId" [(ngModel)]="selectedOption" (change)="checkReport($event)">
+                                    <option value="null">Select Report</option>
+                                    <option [value]="report?.report[0]?.reportId" *ngFor="let report of reportList; let i = index;">
+                                         {{report.report[0].startTime | date:'dd/MM/YYYY'}} - {{report.report[0].endTime
+                                        | date:'dd/MM/YYYY'}}</option>
+                                </select>
+                                <small class="text-danger"
+                                *ngIf="driverAttendance.controls.reportId?.touched && driverAttendance.controls.odoMeterValue?.errors?.required">
+                                Report value is required
+                                </small>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-3 col-sm-12"
+                            *ngIf="driverAttendance.value.fuelFillTypeCd==133||driverAttendance.value.fuelFillTypeCd==134">
+                            <label class="text-gray">Odometer value</label>
+                            <input type="number" class="form-control" id="input-11" formControlName="odoMeterValue">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.odoMeterValue?.touched && driverAttendance.controls.odoMeterValue?.errors?.required">
+                                Odometer value is required
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12"
+                            *ngIf="driverAttendance.value.fuelFillTypeCd==133||driverAttendance.value.fuelFillTypeCd==134">
+                            <label class="text-gray">Fuel filled (In Litres)<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="input-11" formControlName="fuelQuantity"
+                                maxlength="3" [(ngModel)]="this.driverAttendance.value.fuelQuantity"
+                                (input)="calculate()" [value]="totalFuelQuantity">
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.fuelQuantity?.touched && driverAttendance.controls.fuelQuantity?.errors?.required">
+                                Fuel filled is required
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12"
+                            *ngIf="driverAttendance.value.fuelFillTypeCd==133||driverAttendance.value.fuelFillTypeCd==134">
+                            <label class="text-gray">Price per litre <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" formControlName="pricePerLtr"
+                                (input)=" calculate()" appTwoDigitDecimaNumber
+                                [(ngModel)]="this.driverAttendance.value.pricePerLtr">
+                            <!-- <input type="number" onchange="setTwoNumberDecimal" min="0" max="10" step="0.25" value="0.00" class="form-control" id="input-11" formControlName="pricePerLtr"/> -->
+                            <!-- <input type="number" class="form-control" id="input-11" formControlName="pricePerLtr"> -->
+                            <small class="text-danger"
+                                *ngIf="driverAttendance.controls.pricePerLtr?.touched && driverAttendance.controls.pricePerLtr?.errors?.required">
+                                Price per litre is required
+                            </small>
+                        </div>
+
+                        <div class="form-group col-md-3 col-sm-12"
+                            *ngIf="driverAttendance.value.fuelFillTypeCd==133||driverAttendance.value.fuelFillTypeCd==134">
+                            <label class="text-gray">Total Fuel Price</label>
+                            <input type="number" class="form-control" id="input-11" formControlName="totalFuelPrice"
+                                [value]="totalFuelPrice" (input)="calculate()">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary  mb-1 mr-3" data-dismiss="modal" #myModalClose (click)="closeModel()">
+                    Cancel
+                </button>
+                <button type="button" class="btn btn-primary  mb-1 mr-3" (click)="save()"
+                    [disabled]="!driverAttendance.valid  || isLoad ||  (driverAttendance.value.fuelFillTypeCd!=133 && selectedOption === 'null') ">
+                    <span class="spinner-border spinner-border-sm" *ngIf="isLoad"></span>&nbsp;&nbsp;Save
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- <form [formGroup]="driverAttendance" class="">
+    <div class="row mt-4 ">
+        <div cla5ss="col-md-12 col-sm-12">
+            <h3 class="text-dark ">Add Driver Attendance/Fuel Details:</h3>
+        </div>
+      
+        <div class="d-flex">
+            <h3 class="text-dark fw-bold">Note:</h3>
+            <p class="fs-5" style="padding-top: 5px;"> For accurate report, please enter exact date and time</p>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <label class="text-gray">Driver Name <span class="text-danger">*</span></label>
+                <select class="form-control fa-select minimal" formControlName="driverSno">
+                    <option [value]=driver.driverSno *ngFor="let driver of driverList; let i=index;">
+                        {{driver.driverName}}
+                    </option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="driverAttendance?.get('driverSno').touched && driverAttendance?.get('driverSno').errors?.required">
+                    Driver Name is required
+                </small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <label class="text-gray">Vehicle Number <span class="text-danger">*</span></label>
+                <select formControlName="vehicleSno" class="form-control fa-select minimal">
+                    <option [value]=vehicle.vehicleSno *ngFor="let vehicle of orgvehicles; let i=index;">
+                        {{vehicle.vehicleRegNumber}}
+                    </option>
+                </select>
+                <small class="text-danger"
+                    *ngIf="driverAttendance?.get('vehicleSno').touched && driverAttendance?.get('vehicleSno').errors?.required">
+                    Vehicle Number is required
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <h3 class="text-dark">Attendance Details:</h3>
+        </div>
+
+        <div class="col-md-6 col-sm-12">
+            <h3 class="text-dark">Fuel Details:</h3>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12">
+            <label class="text-gray">Driving Start Date<span class="text-danger">*</span></label>
+            <input type="datetime-local" class="form-control" id="input-11" formControlName="startTime">
+            <small class="text-danger"
+                *ngIf="driverAttendance.controls.startTime.touched && driverAttendance.controls.startTime?.errors?.required">
+                Driving Start Date is required
+            </small>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Tank Filled Time <span class="text-danger">*</span></label>
+                <input type="datetime-local" class="form-control" id="input-11" formControlName="filledDate">
+                <small class="text-danger"
+                    *ngIf="driverAttendance.controls.filledDate?.touched && driverAttendance.controls.filledDate?.errors?.required">
+                    Tank Filled Time is required
+                </small>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12" >
+            <label class="text-gray">Driving End Date <span class="text-danger">*</span></label>
+            <input type="datetime-local" class="form-control" id="input-11" 
+            formControlName="endTime">
+            <small class="text-danger"
+                *ngIf="driverAttendance.controls.endTime?.touched && driverAttendance.controls.endTime?.errors?.required">
+                Driving End Date is required
+            </small>
+        </div>
+        
+
+            <div class="form-group col-md-6 col-sm-12">
+                <fieldset>
+                    <label class="text-gray">Odometer value when filling fuel <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="input-11" formControlName="odoMeterValue">
+                    <small class="text-danger"
+                        *ngIf="driverAttendance.controls.odoMeterValue?.touched && driverAttendance.controls.odoMeterValue?.errors?.required">
+                        Odometer Reading is required
+                    </small>
+                </fieldset>
+            </div>
+        
+
+        <div class="form-group col-md-6 col-sm-12">
+            <label class="text-gray">Starting Odometer Reading <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="input-11" formControlName="startValue">
+            <small class="text-danger"
+                *ngIf="driverAttendance.controls.startValue?.touched && driverAttendance.controls.startValue?.errors?.required">
+                Starting Odometer Reading is required
+            </small>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12">
+            <fieldset>
+                <label class="text-gray">Litres filled <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="input-11" formControlName="fuelQuantity">
+                <small class="text-danger"
+                    *ngIf="driverAttendance.controls.fuelQuantity?.touched && driverAttendance.controls.fuelQuantity?.errors?.required">
+                    Litres filled is required
+                </small>
+            </fieldset>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12">
+            <label class="text-gray">End Odometer Reading <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="input-11" formControlName="endValue">
+            <small class="text-danger"
+                *ngIf="driverAttendance.controls.endValue?.touched && driverAttendance.controls.endValue?.errors?.required">
+                End Odometer Reading is required
+            </small>
+        </div>
+
+        <div class="form-group col-md-6 col-sm-12">
+            <fieldset>
+                <label class="text-gray">Price per litre <span class="text-danger">*</span></label>
+                <input type="number" class="form-control" id="input-11" formControlName="pricePerLtr">
+                <small class="text-danger"
+                    *ngIf="driverAttendance.controls.pricePerLtr?.touched && driverAttendance.controls.pricePerLtr?.errors?.required">
+                    Price per litre is required
+                </small>
+            </fieldset>
+        </div>
+        <div class="row">
+            <label class="text-gray">Tank fulled or not <span class="text-danger">*</span></label>
+            <div class="form-check col-md-1 col-sm-3">
+                <fieldset [disabled]="!driverAttendance.value.filledDate">
+                    <input class="form-check-input" type="radio" value='Yes' formControlName="isFilled" >Yes 
+                </fieldset>
+            </div>
+            <div class="form-check col-md-1 col-sm-3">
+                <fieldset [disabled]="!driverAttendance.value.filledDate">
+                    <input class="form-check-input" type="radio" value='No' formControlName="isFilled">No
+                </fieldset>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5 ">
+        <div class="col-12">
+            <button type="button" class="btn btn-success  mb-1 mr-3" [disabled]="!driverAttendance.valid" (click)="save()">
+                Save
+            </button>
+            <button type="button" class="btn btn-outline-secondary  mb-1 mr-3">
+                Cancel
+            </button>
+        </div>
+    </div>
+</form> -->
+
+<!-- <div class="row mt-4 ">
+    <div class="col-md-4 col-sm-12 ">
+        <h3 class="font-weight-bold">Add Attendance/Fuel Details</h3>
+        
+    </div>
+</div> -->
+
+
+
+<!-- {{driverAttendance.value | json}} -->
+
+<div class="modal fade" id="reportConfirmModalCenter" tabindex="-1" role="dialog"
+    aria-labelledby="reportConfirmModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content text-center m-auto">
+            <div class="p-4"><i class="bi bi-menu-up munu-class"></i></div>
+            <h1>Are You Sure?</h1>
+            <h3 class="text-secondary">This action cannot be reversed!</h3>
+            <div class="text-center m-auto d-flex justify-content-around w-50 p-4">
+                <button type="button" class="btn btn-primary rounded-circle" data-dismiss="modal"
+                    (click)="generateReport(reportId)"><i class="bi bi-check btn-class"></i></button>
+                <button type="button" class="btn btn-danger rounded-circle" data-dismiss="modal"><i
+                        class="bi bi-x btn-class"></i></button>
+            </div>
+        </div>
+    </div>
+</div>

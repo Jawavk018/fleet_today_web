@@ -1,0 +1,88 @@
+<form [formGroup]="searchForm">
+  <div class=" p-2">
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="form-group dropdown-container">
+          <label class="text-gray">Bus Number</label>
+          <select formControlName="vehicleSno" class="form-control fa-select minimal">
+            <option [value]=org.vehicleSno *ngFor="let org of orgvehicles;">
+              {{org.vehicleRegNumber}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">From date</label>
+          <div class="input-group">
+            <input class="form-control" type="date" placeholder="dd-mm-yy" formControlName="fromDate">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">To date</label>
+          <div class="input-group">
+            <input class="form-control" type="date" placeholder="To Date" formControlName="toDate">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-12 " (click)="goToSearch()">
+        <div class="input-group-text btn btn-primary my-4 mx-2 px-4"><i class="fa fa-search"></i> &nbsp; Search</div>
+      </div>
+      <!-- <div class="col-3 btnDiv" (click)="goToSearch()">
+        <span class="input-group-text btn-sm1"><i class="fa fa-search"></i> &nbsp; Search</span>
+      </div> -->
+    </div>
+  </div>
+</form>
+<br>
+<div *ngIf="busReportList.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+<div class="table-responsive-sm" *ngIf="busReportList?.length">
+  <app-confirm-dialog></app-confirm-dialog> 
+  <table class="table table-striped table-hover" #reportTable>
+    <thead class="bg-primary text-light border-0">
+      <tr>
+        <th>#</th>
+        <th>Bus Number</th>
+        <th>Driver Name</th>
+        <th>Start Km</th>
+        <th>End Km</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+        <th>Vehicle Type</th>
+        <th>Driving (Km)</th>
+        <th>Fuel (Li)</th>
+        <th>Mileage</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of busReportList ;let i =index;">
+        <td>{{(pageIndex*limit)+i+1}}</td>
+        <td>{{report.vehicleRegNumber}}</td>
+        <td>{{report.driverName}}</td>
+        <td>{{report.startValue}}</td>
+        <td>{{report.endValue}}</td>
+        <td>{{report.startTime | date:'d/M/yy, h:mm a'}}</td>
+        <td>{{report.endTime | date:'d/M/yy, h:mm a'}}</td>
+        <td>{{report.drivingType}}</td>
+        <td>{{report.totalDrivingKm}}</td>
+        <td> {{(report.totalDrivingKm/report.mileage) | number : '1.2-2'}} </td>
+        <td> {{report.mileage | number : '1.2-2'}} </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<div *ngIf="busReportList.length > 0" class="d-flex justify-content-between">
+  <div>
+    <button type="button" (click)="getReportPdf()" class="btn btn-light btn-lg border border-primary"><i class="bi bi-file-pdf-fill text-danger"></i> Report</button>
+  </div>
+  <div>
+    <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage" (page)="getMoreBus($event)"
+    aria-label="Select page" [pageIndex]="pageIndex">
+  </mat-paginator>
+  </div>
+</div>

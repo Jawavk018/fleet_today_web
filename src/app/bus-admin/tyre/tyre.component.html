@@ -1,0 +1,284 @@
+<div class="container-fluid">
+  <div class="row justify-content-md-end">
+    <div class="col-lg-3 col-md-4 col-sm-12 mt-2">
+      <div class="input-group mb-2">
+        <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+        <input class="form-control" (input)="searchTyre.next($event);" [(ngModel)]="searchKey" type="text"
+          placeholder="Search Serial Number..." />
+      </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-12 mt-2">
+        <div class="form-group mb-2">
+          <select [formControl]="tyreCompanySno" class="form-control  minimal" (change)="getTyre()">
+            <option value="null">Select Company Name</option>
+              <option [value]="Comapany.tyreCompanySno" *ngFor="let Comapany of tyreCompanyList;">
+                {{Comapany.tyreCompany}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-sm-12 mt-2">
+        <div class="form-group mb-2">
+          <select [formControl]="status" class="form-control  minimal" (change)="getTyre()">
+            <option value="null">All</option>
+            <option value="running">Running</option>
+            <option value="bursted">Bursted</option>
+            <option value="stock">Stock</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-auto mt-2">
+        <div class="btn-group mb-4 border" role="group" aria-label="Basic example">
+          <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" type="button" class="btn btn-primary" (click)="goToAddNewTyre()"><i class="fa fa-plus mr-2"></i>Add
+            Tyre</button>
+        </div>
+             </div>
+      </div>
+      </div>
+
+<!-- <div class="row mt-4 ">
+  <div class="col-md-7 col-sm-12">
+    <h3 class="font-weight-bold">Tyre Details</h3>
+  </div>
+  </div>
+  
+  <div class=" mt-4" style="float:right">
+    <div class="row">
+      <div class="col-auto">
+        <div class="input-group mb-2">
+          <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+          <input class="form-control" (input)="searchTyre.next($event);" [(ngModel)]="searchKey" type="text"
+            placeholder="Search Serial Number..." />
+        </div>
+      </div>
+
+      <div class="col-auto">
+        <div class="form-group mb-2">
+          <select [formControl]="tyreCompanySno" class="form-control  minimal" (change)="getTyre()">
+            <option value="null">Select Company Name</option>
+              <option [value]="Comapany.tyreCompanySno" *ngFor="let Comapany of tyreCompanyList;">
+                {{Comapany.tyreCompany}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-auto">
+        <div class="form-group mb-2">
+          <select [formControl]="status" class="form-control  minimal" (change)="getTyre()">
+            <option value="null">All</option>
+            <option value="running">Running</option>
+            <option value="bursted">Bursted</option>
+            <option value="stock">Stock</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-auto">
+        <div class="btn-group mb-4 border" role="group" aria-label="Basic example">
+          <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" type="button" class="btn btn-primary" (click)="goToAddNewTyre()"><i class="fa fa-plus mr-2"></i>Add
+            Tyre</button>
+        </div>
+             </div>
+    </div>
+  </div> -->
+
+
+<div *ngIf="tyreList.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+<div class="table-responsive" *ngIf="tyreList.length>0">
+  <app-confirm-dialog></app-confirm-dialog>
+  <table class="table table-hover">
+    <thead class="bg-primary text-light">
+      <tr>
+        <th>#</th>
+        <th>Serial Number</th>
+        <th>Company Name</th>
+        <th>Tyre Type</th>
+        <th>Tyre Size</th>
+        <th>Running KM</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let tyre of tyreList ;let i =index;">
+        <td>{{(pageIndex*limit)+i+1}}</td>
+        <td>{{tyre.tyreSerialNumber}} ({{tyre.isNew=='true'?'OT':tyre?.tyreLifeCycle?.retreadingCount==0?'RT':'RT'+tyre?.tyreLifeCycle?.retreadingCount}})</td>        <td>{{tyre.tyreCompanyName}}</td>
+        <td>{{tyre.tyreTypeName}}</td>
+        <td>{{tyre.tyreSizeName}}</td>
+        <!-- <td>{{tyre.tyreUsageName}}</td> -->
+        <td>{{tyre.overAllRunningKm ?? 0}}  </td>
+
+        <td *ngIf="!tyre?.isBursted" [class]="tyre.isRunning ? 'text-success' : 'text-warning'">{{tyre.isRunning ?
+          'Running' : 'Stock'}}</td>
+        <td *ngIf="tyre?.isBursted" class="text-danger">Bursted</td>
+        <td class="align-middle">
+          <div class="btn-group" role="group">
+            <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" data-toggle="modal" data-target="#life_cycle" class="btn btn-primary btn-sm"
+              (click)="selectedTyre = tyre;">
+              <i class="fa fa-code-fork"></i></button>
+            <button data-toggle="tooltip" data-placement="top" title="View" class="btn btn-primary btn-sm"
+            (click)="gotoViewTyre(i)"><i class="fa fa-eye"></i></button>
+            <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" data-toggle="tooltip" data-placement="top" title="Update" class="btn btn-primary btn-sm"
+              (click)="goToEditProject(i,'add')"><i class="fa fa-pencil"></i></button>
+              <div *ngIf="!tyre?.isBursted && !tyre.isRunning">
+                <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" data-toggle="tooltip" data-placement="top" title="Delete" class="btn btn-primary btn-sm"
+                (click)="deleteTyre(i)"><i class="fa-solid fa-trash-can"></i></button>
+              </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- <div *ngIf="count">
+    <mat-paginator [length]="count" [pageSize]="pageSize" [pageSizeOptions]="itemPerPage" (page)="getMoreTyre($event)"
+      aria-label="Select page" [pageIndex]="pageIndex">
+    </mat-paginator>
+  </div> -->
+  <div *ngIf="tyreList.length > 0">
+    <mat-paginator [length]="count" [pageSize]="pageSize"
+        [pageSizeOptions]="itemPerPage" (page)="getMoreTyre($event)"
+        aria-label="Select page" [pageIndex]="pageIndex">
+    </mat-paginator>
+</div>
+</div>
+
+
+<div class="modal fade" id="life_cycle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">{{selectedTyre?.tyreSerialNumber}}</h3>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table text-center">
+          <thead>
+            <tr>
+              <th class="border-0">Retreading</th>
+              <th class="border-0">Rotation</th>
+              <th class="border-0">Puncher</th>
+              <th class="border-0">Powder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="border-0">
+                {{selectedTyre?.tyreLifeCycle?.retreadingCount || 0}}
+              </td>
+              <td class="border-0">
+                {{selectedTyre?.tyreLifeCycle?.rotationCount || 0}}
+              </td>
+              <td class="border-0">
+                {{selectedTyre?.tyreLifeCycle?.puncherCount || 0}}
+              </td>
+              <td class="border-0">
+                {{selectedTyre?.tyreLifeCycle?.powderCount || 0}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #modalContent>
+  <div class="modal-body bg-gray">
+    <h6 class="bg-gray text-center" style="padding-bottom: 3px; color:white;    font-size: 14px;
+          font-weight: bold;">{{action}}</h6>
+    <div class="row">
+      <div class="col-12 vertical-tabs">
+
+        <div class="col-12 vertical-tabs bg-white">
+          <table class="table table-hover">
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Company Name</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.tyreCompany}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Manufacture Date</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.manufactureDate | date:"dd MMM,
+                  yyyy"}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Purchase Date</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.createdOn | date:"dd MMMM, yyyy"}}
+                </label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Serial Number</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.serialNumber}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Tyre Type</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.tyreTypeName}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Tyre Usage</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.tyreUsageName}}</label>
+              </td>
+            </tr>
+
+            <tr *ngIf="selectedTyre?.tyreUsageCd != 79">
+              <td width="50%" class="text-right">
+                <label class="text-secondary">No Of Times Used</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.usageCount}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Tyre Status</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.activeFlag}}</label>
+              </td>
+            </tr>
+
+            <tr>
+              <td width="50%" class="text-right">
+                <label class="text-secondary">Tyre Assigned Status</label>
+              </td>
+              <td width="50%" class="text-left color-blue"><label> {{selectedTyre?.isAssigned}}</label>
+              </td>
+            </tr>
+          </table>
+          <div class="col-12 bg-white text-center py-1">
+            <button type="button" class="btn btn-danger" (click)="closeModal()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ng-template>

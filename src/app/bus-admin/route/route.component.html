@@ -1,0 +1,206 @@
+<div *ngIf="isNoData" class="text-center">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+<div class="row mb-1">
+    <div class="col">
+        <div class="input-group mb-3 box-shadow">
+            <div class="input-group-prepend">
+                <span class="input-group-text border-top-0 border-left-0 border-bottom-0"><i
+                        class="fa fa-search"></i></span>
+            </div>
+            <input type="text" [(ngModel)]="searchText" placeholder="Search Bus Route... "
+                class="form-control border-0">
+            <div class="input-group-append">
+                <span data-toggle="tooltip" data-placement="top" title="Add Permit"
+                    (click)="openModal(modalContent, null,'i')"
+                    class="input-group-text border-top-0 border-right-0 border-bottom-0"><i
+                        class="fa fa-plus"></i></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<span *ngIf="!isNoData">
+    <div class="col-5">
+        <h3 class="font-weight-bold">Routes</h3>
+    </div>
+    <div class="col-12">
+        <app-confirm-dialog></app-confirm-dialog>
+        <div class="table-responsive bg-white box-shadow">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <!-- <th>Route_Sno</th> -->
+                        <th>Source</th>
+                        <th>Destination</th>
+                        <th>Via</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let record of records; let i=index;">
+                        <td class="align-middle text-truncate">{{i+1}}</td>
+                        <!-- <td class="align-middle text-truncate">{{record.routeSno}}</td> -->
+                        <td class="align-middle text-truncate">{{record.sourceCityName}}</td>
+                        <td class="align-middle text-truncate">{{record.destinationCityName}}</td>
+                        <td class="align-middle text-truncate"><span
+                                *ngFor="let via of record?.viaList;let j=index;">{{via?.cityName}}<span
+                                    *ngIf="record?.viaList?.length != (j+1)">,</span></span></td>
+                        <td class="align-middle text-truncate">{{record.activeFlag}}</td>
+                        <!-- <td> <div class="text-left">
+                            <button type="button" class="btn btn-success" 
+                            (click)="openModal(modalContent,null,'i')">Edit</button>
+                            <button type="button" class="btn btn-danger ml-4" (click)="clearModal()">Delete</button>
+                        </div></td> -->
+                        <td class="align-middle">
+                            <div class="btn-group" role="group">
+                                <!-- <button data-toggle="tooltip" data-placement="top" title="##VIEW_BUTTON_TOOL_TIP##"
+                                    class="btn btn-secondary btn-sm" (click)="openModal(modalContent,record,'v')"><i
+                                        class="fa fa-search"></i></button> -->
+                                <button data-toggle="tooltip" data-placement="top" title="Update"
+                                    class="btn btn-secondary btn-sm" (click)="openModal(modalContent, record,'u')"><i
+                                        class="fa fa-pencil"></i></button>
+                                <button data-toggle="tooltip" data-placement="top" title="Delete"
+                                    class="btn btn-secondary btn-sm" (click)="deleteRecord(i,record)"><i
+                                        class="fa-solid fa-trash"></i></button>
+                                <!-- <button data-toggle="tooltip" data-placement="top" title="##COPY_BUTTON_TOOL_TIP##"
+                                    class="btn btn-secondary btn-sm" (click)="openModal(modalContent,record,'c')"><i
+                                        class="fa fa-copy"></i></button> -->
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-white text-center">
+                <pagination-controls autoHide="true" (pageChange)="p = $event" maxSize="3"></pagination-controls>
+            </div>
+        </div>
+    </div>
+</span>
+<ng-template #modalContent>
+    <div class="modal-body bg-gray">
+        <h6 class="bg-gray text-center" style="padding-bottom: 3px; color:white;    font-size: 14px;
+        font-weight: bold;">{{action}}</h6>
+        <div class="row">
+            <div class="col-12 vertical-tabs">
+                <form [formGroup]="form" *ngIf="actionMode!='v'" (ngSubmit)="onSubmit(form.value)" class="row px-3">
+                    <!-- <ul class="nav flex-column left col-3 border-0 rounded-0 mr-0 bg-light">
+                        <li class="nav-item bg-light">
+                            <a class="nav-link  active" href="#vaultcategory" data-toggle="tab">Category</a>
+                        </li>
+                    </ul> -->
+                    <div class="tab-content col-9 border-0">
+                        <div class="tab-pane active" id="vaultcategory">
+
+                            <div class="form-group">
+                                <div class="col-md-12 text-right">
+                                    <button type="button" class="btn btn-warning" (click)="sname.value=' '"
+                                        (click)="dname.value=' '">New</button>
+                                </div>
+                                <div>
+                                    <label class="text-gray">Source <i data-toggle="tooltip" data-placement="top"
+                                            title="Source" class="fa fa-question-circle" aria-hidden="true"></i></label>
+                                    <!-- <input formControlName="vaultCategoryName1" class="form-control validation-field" [(ngModel)]="searchValue1"
+                                    type="text"> -->
+                                    <select class="form-control fa-select" formControlName="sourceCitySno"
+                                        (change)="getDestCity();" #sname required>
+                                        <option [value]="scity.citySno" *ngFor="let scity of sourceCities">
+                                            {{scity.cityName}}</option>
+                                    </select>
+
+                                    <small class="text-danger"
+                                        *ngIf="form?.controls?.sourceCitySno?.touched && form?.controls?.sourceCitySno?.errors?.required">Source
+                                        Name
+                                        is required</small>
+                                </div><br>
+
+                                <label class="text-gray">Destination <i data-toggle="tooltip" data-placement="top"
+                                        title="Destination" class="fa fa-question-circle"
+                                        aria-hidden="true"></i></label>&nbsp;&nbsp;&nbsp;
+                                <!-- <input formControlName="vaultCategoryName" class="form-control validation-field" [(ngModel)]="searchValue2"
+                                type="text"> -->
+                                <select class="form-control fa-select" formControlName="destinationCitySno" #dname
+                                    required>
+                                    <option [value]="dcity.citySno" *ngFor="let dcity of sourceCities">
+                                        {{dcity.cityName}}</option>
+                                </select><br>
+
+
+                                <div class="d-flex">
+                                    <div class="col-md-6">
+                                        <label class="text-gray">Set Via Route</label>&nbsp;&nbsp;&nbsp;
+                                        <select class="form-control" (change)="createViaList($event.target.value)"
+                                            #dname required>
+                                            <option [value]=Source.citySno *ngFor="let Source of sourceCities">
+                                                {{Source.cityName}}</option>
+                                        </select>
+                                    </div>
+                                    <div  class=" mt-4">
+                                    <ss-multiselect-dropdown  [options]="myOptions" formControlName="selectedVehicle">
+                                    </ss-multiselect-dropdown>
+                                </div>
+                                </div>
+
+
+                                <div class="otherDiv mt">
+                                    <mat-chip-list>
+                                        <mat-chip *ngFor="let via of viaLists;let i=index">{{via.cityName}} <mat-icon
+                                                (click)="remove(i)">cancel</mat-icon>
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                                <!-- <div *ngFor="let org of orgvehiclesList; let i=index">
+                                    <input type="checkbox" [value]="org.vehicleSno"
+                                        (change)="onCheckboxChange($event)" />
+                                    {{ org.vehicleName}}
+                                </div> -->
+
+
+
+
+                            </div>
+
+                            <small class="text-danger"
+                                *ngIf="form.controls.destinationCitySno.touched && form.controls.destinationCitySno.errors?.required">Destination
+                                Name
+                                is required</small><small class="text-danger"
+                                *ngIf="form.get('destinationCitySno').touched && form.get('destinationCitySno').hasError('minlength')">Vault
+                                Category Name
+                                is long not enough, minimum of 1 characters</small><small class="text-danger"
+                                *ngIf="form.get('destinationCitySno').touched && form.get('destinationCitySno').hasError('maxlength')">Vault
+                                Category Name
+                                is too long, maximum of 30 characters</small>
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input checkbox-dark-gray"
+                                    id="checkboxactiveFlag" formControlName="activeFlag">
+                                <label class="custom-control-label" for="checkboxactiveFlag">Active Flag <i
+                                        data-toggle="tooltip" data-placement="top" title="##TOOL_TIP_TEXT##"
+                                        class="fa fa-question-circle" aria-hidden="true"></i></label>
+                            </div><small class="text-danger"
+                                *ngIf="form.controls.activeFlag.touched && form.controls.activeFlag.errors?.required">Active
+                                Flag
+                                is required</small>
+                        </div>
+                        <div class="col-12 bg-white text-center py-1">
+                            <button [disabled]="!form.valid" class="btn btn-success mr-1" type="submit">
+                                <span *ngIf="!record.routeSno">Save</span>
+                                <span *ngIf="record.routeSno">Update</span>
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="closeModal()">Cancel</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</ng-template>

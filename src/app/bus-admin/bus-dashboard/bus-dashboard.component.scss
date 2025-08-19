@@ -1,0 +1,101 @@
+
+* {
+    transition: all 0.3s ease-out;
+  }
+  
+.mentions:hover{ 
+cursor: pointer;
+transition: all 0.2s ease-out;
+box-shadow: 1px 4px 10px rgb(181, 179, 243);
+// top: 4px;
+border: 1px solid #cccccc; 
+// background-color: white;
+// padding: 10px;
+}
+
+// @keyframes blink {
+//   0% {
+//     transform: scale(1);
+//     opacity: .25;
+//   }
+//   25%{
+//     opacity: 1;
+//   }
+//   50% {
+//     opacity: .25;
+//   }
+//   75%{
+//     opacity: 1;
+//   }
+//   100% {
+//     transform: scale(1);
+//     opacity: .25;
+//   }
+// }
+
+
+
+.zoom-in-out-box {
+  animation: zoom-in-zoom-out 1s ease infinite;
+}
+
+@keyframes zoom-in-zoom-out {
+  0% {
+    transform: scale(1, 1);
+  }
+  50% {
+    transform: scale(1.23, 1.23);
+  }
+  100% {
+    transform: scale(1, 1);
+  }
+}
+
+
+.mentions{
+  flex: 1 0 8.33333333% ;
+  max-width: 126.333333% ;
+}
+
+@media screen and (min-width: 480px) {
+  .mentions{
+    flex: 1 0 8.33333333% ;
+    max-width: 100% ;
+  }
+}
+
+.card-1{
+  border-bottom: 10px solid !important;
+  border-radius: 1pc !important;
+  background-color: white !important;
+}
+// .card-2{
+// border-bottom: 10px solid grey !important;
+// border-radius: 1pc !important;
+// }
+// .card-3{
+// border-bottom: 10px solid orange !important;
+// border-radius: 1pc !important;
+// }
+// .card-4{
+// border-bottom: 10px solid blue !important;
+// border-radius: 1pc !important;
+// }
+// .card-5{
+//   border-bottom: 10px solid green !important;
+//   border-radius: 1pc !important;
+//   }
+.card-booking{
+background-color: blueviolet;
+// border-radius: 1pc !important;
+
+}
+.card-notification{
+background-color: blue;
+border-radius: 1pc !important;
+}
+
+.round-radious{
+border-radius: 1pc !important;
+
+}

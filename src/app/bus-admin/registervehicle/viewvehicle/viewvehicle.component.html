@@ -1,0 +1,530 @@
+<div class="row mt-4 ">
+    <div class="col-4">
+        <h3 class="font-weight-bold">Vehicle Details</h3>
+    </div>
+</div>
+
+<section style="background-color: #f4f5f7;">
+    <div class="container py-2 h-100">
+        <div class="row h-100">
+            <div class="col col-lg-12  mb-lg-5">
+                <div class="card mb-3" style="border-radius: .5rem;">
+                    <div class="row g-0">
+                        <div class="col-md-6 gradient-custom text-white"
+                            style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                            <div class="row">
+                                <div class="col-6 my-auto" *ngIf="vehicle.vehicleDetails.media">
+                                    <img [src]="vehicle.vehicleDetails.media ? vehicle.vehicleDetails.media[0].mediaUrl : 'assets/img/users/bus.png'"
+                                        data-toggle="modal" data-target="#viewImage" alt="Avatar" width="150"
+                                        height="150" class="user-img rounded-circle" />
+                                </div>
+
+                                <div class="col-6" *ngIf="!vehicle.vehicleDetails.media">
+                                    <img src="assets/img/users/bus.png" alt="Avatar" width="200" height="200" />
+                                </div>
+
+                                <div class="col-6 mt-4 text-center" *ngIf="vehicle.vehicleRegNumber">
+                                    <qr-code [value]="vehicle.vehicleRegNumber" size="120" errorCorrectionLevel="M">
+                                    </qr-code>
+                                    <h3>{{vehicle.vehicleRegNumber}}</h3>
+                                </div>
+
+                                <!-- <div class="col-6" *ngFor="let vehicle of vehicle.vehicleDetails.media; let i=index;">
+                                        <img [src]="vehicle.mediaUrl"alt="user-img" height="80px" width="80px"
+                                        class="user-img" />
+                                    </div> -->
+                            </div>
+
+                            <div class="col-md-12">
+                                <h4 class="text-start">Owner Details</h4>
+                                <hr class="mt-0">
+                                <div class="row">
+                                    <div class="col-6 mb-4" *ngIf="vehicle.ownerList[0].ownerName != null">
+                                        <div class="text-grey">Owner Name </div>
+                                        <div class="text-white"> {{vehicle.ownerList[0].ownerName}}</div>
+                                    </div>
+
+                                    <div class="col-6 mb-4" *ngIf="vehicle.ownerList[0].ownerNumber != null">
+                                        <div class="text-grey">Mobile Number </div>
+                                        <div class="text-white"> {{vehicle.ownerList[0].ownerNumber}}</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between" (click)="vehicleDtlEvent()">
+                                    <div>Vehicle Details</div>
+                                    <div class="col-6">
+                                        <i *ngIf="isVehicle" class="bi bi-chevron-down"></i>
+                                        <i *ngIf="!isVehicle" class="bi bi-chevron-right"></i>
+
+                                    </div>
+                                </div>
+                                <br>
+                                <hr class="mt-0 mb-2" *ngIf="isVehicle">
+                                <div class="row" *ngIf="isVehicle">
+                                    <div class="col-6 p-4">
+                                        <div *ngIf="vehicle.vehicleDetails.odoMeterValue != null">
+                                            <div class="text-grey">Odo Meter Value </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.odoMeterValue}}</div>
+                                            <br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.drivingTypeCd != null">
+                                            <div class="text-grey">Vehicle Class Type </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.drivingTypeCd}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.stateName != null">
+                                            <div class="text-grey">States </div>
+                                            <div class="text-white">{{vehicle.vehicleDetails.stateName}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.wheelTypeName != null">
+                                            <div class="text-grey">Wheelbase Type </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.wheelTypeName}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.wheelsCd != null">
+                                            <div class="text-grey">Wheels Excluding Stepny </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.wheelsCd}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.seatCapacity != null">
+                                            <div class="text-grey">Seat capacity </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.seatCapacity}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.fuelNorm != null">
+                                            <div class="text-grey">Fuel Norms </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.fuelNorm}}</div><br>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-6 p-4">
+                                        <div *ngIf="vehicle.vehicleDetails.fuelCapacity != null">
+                                            <div class="text-grey">Fuel Capacity (in liters) </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.fuelCapacity}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.tyreCountName != null">
+                                            <div class="text-grey">No Of Tyres </div>
+                                            <div class="text-white"> {{vehicle.tyreCountName}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.fuelTypeName != null">
+                                            <div class="text-grey">Fuel Type </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.fuelTypeName}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.districtName != null">
+                                            <div class="text-grey">Permit District </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.districtName}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.vehicleModelCd != null">
+                                            <div class="text-grey">Vehicle Model</div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.vehicleModelCd}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.stepnyCd != null">
+                                            <div class="text-grey">No Of Stepny </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.stepnyCd}}</div><br>
+                                        </div>
+                                        <div *ngIf="vehicle.vehicleDetails.vehicleMake != null">
+                                            <div class="text-grey">Vehicle Make </div>
+                                            <div class="text-white"> {{vehicle.vehicleDetails.vehicleMake}}</div><br>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between" *ngIf="appUser.roleCd == 1">
+                                    <button *ngIf="vehicle.kycStatus !='KYC Verified'" title="Approve"
+                                        data-target="#approve-modal" data-toggle="modal"
+                                        class="btn btn-primary btn-sm text-success"><i class="fa fa-check"></i> Approve
+                                    </button>
+
+                                    <button title="Reject" *ngIf="vehicle.kycStatus !='KYC Verified'"
+                                        data-target="#reject-modal" data-toggle="modal"
+                                        class="btn btn-primary btn-sm text-danger">
+                                        <i class="fa fa-ban"></i> Reject
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <div class="row pt-1" *ngIf="vehicle.kycStatus == 'KYC Rejected'" style="margin: auto;">
+                                    <h4>Reaject Reason : </h4>
+                                    <p class="text-danger" style="margin-left: 2%;">{{vehicle.rejectReason}}</p>
+                                </div>
+                                <div>
+                                    <div class="row d-flex justify-content-between">
+                                        <h4 class="fw-bold">Mileage Details</h4>
+                                        <div>
+                                            <button type="button" (click)="closeView()"
+                                                class="btn btn-light btn-sm border border-primary mr-2"><i
+                                                    class="bi bi-x text-danger"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <hr class="mt-0 mb-1">
+                                    <div class="row pt-1">
+                                        <div class="col-3 mb-1">
+                                            <div class=" p-2 box-shadow header bg-primary rounded" style="height: 40%;">
+                                                <p class="fw-bold text-light fs-6">Odo Meter</p>
+                                            </div>
+                                            <div class="table-responsive bg-white box-shadow">
+                                                <ul class="list-group list-group-flush fs-4">
+                                                    <li class="list-group-item">
+                                                        {{vehicle.vehicleDetails.odoMeterValue}} </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 mb-1">
+                                            <div class=" p-2 box-shadow header bg-primary rounded" style="height: 40%;">
+                                                <p class="fw-bold text-light fs-6">Min Mileage</p>
+                                            </div>
+                                            <div class="table-responsive bg-white box-shadow">
+                                                <ul class="list-group list-group-flush fs-4">
+                                                    <li class="list-group-item" *ngIf="mileageList.minMileage != null">
+                                                        {{mileageList.minMileage | number : '1.2-2'}} </li>
+                                                    <li class="list-group-item" *ngIf="mileageList.minMileage == null">
+                                                        0.00 </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 mb-1">
+                                            <div class=" p-2 box-shadow header bg-primary rounded" style="height: 40%;">
+                                                <p class="fw-bold text-light fs-6">Avg Mileage</p>
+                                            </div>
+                                            <div class="table-responsive bg-white box-shadow">
+                                                <ul class="list-group list-group-flush fs-4">
+                                                    <li class="list-group-item" *ngIf="mileageList.avgMileage != null">
+                                                        {{mileageList.avgMileage | number : '1.2-2'}} </li>
+                                                    <li class="list-group-item" *ngIf="mileageList.avgMileage == null">
+                                                        0.00 </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 mb-1">
+                                            <div class=" p-2 box-shadow header bg-primary rounded" style="height: 40%;">
+                                                <p class="fw-bold text-light fs-6">Max Mileage</p>
+                                            </div>
+                                            <div class="table-responsive bg-white box-shadow">
+                                                <ul class="list-group list-group-flush fs-4">
+                                                    <li class="list-group-item" *ngIf="mileageList.maxMileage != null">
+                                                        {{mileageList.maxMileage | number : '1.2-2'}} </li>
+                                                    <li class="list-group-item" *ngIf="mileageList.maxMileage == null">
+                                                        0.00 </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="vehicle.vehicleTypeCd == 22 || vehicle.vehicleTypeCd == 93">
+                                    <h4>Contract Carriage</h4>
+                                    <hr class="mt-0 mb-1">
+                                    <div class="row">
+                                        <div class="col 6 p-4">
+                                            <div class="mb-2">
+                                                <div class="text-black">Seat Type </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.seatTypeName}}</div>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="text-black">Video Type</div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.videoTypeName}}</div>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="text-black">Public Addressing System Type</div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.publicAddressingSystemName}}</div>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="text-black">Number Of Luckage carrier</div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.luckageCount}}</div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-black">Class</div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.coolName}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col 6 p-4">
+                                            <div class="mb-2">
+                                                <div class="text-black">Price per day </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.pricePerday}}</div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-black">Audio Type </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.audioTypeName}}</div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-black">Lighting System Type </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.lightingSystemName}}</div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-black">Top Luckage Carrier </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.topCarrier == false ? 'No' : 'Yes'}}</div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-black">Suspension Type </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.suspensionName}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div *ngIf="vehicle.vehicleDetails.vehicleRegDate != null">
+                                    <h4 class="fw-bold">Date Details</h4>
+                                    <hr class="mt-0">
+                                    <div class="row">
+                                        <div class="col 6 ">
+                                            <div class="mb-2">
+                                                <div class="text-primary">Registration </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleDetails.vehicleRegDate |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+                                            <div class="mb-2"
+                                                *ngIf="vehicle.vehicleDetails.insuranceExpiryDate != null">
+                                                <div class="text-primary">Insurance Expiry </div>
+                                                <div class="text-black font-weight-bold pt-1"
+                                                    [ngClass]=checkInsuranceExpiry()>
+                                                    {{vehicle.vehicleDetails.insuranceExpiryDate |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+
+                                            <div class="mb-2" *ngIf="vehicle.vehicleDetails.permitExpiryDate != null">
+                                                <div class="text-primary">Permit Expiry </div>
+                                                <div class="text-black font-weight-bold pt-1"
+                                                    [ngClass]=checkPermitExpiry()>
+                                                    {{vehicle.vehicleDetails.permitExpiryDate |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col 6 ">
+                                            <div class="mb-2" *ngIf="vehicle.vehicleDetails.fcExpiryDate != null">
+                                                <div class="text-primary">Fc Expiry </div>
+                                                <div class="text-black font-weight-bold pt-1" [ngClass]=checkFcExpiry()>
+                                                    {{vehicle.vehicleDetails.fcExpiryDate
+                                                    |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+                                            <div class="mb-2" *ngIf="vehicle.vehicleDetails.taxExpiryDate != null">
+                                                <div class="text-primary">Tax Expiry </div>
+                                                <div class="text-black font-weight-bold pt-1"
+                                                    [ngClass]=checkTaxExpiry()>
+                                                    {{vehicle.vehicleDetails.taxExpiryDate |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+
+                                            <div class="mb-2"
+                                                *ngIf="vehicle.vehicleDetails.pollutionExpiryDate != null">
+                                                <div class="text-primary">Pollution Expiry </div>
+                                                <div class="text-black font-weight-bold pt-1"
+                                                    [ngClass]=checkPollutionExpiry()>
+                                                    {{vehicle.vehicleDetails.pollutionExpiryDate |
+                                                    date:'dd/MM/YYYY'}}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <div class="row">
+                                        <div class="d-flex p-1">
+                                            <div class="box bg-danger"></div>
+                                            <div class="pl-2">below 10 Days Or Expired</div>
+                                        </div>
+                                        <div class="d-flex p-1">
+                                            <div class="box bg-warning"></div>
+                                            <div class="pl-2">Above 10 Days</div>
+
+                                        </div>
+                                        <div class="d-flex p-1">
+                                            <div class="box bg-success"></div>
+                                            <div class="pl-2">Above 30 Days</div>
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <!-- <hr> -->
+
+                                <div *ngIf="vehicle.routeList.data != null">
+                                    <!-- <h4 class="fw-bold">Permit Details</h4> -->
+                                    <div class="d-flex justify-content-between" (click)="isPrimaryDtlEvent()">
+                                        <div>Permit Details</div>
+                                        <div class="col-6">
+                                            <i *ngIf="isPrimaryDtl" class="bi bi-chevron-down"></i>
+                                            <i *ngIf="!isPrimaryDtl" class="bi bi-chevron-right"></i>
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <hr class="mt-0 mb-2" *ngIf="isPrimaryDtl">
+                                    <div *ngFor="let route of vehicle.routeList.data;let i=index">
+                                        <div *ngIf="isPrimaryDtl">
+                                            <div class="row" *ngIf="i%2 == 0">
+                                                <div class="col-4 mb-1">
+                                                    <p class="text-primary">Source </p>
+                                                    <p class="text-muted font-weight-bold">
+                                                        {{route.sourceCityName ? route.sourceCityName[0]?.cityName :
+                                                        "---"}}
+                                                    </p>
+                                                </div>
+                                                <div class="col-4 mb-1">
+                                                    <p class="text-primary">Destination</p>
+                                                    <p class="text-muted font-weight-bold">
+                                                        {{route?.destinationCityName ?
+                                                        route?.destinationCityName[0]?.cityName : "---"}}</p>
+                                                </div>
+                                                <div class="col-4 mb-1">
+                                                    <p class="text-primary">Via</p>
+                                                    <p class="text-muted font-weight-bold">
+                                                        {{route?.viaList? route?.viaList[0]?.cityName : "---"}}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+
+                                    <div class="d-flex justify-content-between" (click)="isvehicleDtlEvent()">
+                                        <div>Vehicle Details</div>
+                                        <div class="col-6">
+                                            <i *ngIf="isvehicleDtl" class="bi bi-chevron-down"></i>
+                                            <i *ngIf="!isvehicleDtl" class="bi bi-chevron-right"></i>
+
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <hr class="mt-0 mb-2" *ngIf="isvehicleDtl">
+                                    <div class="row">
+                                        <div class="col 6 p-4" *ngIf="isvehicleDtl">
+                                            <div class="mb-2">
+                                                <div class="text-primary">Registration Number </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleRegNumber}}</div>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="text-primary">Vehicle Type </div>
+                                                <div class="text-black font-weight-bold pt-1">
+                                                    {{vehicle.vehicleTypeName}}</div>
+                                            </div>
+
+                                            <div class="mb-2">
+                                                <div class="text-primary">Chase Number </div>
+                                                <div class="text-black font-weight-bold pt-1">{{vehicle.chaseNumber}}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col 6 p-4" *ngIf="isvehicleDtl">
+                                            <div class="mb-2">
+                                                <div class="text-primary">Vehicle Name </div>
+                                                <div class="text-black font-weight-bold pt-1">{{vehicle.vehicleName}}
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-primary">Vehicle Banner Name </div>
+                                                <div class="text-black font-weight-bold pt-1">{{vehicle.vehicleBanner}}
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="text-primary">Engine Number </div>
+                                                <div class="text-black font-weight-bold pt-1">{{vehicle.engineNumber}}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="approve-modal" role="dialog" tabindex="-1" aria-labelledby="modal-approve-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-success">
+                <h4 class="modal-title" id="modal-approve-label"><i class="fa fa-warning"></i>Approve Operator KYC</h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                Are you sure to approve this Vehicle Kyc?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal"
+                    (click)="changeStatus('Approve')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="reject-modal" role="dialog" tabindex="-1" aria-labelledby="modal-error-label"
+    aria-hidden="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-danger">
+                <h4 class="modal-title" id="modal-error-label"><i class="fa fa-warning"></i>Reject Reason Operator KYC
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" style="height: 100px;" id="pxp-candidate-about"
+                    placeholder="Type reason here..." [(ngModel)]="reason"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" [disabled]="!reason" data-dismiss="modal"
+                    (click)="changeStatus('Reject')">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="viewImage" data-backdrop='static' role="dialog" tabindex="-1" aria-hidden="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Model Image
+                </h4>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true" style="color: black;">X</span></button>
+            </div>
+            <div class="modal-body">
+                <div id="carouselImage" class="carousel slide" data-ride="carousel">
+                    <div class="carousel-inner">
+                      <div class="carousel-item" [class]="selectedImageIndex == i ? 'active' : '' "
+                        *ngFor="let vehicle of vehicle?.vehicleDetails.media; let i=index;">
+                        <img class="slider d-block w-100" [src]="vehicle.mediaUrl">
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#carouselImage" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon prev-btn text-dark" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                    <a class="carousel-control-next text-dark" href="#carouselImage" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon nxt-btn " aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                  </div>
+            </div>
+        </div>
+    </div>
+</div>

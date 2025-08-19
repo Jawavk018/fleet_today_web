@@ -1,0 +1,381 @@
+<div class="container">
+    <form [formGroup]="form">
+        <div class="row" formGroupName="ownerDetails">
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Owner Name
+                    <span class="text-danger">*</span>
+                </label>
+                <input class="form-control" type="text" value="ownerName" formControlName="ownerName"
+                    onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90'
+                    minlength="3">
+                <small class="text-danger"
+                    *ngIf="form?.get('ownerDetails.ownerName').touched && form?.get('ownerDetails.ownerName').errors?.required">owner
+                    Name
+                    is required</small>
+                <small class="text-danger"
+                    *ngIf="form.get('ownerDetails.ownerName').touched && form.get('ownerDetails.ownerName').errors?.minlength">
+                    owner Name
+                    isn't long enough, minimum of 3 characters</small>
+            </div>
+            <div class="form-group col-md-6 col-sm-12">
+                <label class="text-gray">Vehicle Number <span class="text-danger">*</span></label>
+                <input oninput="this.value = this.value.toUpperCase()" class="form-control text-lights" type="text"
+                    formControlName="vehicleNumber" maxlength="10"
+                    pattern="^[A-Za-z]{2}[0-9]{1,2}(?:[A-Za-z])?(?:[A-Za-z]*)?[0-9]{4}$"
+                    onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode >= 48 && event.charCode <= 57'
+                    placeholder="TN09AB1234" onfocus="this.placeholder = ''">
+                <small class="text-danger"
+                    *ngIf="form.get('ownerDetails.vehicleNumber').touched && form.get('ownerDetails.vehicleNumber').errors?.required">Vehicle
+                    Number
+                    is required</small>
+                <small class="text-danger"
+                    *ngIf="form.get('ownerDetails.vehicleNumber').touched && form.get('ownerDetails.vehicleNumber').errors?.maxlength">Vehicle
+                    Number is invalid</small>
+
+                <small class="text-danger"
+                    *ngIf="form.get('ownerDetails.vehicleNumber').touched && form.get('ownerDetails.vehicleNumber').errors?.pattern">Vehicle
+                    Number format is invalid</small>
+            </div>
+        </div>
+
+
+        <fieldset [disabled]="form.get('ownerDetails').invalid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="row mt-4">
+                        <div class="col-md-6 col-sm-12">
+                            <h5>Add Organization</h5>
+                        </div>
+                        <div class="col-md-6 col-sm-12" *ngIf="appUser.roleCd == 1">
+                            <h5>Operator Credential</h5>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group col-md-6 col-sm-12">
+                            <label class="text-gray">Company Name <span class="text-danger">*</span></label>
+                            <input class="form-control" type="text" formControlName="orgName">
+                            <small class="text-danger"
+                                *ngIf="form.controls.orgName.touched && form.controls.orgName.errors?.required">company
+                                Name
+                                is required</small>
+                            <small class="text-danger"
+                                *ngIf="form.controls.orgName.touched && form.controls.orgName.errors?.minlength">company
+                                Name
+                                isn't long enough, minimum of 3 characters</small>
+                        </div>
+
+                        <div class="col-md-6 col-sm-12" *ngIf="appUser.roleCd == 1">
+                            <div class="form-group">
+                                <label class="text-gray">Mobile <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                                    </div>
+                                    <input  class="form-control" type="number" maxlength="10"
+                                        pattern="^((\\+91-?)|0)?[0-9]{10}$" formControlName="mobileNumber"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+                                </div>
+                                <small class="text-danger"
+                                    *ngIf="form.controls.mobileNumber.touched && form.controls.mobileNumber.errors?.required">Mobile
+                                    Number
+                                    is required</small>
+                                <small class="text-danger" *ngIf="form.controls.mobileNumber.errors?.pattern">
+                                    Please check your mobile number!</small>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <h5>Contact</h5>
+                        </div>
+                    </div>
+                    <div formArrayName="contactList">
+                        <span *ngFor="let contact of contactList.controls; let i=index">
+                            <div class="row" [formGroup]="contact">
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="text-gray">Name <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                                            </div>
+                                            <input class="form-control" type="text" formControlName="name"
+                                                onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode == 32 || event.charCode >= 65 && event.charCode <= 90'>
+                                        </div>
+                                        <small class="text-danger"
+                                            *ngIf="contact.get('name').touched && contact.get('name').errors?.required">
+                                            Name is required</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-12">
+                                    <label class="text-gray">Role <span class="text-danger">*</span></label>
+                                    <select class="form-control" formControlName="contactRoleCd" (change)="verifyNumber(contact,i)">
+                                        <option [value]="contact.codesDtlSno" *ngFor="let contact of contactLists;">
+                                            {{contact.cdValue}}</option>
+                                    </select>
+                                    <small class="text-danger"
+                                        *ngIf="contact.get('contactRoleCd').touched && contact.get('contactRoleCd').errors?.required">
+                                        Role is required</small>
+                                </div>
+
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="text-gray">Mobile <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-mobile"></i></span>
+                                            </div>
+                                            <input class="form-control" type="number" maxlength="10"
+                                                pattern="^((\\+91-?)|0)?[0-9]{10}$" (change)="contact.get('mobileNumber').value?.toString().length == 10 && contact.get('contactRoleCd').value != 2 ? verifyNumber(contact,i) : ''"
+                                                oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                                formControlName="mobileNumber">
+                                        </div>
+                                        <small class="text-danger"
+                                            *ngIf="contact.get('mobileNumber').touched && contact.get('mobileNumber').errors?.required">
+                                            Mobile Number is required</small>
+                                        <small class="text-danger" *ngIf="contact.get('mobileNumber').errors?.pattern">
+                                            Please check your mobile number!</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="text-gray">Email</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                            </div>
+                                            <input class="form-control" type="text" formControlName="email">
+                                        </div>
+                                        <div *ngIf="contact.get('email')?.touched && contact.get('email').dirty">
+                                            <small class="text-danger"
+                                                *ngIf="contact.get('email')?.errors?.pattern">Please
+                                                enter
+                                                valid emailid.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-md-6 col-sm-12">
+                                        <div class="form-group">
+                                            <label class="text-gray">Show To Public</label>
+                                            <div class="input-group">
+                                                <input mdbCheckbox class="checkBox" type="checkbox" formControlName="isShow"
+                                                    value="" id="flexCheckDefault" />
+                                            </div>
+                                        </div>
+                                    </div> -->
+                            </div>
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-primary  mb-1 mr-3 border-0"
+                                (click)="createContactList()"><i class="fa fa-plus mr-2"></i>
+                                Add Role</button>
+                        </div>
+                    </div>
+
+
+
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <h5>Account Details</h5>
+                        </div>
+                    </div>
+                        <div formArrayName="accountList">
+                            <span *ngFor="let account of accountList?.controls; let i=index">
+                                <div class="row" [formGroup]="account">
+                                    <div class="col-md-6 col-sm-12">
+                                        <div class="form-group col-md-6 col-sm-12">
+                                            <label class="text-gray">Bank Name</label>
+                                            <input  class="form-control text-lights" type="text"
+                                                formControlName="bankAccountName"
+                                                placeholder="CANARA9210" onfocus="this.placeholder = ''">
+                                        </div>
+                                    </div>
+                                    <div class="col-2" *ngIf="accountList?.length>1 && form.value?.orgSno == null">
+                                        <button class="btn text-danger" style="margin-top: 10%;" type="button"
+                                            (click)="removeAccount(i)">
+                                            <i class="fa fa-close mr-2"></i> Remove
+                                        </button>
+                                    </div>
+                                </div>
+                            
+                            </span>
+                        </div>
+                  
+
+ 
+
+                    <div class="row">
+                        <div class="col-6">
+                            <button type="button" class="btn btn-outline-primary  mb-1 mr-3 border-0"
+                                (click)="createAccountList()"><i class="fa fa-plus mr-2"></i>
+                                Add Account</button>
+                        </div>
+                    </div>
+
+                    <div class="row mt-4 ">
+                        <div class="col-4">
+                            <h5>Address</h5>
+                        </div>
+                    </div>
+
+                    <div formGroupName="address">
+                        <div class="row">
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">AddressLine1 <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" formControlName="addressLine1">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.addressLine1').touched && form?.get('address.addressLine1').errors?.required">
+                                        Name is required</small>
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.addressLine1')?.errors?.pattern">Please enter
+                                        valid Address.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">AddressLine2</label>
+                                    <input class="form-control" type="text" formControlName="addressLine2">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.addressLine2')?.errors?.pattern">Please enter
+                                        valid Address.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">Pincode <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number"
+                                        oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                        formControlName="pincode" maxlength="6" minlength="6"
+                                        (ngModelChange)="searchPincode.next($event)">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.pincode').touched && form?.get('address.pincode').errors?.required">
+                                        Valid Pincode is required</small>
+                                    <small class="text-danger"
+                                        *ngIf="form.get('address.pincode').touched && form.get('address.pincode').hasError('maxlength')">
+                                        Invalid
+                                        Pincode
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group col-md-6 col-sm-12">
+                                <label class="text-gray">City <span class="text-danger">*</span></label>
+                                <select class="form-control" formControlName="city">
+                                    <option [value]="city.Name" *ngFor="let city of cityList;">
+                                        {{city.Name}}</option>
+                                </select>
+                                <small class="text-danger"
+                                    *ngIf="form?.get('address.city').touched && form?.get('address.city').errors?.required">
+                                    City Name is required</small>
+                            </div>
+                            <!-- <div class="col-md-6 col-sm-12">
+                                    <div class="form-group">
+                                        <label class="text-gray">City <span class="text-danger">*</span></label>
+                                        <input class="form-control" type="text" formControlName="city">
+                                        <small class="text-danger"
+                                            *ngIf="form?.get('address.city').touched && form?.get('address.city').errors?.required">
+                                            City Name is required</small>
+                                    </div>
+                                </div> -->
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">State <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" formControlName="state">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.state').touched && form?.get('address.state').errors?.required">
+                                        State Name is required</small>
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.state')?.errors?.pattern">Please
+                                        enter
+                                        valid State Name.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">District <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" formControlName="district">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.district').touched && form?.get('address.district').errors?.required">
+                                        District Name is required</small>
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.district')?.errors?.pattern">Please
+                                        enter
+                                        valid District Name.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">Country Code <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="number" formControlName="countryCode">
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="text-gray">Country <span class="text-danger">*</span></label>
+                                    <input class="form-control" type="text" formControlName="country">
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.country').touched && form?.get('address.country').errors?.required">
+                                        Country Name is required</small>
+                                    <small class="text-danger"
+                                        *ngIf="form?.get('address.country')?.errors?.pattern">Please
+                                        enter
+                                        valid Country Name.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-4">
+                        <div class="col-4">
+                            <h5>Social</h5>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane" id="social" formArrayName="social">
+                        <span *ngFor="let social of social.controls; let i=index">
+                            <div class="form-group" [formGroup]="social">
+                                <label class="text-gray">{{social.value.socialTypeName}}</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fa fa-{{social.value?.socialTypeName?.toLowerCase()}}"></i></span>
+                                    </div>
+                                    <input formControlName="urlLink" class="form-control" type="text">
+                                </div>
+                            </div>
+                        </span>
+                    </div>
+
+                    <!-- </div> -->
+                </div>
+            </div>
+
+            <div class="row mt-5 ">
+                <div class="col-12">
+                    <button *ngIf="!form.value?.orgSno " type="button" class="btn btn-primary  mb-1 mr-3"
+                        [disabled]="!form.valid" (click)="save()">Save</button>
+                    <button *ngIf="form.value?.orgSno " type="button" class="btn btn-primary  mb-1 mr-3"
+                        [disabled]="!form.valid" (click)="update()">Update</button>
+
+                    <button type="button" class="btn btn-outline-secondary  mb-1 mr-3"
+                        (click)="location.back()">Cancel</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>

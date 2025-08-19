@@ -1,0 +1,48 @@
+.toggle{
+    position: absolute;
+    right: 3rem;
+}
+
+.message{
+    position: absolute;
+    // left: 5rem;
+}
+
+.toggle1{
+    position: absolute;
+    right: 37rem;
+}
+
+
+
+.checkBox {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 10px;
+ }
+
+ .checkbox-container {
+    display: flex;
+    align-items: center;
+    // justify-content: space-between;
+    // margin-bottom: 5px;
+    /* Add other styles as needed */
+  }
+  
+  .checkbox-label {
+    // flex: 1; /* Expands label to fill available space */
+    margin-right: 10px; 
+    // margin-bottom: 10px;/* Add spacing between label and checkbox */
+    /* Add other label styles as needed */
+  }
+
+  .checkbox-label-toll{
+    // flex: 1; /* Expands label to fill available space */
+    margin-right: 60px; 
+    // margin-bottom: 10px;/* Add spacing between label and checkbox */
+    /* Add other label styles as needed */
+  }
+  
+  .checkbox-input {
+    /* Add checkbox input styles as needed */
+  }

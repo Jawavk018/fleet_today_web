@@ -1,0 +1,211 @@
+<!-- <div *ngIf="isNoData" class="text-center">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div> -->
+
+<!-- <div (click)="openModal(modalContent,null,'i')">
+        <div data-toggle="tooltip" data-placement="top" title="Add Single"
+                    class=" input-group-text border-top-0 border-right-0 border-bottom-0 w-25" ><i
+                        class="fa fa-plus"></i> Add Single</div>
+    </div> -->
+
+    <div class="col-12 text-right ">
+            <div class="btn-group mb-4 border" role="group" aria-label="Basic example">
+            <button type="button" class="btn bg-primary text-light p-2 px-4" (click)="openModal(modalContent,null,'i')" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                <i class="fa fa-plus"></i>  Add Single
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="orgvehicles?.length == 0" class="text-center">
+        <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+    </div>
+
+    
+    <span *ngIf="orgvehicles?.length>0">
+        <div class="col-12">
+            <div class="row">
+                <div class="col-3">
+                    <div class=" p-2 box-shadow header bg-primary rounded" >
+                        <p class="fw-bold mt-2 text-light fs-6">Vehicle Registration Number</p>
+                    </div>
+                    <div class="table-responsive bg-white box-shadow" style="height:70vh">
+                        <ul class="list-group list-group-flush fs-4" style="line-height:40px">
+                            <li *ngFor="let route of orgvehicles; let i=index;"
+                                [ngClass]="{'selectedListItem': selectedItem == route}" (click)="listClick($event, route)"
+                                class="list-group-item" (click)="displayRoute(i)">
+                                {{route?.vehicleRegNumber}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="col-9">
+                    <p class="fw-bold fs-5">Route Details:</p>
+                    <div *ngIf="!singleRoutes.length" class="text-center">
+                        <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png"/>
+                      </div>
+                    <div class="row">
+                        <div class="col-sm-6 p-2" *ngFor="let single of singleRoutes;let i=index;">
+                            <div class="card">
+                                <div class="card-header text-center text-light fs-4 p-3 bg-primary">
+                                    {{single.routeList[0].routeName}}
+                                </div>
+    
+                                <table class="table">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <td class="fs-5" scope="col">#</td>
+                                            <td class="fs-5" scope="col">Starting Time</td>
+                                            <td class="fs-5" scope="col">Running Time</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="text-center" *ngFor="let routes of single.routeList;let i=index;">
+                                            <td class="fs-5" scope="row">{{i+1}}</td>
+    
+                                            <td class="fs-5">{{routes.startingTime | date:"hh:mm a"}}</td>
+                                            <td class="fs-5">{{routes.runningTime}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div style="margin-left: auto; margin-bottom: 10px;">
+                                    <button class="btn btn-primary btn-sm" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                        <i class="fa fa-pencil" title="Edit" 
+                                            (click)="openModal(modalContent,i,'u')"></i></button>&nbsp;
+    
+    
+                                    <button title="Delete" class="btn btn-danger btn-sm" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+                                        <i
+                                            class="fa-solid fa-trash text-light" aria-hidden="true"
+                                            (click)="delete(i)"></i></button>&nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+    </span>
+    <ng-template mplate #modalContent>
+        <div class="modal-body bg-gray col-12 col-md-12 col-sm-12">
+            <h6 class="bg-gray text-center" style="color:white; height:auto;font-size: 14px;
+            font-weight: bold;">{{action}}</h6>
+            <div class="row">
+                <div class="col-12 vertical-tabs">
+                    <form [formGroup]="form" class="row px-3">
+                        <div class="tab-content col-12 col-md-12 col-sm-12 border-0" >
+                            <div class="tab-pane active" id="vaultcategory"
+                                >
+    
+                                <div >
+                                    <div class="row">
+                                        <div class="form-group col-md-6 col-sm-6 mx-auto">
+                                            <label>Vehicle Number</label>
+                                            <select class="form-control" formControlName="vehicleSno"
+                                                (change)="onChange($event.target.value)">
+                                                <option [ngValue]="null" [disabled]="true">-- Select Vehicle --</option>
+                                                <option *ngFor="let vehicle of orgvehicles" aria-placeholder="bus"
+                                                    [value]="vehicle.vehicleSno"><span></span> {{vehicle.vehicleRegNumber}}
+                                                </option>
+                                            </select>
+                                        </div>
+    
+    
+                                        <div class="form-group col-md-6 col-sm-6 mx-auto">
+                                            <label>route</label>
+                                            <select class="form-control" formControlName="routeSno"
+                                                (change)="onChangeRoute($event.target.value)">
+                                                <option [ngValue]="null" [disabled]="true">-- Select Route --</option>
+                                                <option *ngFor="let route of routes" aria-placeholder="bus"
+                                                    [value]="route.routeSno"><span></span> {{route.source}} -
+                                                    {{route.destination}}
+                                                </option>
+                                            </select>
+                                        </div>
+    
+    
+                                    </div>
+                                    <fieldset [disabled]="!form.value.routeSno" formArrayName="dateList">
+                                        <div class="mt-4" *ngFor="let dates of dateList.controls; let i=index">
+                                            <div class="mb-4" [formGroup]="dates">
+                                                <div class="d-flex">
+                                                    <div class="col-md-4 col-sm-6">
+                                                        <label class="text-gray">Starting Time{{dates.value.routeSno}}</label>&nbsp;
+                                                        <div class="input-group d-flex">
+                                                            <select class="mr-1 timeBox" formControlName="startHrs"
+                                                                (ngModelChange)="changeStartTime(i)">
+                                                                <option [value]="hour" *ngFor="let hour of hours;">
+                                                                    {{hour}}</option>
+                                                            </select>
+                                                            <span>:</span>
+                                                            <select class=" ml-1 timeBox" formControlName="startMints"
+                                                                (ngModelChange)="changeStartTime(i)">
+                                                                <option [value]="min" *ngFor="let min of minutes;">
+                                                                    {{min}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+    
+                                                    <div class="col-md-4 col-sm-6 mx-auto">
+                                                        <label class="text-gray">Running Time</label>&nbsp;
+                                                        <div class="input-group">
+                                                            <select class="mr-1 timeBox" formControlName="runningHrs"
+                                                                (ngModelChange)="changeStartTime(i)">
+                                                                <option [value]="hour" *ngFor="let hour of hours;">
+                                                                    {{hour}}</option>
+                                                            </select>
+                                                            <span>:</span>
+                                                            <select class=" ml-1 timeBox" formControlName="runningMints"
+                                                                (ngModelChange)="changeStartTime(i)">
+                                                                <option [value]="min" *ngFor="let min of runmins;">
+                                                                    {{min}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+    
+                                                    <div class="col-md-1 col-sm-1 mx-auto">
+                                                        <button type="button" *ngIf="i == 0 && isCreate"
+                                                            style="margin-top: 3vh;" class="btn btn-outline-primary h"
+                                                            (click)="createDateList()"><i class="fa fa-plus"></i>
+                                                        </button>
+                                                        <button type="button" *ngIf="i != 0" style="margin-top: 3vh;"
+                                                            class="btn btn-outline-danger h" (click)="deletedate(i)"><i
+                                                                class="fa fa-close"></i>
+                                                        </button>
+                                                    </div>
+    
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+    <!-- {{form.value.dateList[0].singleRouteSno | json }} -->
+                                    <div class="custom-control custom-checkbox mt-4 mx-auto">
+                                        <input type="checkbox" class="custom-control-input checkbox-dark-gray"
+                                            id="checkboxactiveFlag" formControlName="activeFlag">
+                                        <label class="custom-control-label" for="checkboxactiveFlag">Active Flag <i
+                                                data-toggle="tooltip" data-placement="top" title="##TOOL_TIP_TEXT##"
+                                                class="fa fa-question-circle" aria-hidden="true"></i></label>
+                                    </div>
+                                    <div class="col-12 bg-white text-center py-3">
+                                        <button class="btn btn-primary" type="submit"
+                                            (click)="!form?.value?.dateList[0]?.singleRouteSno ? save() : update()" [disabled]="form.invalid">
+                                            <span *ngIf="!form?.value?.dateList[0]?.singleRouteSno">Save</span>
+                                            <span *ngIf="form?.value?.dateList[0]?.singleRouteSno">Update</span>
+            
+                                        </button>&nbsp;&nbsp;
+                                        <button type="button" class="btn btn-danger" (click)="closeModal()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </form>
+    
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    <app-confirm-dialog></app-confirm-dialog>
+    

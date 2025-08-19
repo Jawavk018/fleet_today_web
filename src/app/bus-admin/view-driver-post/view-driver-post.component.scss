@@ -1,0 +1,40 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #6c65f6;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right bottom, #492db500, #492db500);
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right bottom, rgb(17, 30, 181), rgb(173, 178, 232))
+    }
+
+    .text-grey{
+        color: lightgray;
+    }
+
+    .circular_image {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        overflow: hidden;
+        background-color: blue;
+        /* commented for demo
+        float: left;
+        margin-left: 125px;
+        margin-top: 20px;
+        */
+        
+        /*for demo*/
+        display:inline-block;
+        vertical-align:middle;
+      }
+      .circular_image img{
+        width:100%;
+      }
+
+    .box {
+        width: 20px !important;
+        height: 20px !important;
+    }
+    

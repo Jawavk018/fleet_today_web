@@ -1,0 +1,176 @@
+<form [formGroup]="bookingForm">
+  <div class="row mt-5">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Select Bus Number <span class="text-danger">*</span></label>
+        <select formControlName="vehicleSno" class="form-control fa-select minimal">
+          <option [value]=vehicle.vehicleSno *ngFor="let vehicle of ContractCarrierVehicleList;">
+            {{vehicle.vehicleRegNumber}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label for="input-11">Start Date <span class="text-danger">*</span></label>
+        <input type="datetime-local" appDisableDatetimeLocalScroll (input)="onDateTimeChange($event)" [min]="today" (change)="dateChange()" class="form-control" id="input-11"
+          formControlName="startDate" [(ngModel)]="this.bookingForm.value.startDate"
+          (input)=" calculateDateDifference()">
+      </div>
+      <small class="text-danger"
+        *ngIf="bookingForm.controls.startDate?.touched && bookingForm.controls.startDate?.errors?.required">
+        Start Date is required</small>
+    </div>
+
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label for="input-11">End Date <span class="text-danger">*</span></label>
+        <input type="datetime-local" [min]="dueDate" (focusout)="validateDateRange('End')"
+          [readonly]="bookingForm.value.startDate == '' ? true : false" class="form-control" id="input-11"
+          formControlName="endDate" [(ngModel)]="this.bookingForm.value.endDate" (input)=" calculateDateDifference()">
+      </div>
+      <small class="text-danger"
+        *ngIf="bookingForm.controls.endDate?.touched && bookingForm.controls.endDate?.errors?.required">
+        End Date is required</small>
+      <small class="text-danger" *ngIf="isEnddateValid">
+        End Date Must be greater then Start Date
+      </small>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Customer Name <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="customerName"
+          onkeypress='return event.charCode >= 97 && event.charCode <= 122 || event.charCode >= 65 && event.charCode <= 90 || event.charCode == 32'>
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.customerName?.touched && bookingForm.controls.customerName?.errors?.required">
+          Customer Name is required</small>
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.customerName?.touched && bookingForm.controls.customerName?.errors?.minlength">
+          Customer Name isn't long enough, minimum of 3 characters</small>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Contact Number <span class="text-danger">*</span></label>
+        <input class="form-control" maxlength="10" pattern="^((\\+91-?)|0)?[0-9]{10}$" type="number"
+          formControlName="contactNumber"
+          oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.contactNumber?.touched && bookingForm.controls.contactNumber?.errors?.required">Please
+          enter Customer's mobile number</small>
+        <small class="text-danger" *ngIf="bookingForm.controls.contactNumber?.errors?.pattern">
+          Please check your mobile number!</small>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Customer Address <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="customerAddress">
+        <small class="text-danger" *ngIf="bookingForm.controls.customerAddress?.errors?.pattern">
+          Enter Valid Address</small>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">No Of Days Booked <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="noOfDaysBooked" [value]="noOfDaysBooked">
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.noOfDaysBooked?.touched && bookingForm.controls.noOfDaysBooked?.errors?.required">
+          No Of Booked Days is required</small>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Total Booking Amount <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="totalBookingAmount"
+          [(ngModel)]="this.bookingForm.value.totalBookingAmount" (input)="calculateBalance()">
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.totalBookingAmount?.touched && bookingForm.controls.totalBookingAmount?.errors?.required">
+          Total Booking Amount is required</small>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Advance Paid <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="advancePaid"
+          [(ngModel)]="this.bookingForm.value.advancePaid" (input)="calculateBalance()">
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.advancePaid?.touched && bookingForm.controls.advancePaid?.errors?.required">
+          Advance Amount is required</small>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Balance Amount to Pay <span class="text-danger">*</span></label>
+        <input class="form-control" type="text" formControlName="balanceAmountTopaid" [value]="balanceAmount">
+        <small class="text-danger"
+          *ngIf="bookingForm.controls.balanceAmountTopaid?.touched && bookingForm.controls.balanceAmountTopaid?.errors?.required">
+          Balance Amount to Pay is required</small>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Teams & Conditions </label>
+        <input class="form-control" type="text" formControlName="description">
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <label class="text-gray">Trip Plan</label>
+        <textarea class="form-control" type="text" formControlName="tripPlan" #inputText [(ngModel)]="textareaContent"
+          (keyup.enter)="addDestination(inputText.value)"></textarea>
+      </div>
+      <div>
+        <mat-chip-list>
+          <mat-chip *ngFor="let trip of tripPlanList ;let i=index">
+            {{trip}}
+            <mat-icon (click)="removes(i)">cancel</mat-icon>
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+    </div>
+    </div>
+    <div class="row mt-4">
+    <div class="col-md-4 col-sm-12">
+      <div class="checkbox-container">
+        <label class="checkbox-label-toll">Toll/Parking Extra :</label>
+        <input type="checkbox" class="checkBox" formControlName="tollParkingIncludes">
+      </div>
+    </div>
+  </div>
+  <div class="row mt-2">
+    <div class="col-md-4 col-sm-12">
+      <div class="checkbox-container">
+        <label class="checkbox-label">Driver Batta/Per Day Extra :</label>
+        <input type="checkbox" class="checkBox" (change)="checkboxChanged($event)" [(ngModel)]="isChecked"
+        formControlName="driverWagesIncludes">
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="isChecked">
+    <div class="col-md-2 col-sm-12">
+      <div class="checkbox-container">
+        <input class="form-control" type="text" formControlName="driverWages"> 
+      </div>
+    </div>
+  </div>
+  <div>
+    <small class="text-danger"
+      *ngIf="bookingForm.controls.driverWages?.touched && bookingForm.controls.driverWages?.errors?.required">
+      Driver Wages is required</small></div>
+  <div class="row mt-5 ">
+    <div class="col-12 text-center">
+      <button type="button" *ngIf="!bookingForm.value?.bookingSno" class="btn btn-primary  mb-1 mr-3"
+        [disabled]="!bookingForm.valid || isEnddateValid" (click)="save()">Book a Trip</button>
+        <button type="button" *ngIf="bookingForm.value?.bookingSno" class="btn btn-primary  mb-1 mr-3"
+        [disabled]="!bookingForm.valid || isEnddateValid" (click)="Update()">Update a Trip</button>  
+      <button type="button" class="btn btn-outline-secondary  mb-1 mr-3" (click)="clear()">Cancel</button>
+    </div>
+  </div>
+</form>

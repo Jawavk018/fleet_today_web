@@ -1,0 +1,293 @@
+<div id="carouselExampleIndicators" data-interval="false" class="carousel slide " data-ride="carousel">
+    <ol class="carousel-indicators d-none">
+        <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+    </ol>
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <div class="login-container img js-fullheight min-vh-100"
+                style="background-image: url(../../../assets/img/bus1.jpeg);">
+                <section class="ftco-section">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center mb-2">
+                                <h2 class="heading-section">FLEET TODAY</h2>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="login-wrap p-0">
+                                    <h3 class="mb-4 text-center">Have an account?</h3>
+                                    <form action="#" class="signin-form" [formGroup]="form">
+                                        <div class="form-group  ">
+                                            <input [formControl]="mobileNumber" type="text"
+                                                class="form-control text-control m-2" placeholder="Mobile Number"
+                                                required (input)="mobileNumberChange($event)" maxlength="10"
+                                                minlength="10"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                id="mNumber" name="mNumber">
+                                            <div class="popover bottom error-message "
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('required')">
+                                                <div class="arrow"></div>
+                                                <small class="popover-title text-dark">
+                                                    <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                    &nbsp;
+                                                    Mobile
+                                                    Number is
+                                                    required</small>
+                                            </div>
+                                            <!-- <small class="text-danger"
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('required')">Mobile
+                                                Number is
+                                                required</small>
+                                            <small class="text-danger"
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('maxlength')">Invalid
+                                                Mobile number
+                                            </small> -->
+                                        </div>
+                                        <div class="form-group " *ngIf="isPasswordBox">
+                                            <input formControlName="password" id="password-field"
+                                                [type]="isLoginPassword?'password':'true'"
+                                                class="form-control text-control" placeholder="Password" required>
+                                            <span (click)="goToShowPassword()" toggle="#password-field"
+                                                class="fa fa-fw field-icon toggle-password"
+                                                [ngClass]="isLoginPassword?'fa fa-eye-slash':'fa fa-eye'"></span>
+
+                                            <div class="popover bottom error-message "
+                                                *ngIf="form.get('password').touched && form.get('password').hasError('required')">
+                                                <div class="arrow"></div>
+                                                <small class="popover-title text-dark">
+                                                    <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                    &nbsp;
+                                                    Password is
+                                                    required</small>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group " *ngIf="!isOrg">
+                                            <button [disabled]="!form.valid" type="submit"
+                                                (click)="isPasswordBox ? login() : onSubmit(form.value)"
+                                                class="form-control btn btn-primary submit px-3">Sign
+                                                In</button>
+                                        </div>
+                                        <div class="form-group d-md-flex">
+                                            <!-- <div class="w-50">
+                                                <label class="checkbox-wrap checkbox-primary">Remember Me
+                                                    <input type="checkbox" checked>
+                                                    <span class="checkmark"></span>
+                                                </label>
+                                            </div> -->
+                                            <div class="w-100 text-md-right">
+                                                <a href="#" type="button" (click)="isForgotPassword = true"
+                                                    data-slide-to="1" data-target="#carouselExampleIndicators"
+                                                    style="color: #fff">Forgot Password ?</a>
+                                            </div> 
+
+                                        </div>
+                                        <div class="text-white m-auto text-center">
+                                            By signing up , you accept our <span class="text-warning privacy" (click)="goToTerms()"> terms and
+                                                condition </span> and <span class="text-warning privacy" (click)="goToPrivacy()"> Privacy policy
+
+                                            </span>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+
+                            </div> 
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="carousel-item" *ngIf="isForgotPassword">
+            <div class="login-container img js-fullheight min-vh-100"
+                style="background-image: url(../../../assets/img/bus1.jpeg);">
+                <section class="ftco-section">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center mb-2">
+                                <h2 class="heading-section">FLEET TODAY</h2>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="login-wrap p-0">
+                                    <!-- <h3 class="mb-4 text-center">Have an account?</h3> -->
+                                    <form action="#" class="signin-form" [formGroup]="form">
+                                        <div class="form-group  ">
+                                            <input [formControl]="mobileNumber" type="text"
+                                                class="form-control text-control m-2" placeholder="Mobile Number"
+                                                required maxlength="10" minlength="10"
+                                                onkeypress='return event.charCode >= 48 && event.charCode <= 57'
+                                                id="mNumber" name="mNumber">
+                                            <div class="popover bottom error-message "
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('required')">
+                                                <div class="arrow"></div>
+                                                <small class="popover-title text-dark">
+                                                    <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                    &nbsp;
+                                                    Mobile
+                                                    Number is
+                                                    required</small>
+                                            </div>
+                                            <!-- <small class="text-danger"
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('required')">Mobile
+                                                Number is
+                                                required</small>
+                                            <small class="text-danger"
+                                                *ngIf="form.get('mobileNumber').touched && form.get('mobileNumber').hasError('maxlength')">Invalid
+                                                Mobile number
+                                            </small> -->
+                                        </div>
+
+                                        <div class="form-group ">
+                                            <button [disabled]="!form.valid" data-target="#carouselExampleIndicators"
+                                                type="submit" (click)="forgotPassword($event)" data-interval="false"
+                                                class="form-control btn btn-primary carousel slide submit px-3">Verify</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- otp -->
+        <div class="carousel-item">
+            <div class="login-container img js-fullheight min-vh-100"
+                style="background-image: url(../../../assets/img/bus1.jpeg);">
+                <section class="ftco-section">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center mb-2">
+                                <h2 class="heading-section">FLEET TODAY</h2>
+                            </div>
+                        </div>
+
+                        <div class="row justify-content-center ">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="login-wrap p-0">
+                                    <!-- <h3 class="mb-4 text-center">Have an account?</h3> -->
+                                    <div class="card-body text-center pb-1 cssanimation sequence fadeInBottom"
+                                        *ngIf="isShowOTP">
+                                        <h2 class="text-light">Enter verification code</h2>
+                                        <p class="text text-light">We have sent you a 6 digit OTP in your mobile</p>
+                                        <form class="mt-3">
+                                            <div class="form-group text-center">
+                                                <ng-otp-input class="text-light" #ngOtpInput
+                                                    (onInputChange)="onOtpChange($event)" [config]="config">
+                                                </ng-otp-input>
+                                            </div>
+
+                                            <div class="form-group p-4">
+                                                <button (click)="verifyOTP()" data-target="#carouselExampleIndicators"
+                                                    class="btn btn-block bg-primary text-light"
+                                                    [disabled]="!simOtp || isDisabled">Verify OTP</button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+        <!-- password -->
+        <div class="carousel-item">
+            <div class="login-container img js-fullheight min-vh-100"
+                style="background-image: url(../../../assets/img/bus1.jpeg);">
+                <section class="ftco-section">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 text-center mb-2">
+                                <h2 class="heading-section">FLEET TODAY</h2>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 col-lg-4">
+                                <div class="login-wrap p-0">
+                                    <!-- <h3 class="mb-4 text-center">Have an account?</h3> -->
+                                    <h2 class="text-light text-center">CHANGE PASSWORD</h2>
+                                    <p class="text text-light text-center">Change your password here!</p>
+                                    <form action="#" class="signin-form" [formGroup]="passwordFrom">
+                                        <div class="form-group">
+                                            <input formControlName="password" type="text"
+                                                class="form-control text-control" placeholder="New Password"
+                                                [type]="showNewPassword ? 'text' : 'password'" name="password"
+                                                (input)="onChangeEvent($event)" required="">
+                                            <span (click)="toggleNewPasswordVisibility()" toggle="#password-field"
+                                                class="fa fa-fw field-icon toggle-password"
+                                                [ngClass]="showNewPassword?'fa fa-eye':'fa fa-eye-slash'"></span>
+
+                                            <div class="popover bottom error-message "
+                                                *ngIf="passwordFrom.get('password').touched && passwordFrom.get('password').hasError('required')">
+                                                <div class="arrow"></div>
+                                                <small class="popover-title text-dark">
+                                                    <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                    &nbsp;Password is required</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group ">
+                                            <input formControlName="confirmPassword" id="password-field"
+                                                [type]="showConfirmPassword ? 'text' : 'password'"
+                                                class="form-control text-control" placeholder="Confirm Password"
+                                                required (input)="confirmPasswordChange($event)">
+                                            <span (click)="toggleConfirmPasswordVisibility()" toggle="#password-field"
+                                                class="fa fa-fw field-icon toggle-password"
+                                                [ngClass]="showConfirmPassword?'fa fa-eye':'fa fa-eye-slash'"></span>
+
+                                            <!-- <small class="text-danger" style="float: left;"
+                                                *ngIf=" passwordInput!=confirmPasswordInput">
+                                                Password and Confirm password are mismatch
+                                            </small> -->
+                                        </div>
+                                        <div class="popover bottom error-message "
+                                            *ngIf="passwordFrom.get('confirmPassword').touched && passwordFrom.get('confirmPassword').hasError('required')">
+                                            <div class="arrow"></div>
+                                            <small class="popover-title text-dark">
+                                                <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                &nbsp;Password is required</small>
+                                        </div>
+                                        <div class="popover bottom error-message "
+                                            *ngIf=" passwordInput!=confirmPasswordInput && passwordFrom.get('confirmPassword').dirty">
+                                            <div class="arrow"></div>
+                                            <small class="popover-title text-dark">
+                                                <i class="fa fa-info-circle text-danger" aria-hidden="true"></i>
+                                                &nbsp;Password and Confirm password are mismatch</small>
+                                        </div>
+                                        <div class="form-group ">
+                                            <button class="form-control btn btn-primary rounded  px-3"
+                                                style="color: white;" class="btn btn-block bg-primary"
+                                                [disabled]="passwordFrom.invalid || (passwordInput!=confirmPasswordInput)"
+                                                (click)="goToSave()">save</button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- <button class="carousel-control-prev" type="button" data-target="#carouselExampleIndicators" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-target="#carouselExampleIndicators" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </button> -->
+</div>

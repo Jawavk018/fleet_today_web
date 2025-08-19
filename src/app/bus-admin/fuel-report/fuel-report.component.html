@@ -1,0 +1,102 @@
+<form [formGroup]="form">
+  <div class=" p-2">
+    <div class="row">
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="form-group dropdown-container">
+          <label class="text-gray">Bus Number</label>
+          <select class="form-control fa-select minimal" formControlName="vehicleSno">
+            <option [value]="buses.vehicleSno" *ngFor="let buses of busList;let i=index">
+              {{buses.vehicleRegNumber}}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="col-lg-3 col-md-4 col-sm-12">
+        <div class="form-group dropdown-container">
+          <label class="text-gray">Driver Name</label>
+          <div class="input-group">
+            <select class="form-control fa-select minimal" formControlName="driverSno">
+              <option [value]="driver.driverSno" *ngFor="let driver of driverList;let i=index">
+                {{driver.driverName}}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">From date</label>
+          <div class="input-group">
+            <input class="form-control" type="date" placeholder="dd-mm-yy" formControlName="filledDate">
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-2 col-md-3 col-sm-12">
+        <div class="form-group">
+          <label class="text-gray">To date</label>
+          <div class="input-group">
+            <input class="form-control" type="date" placeholder="dd-mm-yy" formControlName="toDate">
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-3 col-sm-12 " (click)="getFuelCount()">
+        <div class="input-group-text btn btn-primary my-4  px-4"><i class="fa fa-search"></i> &nbsp; Search</div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="fuelReportList?.length==0" class="text-center">
+  <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+</div>
+
+<div class="table-responsive-sm" *ngIf="fuelReportList?.length">
+  <app-confirm-dialog></app-confirm-dialog>
+  <table class="table table-striped">
+    <thead class="bg-primary border-0 text-light">
+      <tr>
+        <th>#</th>
+        <th>Bus Number</th>
+        <th>Driving Type</th>
+        <th>Driver Name</th>
+        <th>Fuel Filling Time</th>
+        <th>Fuel Quantity</th>
+        <th>Price Per Liter</th>
+        <th>Fuel Amount</th>
+        <th>Odo Mtr Reading</th>
+        <!-- <th>Running Km</th> -->
+        <!-- <th>Mileage</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let report of fuelReportList ;let i =index;"
+        [ngClass]="report.FuelList.isFilled == 'true'?'text-dark':'text-warning'">
+        <td>{{(pageIndex*limit)+i+1}}</td>
+        <td>{{report.FuelList.vehicleRegNumber}}</td>
+        <td>{{report.FuelList.drivingType ?? '--'}}</td>
+        <td>{{report.FuelList.driverName}}</td>
+        <td *ngIf="report.FuelList.filledDate">{{report.FuelList.filledDate[0] | date:'dd/MM/yy, h:mm a' }}</td>
+        <td *ngIf="!report.FuelList.filledDate">--</td>
+        
+        <td>{{report.FuelList.fuelQuantity | number : '1.2-2'}}</td>
+        <td>{{(report.FuelList.fuelAmount/report.FuelList.fuelQuantity) | number : '1.2-2'}}</td>
+        <td>{{report.FuelList.fuelAmount | number : '1.2-2'}}</td>
+        <td>{{report.FuelList.odoMeterValue}}</td>
+        <!-- <td >{{report.FuelList.runningKm}}</td> -->
+        <!-- <td >{{(report.mileage | number : '1.2-2'}} </td> -->
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="fuelReportList.length > 0" class="d-flex justify-content-between">
+  <div>
+    <button type="button" (click)="getReportPdf()" class="btn btn-light btn-lg border border-primary"><i class="bi bi-file-pdf-fill text-danger"></i> Report</button>
+  </div>
+  <div>
+    <mat-paginator [length]="count" [pageSizeOptions]="itemPerPage" (page)="getMoreFuel($event)" [pageIndex]="pageIndex"
+    [pageSize]="pageSize" aria-label="Select page">
+  </mat-paginator>
+  </div>
+</div>

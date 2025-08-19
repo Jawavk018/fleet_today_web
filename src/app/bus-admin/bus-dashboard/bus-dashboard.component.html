@@ -1,0 +1,177 @@
+<!-- <div class="card bg-danger text-light p-1">
+  <div *ngIf="operatorList.length>0">
+    <div class="row" *ngFor="let operator of operatorList;let i=index;">
+      <p class="fw-bold mx-auto text-center pt-2" style="font-size: 30px;">
+        {{operator.orgName}} - {{operator.address.district}}
+      </p>
+    </div>
+  </div>
+  <div *ngIf="operatorList.length==0">
+  
+    <div class="row ">
+      <div class="col-8">
+        <p class="font-weight-bold pt-2" *ngIf="user.roleCd == 1">Admin Dashboard</p>
+        <p class="font-weight-bold pt-2" *ngIf="user.roleCd != 1">Bus Dashboard</p>
+      </div>
+    </div>
+  </div>
+</div>-->
+<br>
+
+<div class=" m-auto text-center ">
+
+  <div class="d-md-flex justify-content-between">
+    <div class="col-sm-12  col-md-1 card border-0 pt-2 mentions m-2 " ngHoverClass='hover'
+      (click)="goToPage(expiry.path,expiry.title,expiry.count)" [class]="expiry['class']"
+      *ngFor="let expiry of expiryList">
+      <span [ngClass]="expiry['count'] != 0 ? blinkCard : ''">
+        <div class="dash-hover p-2" >
+          <p class=" pt-1 pb-0 fw-bold "> <span class="h2 text-light">{{expiry['count']}}</span> <span class="text-light"
+              style="font-size: 14;" *ngIf="expiry.title!='Transport License Expiry'">
+              vehicle</span>
+            <span class="text-light" style="font-size: 14;" *ngIf="expiry.title=='Transport License Expiry'">
+              Drivers</span>
+          </p>
+          <div>
+            <i class=" pb-2 text-light" [ngClass]="expiry['icon']" aria-hidden="true"> </i>
+            <span class="px-2 text-light"> {{expiry['title']}}</span>
+          </div>
+        </div>
+      </span> 
+    </div>
+  </div>
+  <br>
+
+  <div class="d-md-flex justify-content-between">
+    <div class="col-sm-12  col-md-1 card border-0 pt-2 mentions m-2 " ngHoverClass='hover'
+      (click)="goToPage(expiryDtl.path,expiryDtl.title,expiryDtl.count)" 
+       [class]="expiryDtl['class']"
+      *ngFor="let expiryDtl of expiryListDtl">
+      <span [ngClass]="expiryDtl['count'] != 0 ? blinkCard : ''">
+        <div class="dash-hover p-2">
+          <p class=" pt-1 pb-0 fw-bold "> <span class="h2 text-light">{{expiryDtl['count']}}</span> <span class="text-light"
+              style="font-size: 14;" *ngIf="expiryDtl.title!='Transport License Expiry' && expiryDtl.title!='Toll Expiry' && expiryDtl.title!='Due Expiry'">
+              vehicle</span>
+            <span class="text-light" style="font-size: 14;" *ngIf="expiryDtl.title=='Transport License Expiry'">
+              Drivers</span>
+              <span class="text-light" style="font-size: 14;" *ngIf="expiryDtl.title=='Toll Expiry'">
+                Toll</span>  
+                <span class="text-light" style="font-size: 14;" *ngIf="expiryDtl.title=='Due Expiry'">
+                  Due</span>  
+          </p>
+          <div>
+            <i class=" pb-2 text-light" [ngClass]="expiryDtl['icon']" aria-hidden="true"> </i>
+            <span class="px-2 text-light"> {{expiryDtl['title']}}</span>
+          </div>
+        </div>
+      </span>
+    </div>
+  </div>
+  <br>
+
+  <div class="d-md-flex justify-content-between">
+    <div class="col-sm-12 col-md-1 card border-0 pt-2 mentions m-2 " ngHoverClass='hover'
+      (click)="goToPage(count.path,count.title,count.count)" [ngClass]="count.class"
+      *ngFor="let count of dashboardList ">
+      <div class="dash-hover ">
+        <div class="h6 pt-2">
+          <span> {{count.title}}</span>
+        </div>
+        <div>
+          <p class=" pt-1 pb-0 fw-bold h2 "><i [ngClass]="count['icon']" aria-hidden="true"> </i>
+            {{count.title!='Running Routes'?count.count:getValue(count.count/2)}} </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="d-md-flex d-sm-block gy-5 mt-4">
+    <div class="col-md-3 col-sm-12 card pt-2 mentions m-2 shadow border-0 card-1" ngHoverClass='hover'
+      (click)="goToPage(count.path,count.title,count.count)" [ngClass]="count.class" style="background-color: white !important;"
+      *ngFor="let count of dashboardCountList ">
+      <div class="h6 pt-2">
+        <span> {{count.title}}</span>
+      </div>
+
+      <div class="d-flex justify-content-between py-1">
+        <div>
+          <h1 class="font-weight-bold">{{count.count}}</h1>
+        </div>
+        <div> <i [ngClass]="count['icon']" aria-hidden="true" style="font-size: 4vh;"> </i></div>
+      </div>
+      <div class="progress rounded" style="height:10px;">
+        <div class="progress-bar"  [ngClass]="count.class"  aria-hidden="true" role="progressbar" style="width: 45%;" aria-valuenow="25" aria-valuemin="0"
+          aria-valuemax="100"></div>
+      </div>
+      <br>
+    </div>
+    <!-- <div class="col-md-3 col-sm-12 card pt-2 mentions m-2 shadow border-0 card-2 bg-white rounded">
+      <h3 class="text-secondary">Total Running Drivers</h3>
+      <div class="d-flex justify-content-between py-1">
+        <div>
+          <h1 class="font-weight-bold">67</h1>
+        </div>
+        <div><i class="bi bi-person-circle text-secondary h1" style="font-size: 4vh;"></i></div>
+      </div>
+      <div class="progress rounded" style="height:10px;">
+        <div class="progress-bar bg-secondary " role="progressbar" style="width: 45%;" aria-valuenow="25"
+          aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <br>
+    </div> -->
+    <!-- <div class="col-md-3 col-sm-12 card pt-2 mentions m-2 shadow border-0 card-3 bg-white rounded">
+      <h3 class="text-warning">Total Running Vehicle</h3>
+      <div class="d-flex justify-content-between py-1">
+        <div>
+          <h1 class="font-weight-bold">10</h1>
+        </div>
+        <div><i class="bi bi-bus-front text-warning h1" style="font-size: 4vh;"></i></div>
+      </div>
+      <div class="progress rounded" style="height:10px;">
+        <div class="progress-bar bg-warning " role="progressbar" style="width: 45%;" aria-valuenow="25"
+          aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <br>
+    </div> -->
+    <!-- <div class="col-md-3 col-sm-12 card pt-2 mentions m-2 shadow border-0 card-4 bg-white rounded">
+      <h3 class="text-primary">Total Running Tyres</h3>
+      <div class="d-flex justify-content-between py-1">
+        <div>
+          <h1 class="font-weight-bold">5</h1>
+        </div>
+        <div><i class="bi bi-record-circle text-primary h1" style="font-size: 4vh;"></i></div>
+      </div>
+      <div class="progress rounded" style="height:10px;">
+        <div class="progress-bar bg-primary " role="progressbar" style="width: 45%;" aria-valuenow="25"
+          aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <br>
+    </div> -->
+    <!-- <div class="col-md-3 col-sm-12 card pt-2 mentions m-2 shadow border-0 card-5 bg-white rounded">
+      <h3 class="text-success">Total Stock Tyres</h3>
+      <div class="d-flex justify-content-between py-1">
+        <div>
+          <h1 class="font-weight-bold">10</h1>
+        </div>
+        <div><i class="bi bi-wrench-adjustable-circle text-success h1" style="font-size: 4vh;"></i></div>
+      </div>
+      <div class="progress rounded" style="height:10px;">
+        <div class="progress-bar bg-success " role="progressbar" style="width: 45%;" aria-valuenow="25"
+          aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <br>
+    </div> -->
+  </div>
+
+</div>
+<br>
+
+<div class="row">
+  <div class="col-sm-12 col-md-6">
+    <app-visitors></app-visitors>
+  </div>
+  <div class="col-sm-12 col-md-6">
+    <app-cost></app-cost>
+  </div>
+</div>

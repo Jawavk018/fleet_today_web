@@ -1,0 +1,107 @@
+<div class="row mt-4 ">
+  <div class="col-3">
+    <h3 class="font-weight-bold">Tyre Details</h3>
+  </div>
+
+</div>
+
+<section class="" style="background-color: #f4f5f7;">
+  <div class="  h-100">
+    <div class="row d-flex justify-content-center align-items-center  h-100">
+      <div class="col col-lg-8  mb-lg-5">
+        <div class="card mb-3" style="border-radius: .5rem;">
+          <div class="row g-0">
+            <div class="col-md-3 col-sm-12 container-sm gradient-custom text-center text-white"
+              style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+              <img [src]="tyre.invoiceMedia != null ? tyre.invoiceMedia.mediaUrl : 'assets/img/tyre.png'" alt="Avatar"
+                class="img-fluid my-5 circular_image rounded-circle" style="width: 90px;" />
+              <h2>{{tyre.tyreCompanyName}}</h2>
+              <div class="col-md-12 mb-4" *ngIf="tyre?.vehicleNumber">
+                <div style="font-weight:500;" class="text-grey">Tyre Vehicle Number </div>
+                <div class="text-white"> {{tyre.vehicleNumber}}</div>
+              </div>
+              <div class="col-md-12 mb-4">
+                <div style="font-weight:500;" class="text-grey">Tyre Serial Number </div>
+                <div class="text-white"> {{tyre.tyreSerialNumber}}</div>
+              </div>
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <div class="card-body ">
+                <div class="row d-flex justify-content-between">
+                  <h4 class="font-weight-bold">Tyre Details:</h4>
+                  <div>
+                      <button type="button" (click)="closeView()" class="btn btn-light btn-sm border border-primary mr-2"><i class="bi bi-x text-danger"></i></button>
+                  </div>
+                </div>
+                <hr class="mt-0 mb-4">
+                <div class="row pt-1">
+                  <div class="col-md-4 col-sm-12 mb-3">
+                    <p class="text-primary">Tyre Type</p>
+                    <p class="font-weight-bold">{{tyre.tyreTypeName}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3">
+                    <p class="text-primary">Tyre Size</p>
+                    <p class="font-weight-bold">{{tyre.tyreSizeName}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.tyreModelName">
+                    <p class="text-primary">Tyre Model</p>
+                    <p class="font-weight-bold">{{tyre.tyreModelName}}</p>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12 mb-3">
+                    <p class="text-primary">Tyre Category</p>
+                    <p class="font-weight-bold">{{tyre.isNew=='true' ? 'New' : 'Old'}}</p>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.invoiceDate">
+                    <p class="text-primary">Invoice Date</p>
+                    <p class="font-weight-bold"> <i class="bi bi-calendar2 text-primary"></i> {{ tyre.invoiceDate | date:'dd/MM/YYYY'}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.incomingDate">
+                    <p class="text-primary">Incoming Date</p>
+                    <p class="font-weight-bold"> <i class="bi bi-calendar2 text-primary"></i> {{tyre.incomingDate | date:'dd/MM/YYYY'}}</p>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.agencyName">
+                    <p class="text-primary">Agency Name</p>
+                    <p class="font-weight-bold">{{tyre.agencyName}}</p>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.efficiencyValue">
+                    <p class="text-primary">Efficiency Value</p>
+                    <p class="font-weight-bold">{{tyre.efficiencyValue}} %</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.tyrePrice">
+                    <p class="text-primary">Tyre Price</p>
+                    <p class="font-weight-bold">₹ {{tyre.tyrePrice}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre?.kmDrive">
+                    <p class="text-primary">Tyre km</p>
+                    <p class="font-weight-bold"> <i class="bi bi-speedometer2 text-primary"></i> {{tyre.kmDrive}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre?.isTread">
+                    <p class="text-primary">Thread Type</p>
+                    <p class="font-weight-bold"> <i class="text-primary"></i> {{tyre.isTread == 'true' ? 'Original Thread' : 'Re-Thread'}}</p>
+                  </div>
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre?.noOfTread">
+                    <p class="text-primary">No. of Thread</p>
+                    <p class="font-weight-bold"> <i class="text-primary"></i> {{tyre.noOfTread}}</p>
+                  </div>  
+                  <div class="col-md-4 col-sm-12 mb-3" *ngIf="tyre.paymentMethod">
+                    <p class="text-primary">Payment Method</p>
+                    <p class="font-weight-bold"
+                      [ngClass]="tyre.paymentMethod=='Online' ? 'text-success' :'text-danger'">{{tyre.paymentMethod}}
+                    </p>
+                  </div>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

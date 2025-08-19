@@ -1,0 +1,74 @@
+<div class="row mt-4 ">
+  <div class="container-fluid">
+    <div class="row justify-content-md-end">
+      <div class="col-auto" style="margin-right: auto;">
+        <h3 class="font-weight-bold">Post Details</h3>
+      </div>
+
+      <!-- <div class="col-auto my-2">
+        <div class="input-group mb-2 ">
+          <span class="input-group-prepend"><span class="input-group-text"><i class="fa fa-search"></i></span></span>
+          <input (input)="search.next($event);" [(ngModel)]="searchKey" type="text" style="height:42px" class="w-25"
+            placeholder="Contact Name..." class="form-control border-1 ">
+        </div>
+      </div> -->
+
+      <div class="col-8 text-right" *ngIf=" jobList.length < 3">
+        <button *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin" class="btn bg-primary text-white mx-2 p-2 px-4"
+          (click)="goToAddPost()"><i class="fa fa-plus mr-2"></i>Add Post</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<span>
+  <div *ngIf="jobList.length==0" class="text-center">
+    <img class="mt-2 mb-2 w-25" src="assets/img/norecord.png" />
+  </div>
+
+  <div class="table-responsive" *ngIf="jobList.length>0">
+    <app-confirm-dialog></app-confirm-dialog>
+    <table class="table table-hover table-sjobed">
+      <thead class="bg-primary text-light">
+        <tr>
+          <th>#</th>
+          <th>Orgonisation Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Location</th>
+          <th>customer Name</th>
+          <th>Contact Number</th>
+          <th *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let job of jobList ;let i =index;">
+          <td>{{i+1}}</td>
+          <td>{{job.orgName}}</td>
+          <td>{{job.startDate | date:'dd/MM/yyyy, h:mm a'}}</td>
+          <td>{{job.endDate | date:'dd/MM/yyyy, h:mm a'}}</td>
+          <td>{{job.userLatLong.split(', ')[0]}}</td>
+          <td>{{job.contactName}}</td>
+          <td>{{job.contactNumber}}</td>
+          <td class="align-middle" *ngIf="user.roleCd==2 || user.roleCd==1 || isAdmin">
+            <div class="btn-group" role="group">
+              <button data-toggle="tooltip" data-placement="top" title="Edit" class="btn btn-primary btn-sm"
+                (click)="gotoViewPost(i)"><i class="fa fa-eye"></i></button>
+              <button type="button" (click)="goToUpdatejob(i)" class="btn btn-primary btn-sm">
+                <i class="fa fa-pencil"></i></button>
+              <!-- <button type="button" (click)="getReportPdf(i)" class="btn btn-primary btn-sm">
+                  <i class="bi bi-file-pdf-fill"></i></button> -->
+              <button data-toggle="tooltip" data-placement="top" title="Delete" class="btn btn-primary btn-sm"
+                (click)="deletePost(i)"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <mat-paginator [length]="count" [pageSize]="pageSize" *ngIf="jobList?.length" [pageSizeOptions]="itemPerPage"
+      (page)="getMorePost($event)" aria-label="Select page" [pageIndex]="pageIndex">
+    </mat-paginator>
+  </div>
+</span>

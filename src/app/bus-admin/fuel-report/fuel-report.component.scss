@@ -1,0 +1,69 @@
+// .btn-sm1{
+//     height: 32px;
+//     text-align: center;
+//     background-color: #5baf4f;
+//     color: white;
+//     margin: auto;
+//     width: 90px;
+// }
+.border{
+border: 1px solid lavender;
+}
+// .btnDiv{
+//     margin: auto;
+//     text-align: center;
+//     width: 100%;
+// }
+
+select.minimal {
+    background-image:
+      linear-gradient(45deg, transparent 50%, rgb(18, 7, 7) 50%),
+      linear-gradient(135deg, rgb(12, 3, 3) 50%, transparent 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position:
+      calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px),
+      calc(100% - 2.5em) 0.5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1px 1.5em;
+    background-repeat: no-repeat;
+  }
+  
+  select.minimal:focus {
+    background-image:
+      linear-gradient(45deg, green 50%, transparent 50%),
+      linear-gradient(135deg, transparent 50%, green 50%),
+      linear-gradient(to right, #ccc, #ccc);
+    background-position:
+      calc(100% - 15px) 1em,
+      calc(100% - 20px) 1em,
+      calc(100% - 2.5em) 0.5em;
+    background-size:
+      5px 5px,
+      5px 5px,
+      1px 1.5em;
+    background-repeat: no-repeat;
+    border-color: green;
+    outline: 0;
+  }
+
+  .dropdown-container select {
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+  }
+
+  .dropdown-container select::-ms-expand {
+    display: none !important;
+  }
+
+
+  @media(max-width:768px){
+    .btn-search{
+        margin: auto !important;
+        text-align: center;
+    }
+  }
+  
+  

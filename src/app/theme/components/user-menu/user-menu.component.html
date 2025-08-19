@@ -1,0 +1,177 @@
+<div class="dropdown d-inline-block">
+    <a class="dropdown-toggle no-caret pl-2 pr-2" id="user-menu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-user-o" aria-hidden="true"></i>
+    </a>
+
+    <div class="dropdown-menu dropdown-menu-right rounded-0 mt-3 p-0 box-shadow" aria-labelledby="user-menu" style="max-height: none;">        <div class="user-menu">
+            <div class="user-info text-center p-3">
+                <img src="assets/img/users/user.jpg" alt="user-img" class="user-img rounded-circle">                    
+                <p class="mt-1 mb-0"> 
+                    <span>{{ (userInfo.roleCdValue == 'Admin' || userInfo.roleCdValue == 'User')? userInfo?.mobileNumber : userInfo?.operatorName   }}</span><br>
+                   
+                    <!-- Emilio Verdines - Web Developer -->
+                    <small>{{userInfo?.roleCdValue}}</small>
+                </p>
+            </div>
+            <!-- <a class="dropdown-item" routerLink="/profile"><i class="fa fa-user mr-2"></i>Profile</a>
+            <a class="dropdown-item" routerLink="/"><i class="fa fa-cog mr-2"></i>Settings</a>
+            <a class="dropdown-item" routerLink="/"><i class="fa fa-lock mr-2"></i>Lock screen</a> -->
+            <a class="dropdown-item" type="button" data-toggle="modal" data-target="#exampleModal" (click)="getAppUser()"><i class="fa fa-phone mr-2"></i>Change mobileNumber</a>
+            <a  class="dropdown-item" type="button" (click)="openDialogue()"><i class="fa fa-lock mr-2"></i>Change Password</a>
+            <a class="dropdown-item mb-1" routerLink="/login"><i class="fa fa-power-off mr-2"></i>Log out</a>
+        </div>
+    </div>
+</div>  
+
+
+<div class="modal" id="pxp-open-password-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-top" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title  text-dark">Change Password</h3>
+                <button #closepassdialog type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+                </button>
+              </div>
+            <div class="modal-body">
+            <form [formGroup]="passwordFrom">
+            <!--  old password -->
+            <div class="input-group mb-3">
+                <input  formControlName="oldPassword" class="form-control validation-field"  [type]="showPassword ? 'text' : 'password'"
+                name="oldPassword" matInput  (input)="onChangeEvent($event)"
+                placeholder="Old Password" aria-label="Old Password" aria-describedby="basic-addon1">
+                 <div class="input-group-append">
+                 <span class="input-group-text" id="basic-addon1">
+                    <i class="fa-solid " [ngClass]="showPassword?'fa-eye':'fa-eye-slash'" (click)="togglePasswordVisibility()"></i> 
+                 </span>
+                </div>
+            </div>
+                <small class="text-primary"
+                    *ngIf="passwordFrom.get('oldPassword')?.touched && appUserList[0]?.['Password'] != passwordInput">
+                    Your Old Password not matched
+                </small>
+                    <br>
+                    <!-- new password -->
+                    <div class="input-group mb-3">
+                        <input formControlName="password" class="form-control validation-field"
+                            placeholder="New Password" matInput [type]="showNewPassword ? 'text' : 'password'"
+                            name="password" (input)="newPasswordChange($event)" aria-label="password" aria-describedby="basic-addon2" value="showNewPassword" />
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">
+                                <i class="fa-solid " [ngClass]="showNewPassword?'fa-eye':'fa-eye-slash'" (click)="toggleNewPasswordVisibility()"></i> 
+                            </span>
+                        </div>
+                    </div>
+                    <small class="text-primary"
+                        *ngIf="passwordFrom.get('password').touched && passwordFrom.get('password').hasError('required')">
+                        password is required
+                    </small>
+                    <br>
+                    <!-- confirm password -->
+                    <div class="input-group mb-3">
+                        <input formControlName="confirmPassword" matInput class="form-control validation-field"  
+                            placeholder="Confirm Password" aria-label="Confirm Password" matInput [type]="showConfirmPassword ? 'text' : 'password'"
+                            name="confirmPassword" (input)="confirmPasswordChange($event)" aria-describedby="basic-addon3" />
+                            <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon3">
+                                <i class="fa-solid " [ngClass]="showConfirmPassword?'fa-eye':'fa-eye-slash'" (click)="toggleConfirmPasswordVisibility()"></i> 
+                             </span>
+                            </div>
+                    </div>
+                    <small class="text-primary"
+                        *ngIf="passwordFrom.get('confirmPassword').touched && passwordFrom.get('confirmPassword').hasError('required')">
+                        confirm password is required
+                    </small>
+                    <small class="text-primary"
+                        *ngIf="passwordFrom.get('confirmPassword').touched && newPasswordInput!=confirmPasswordInput">
+                        password and confirm password are mismatch
+                    </small>
+
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+                    <button class="form-control btn btn-primary rounded  px-3" style="color: white;"
+                        class="btn bg-primary"
+                        [disabled]="passwordFrom.invalid || (newPasswordInput!=confirmPasswordInput)"
+                        (click)="goToSave()">save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" #close>Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title  text-dark">Change Mobile Number</h3>
+            <button #closepassdialog1 type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="mobileFrom">
+                <!--  old password -->
+                <div class="input-group mb-3">
+                    <input  formControlName="newMobileNumber" class="form-control validation-field"
+                    name="newMobileNumber" matInput maxlength="10" minlength="10"
+                    placeholder="New mobile Number" aria-describedby="basic-addon1">
+                </div>
+                    <small class="text-primary"
+                        *ngIf="mobileFrom.get('newMobileNumber')?.touched && mobileFrom.get('newMobileNumber').hasError('required')">
+                        Your New Mobile Number is Required
+                    </small>   
+                    </form>
+        </div>
+        <div class="modal-footer">
+            <button class="form-control btn btn-primary rounded  px-3" style="color: white;"
+            class="btn bg-primary"
+            [disabled]="mobileFrom.invalid"
+            (click)="goToOtp()">save</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" #close>Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title  text-dark">OTP</h3>
+            <button #closepassdialog2 type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="font-size: 24px;">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="card-body text-center"
+            *ngIf="isShowOTP">
+            <h2 class="text-dark">Enter verification code</h2>
+            <p class="text-dark">We have sent you a 6 digit OTP in your mobile</p>
+            <form class="mt-3">
+                <div class="text-center">
+                    <ng-otp-input class="text-dark" style="background-color: transparent !important;" (onInputChange)="onOtpChange($event)"  [config]="{length:6}"></ng-otp-input>
+
+                    <!-- <ng-otp-input class="otp-color text-dark" #ngOtpInput
+                        (onInputChange)="onOtpChange($event)" [config]="config"> -->
+                    <!-- </ng-otp-input> -->
+                </div>
+            </form>
+        </div>
+        </div>
+        <div class="modal-footer">
+            <div class="form-group">
+                <button (click)="verifyOTP()"
+                    class="btn btn-block bg-primary text-light"
+                    [disabled]="!simOtp || isDisabled">Verify OTP</button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+<span #exampleModal data-target="#exampleModal2" data-toggle="modal" class="d-none" translate>Add</span>
+
+<span #openpopup data-target="#pxp-open-password-modal" data-toggle="modal" class="d-none" translate>reject</span>
